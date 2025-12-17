@@ -3,24 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>fmXML | Mobile Config Generator</title>
+    <title>fmXML | Mobile Pro</title>
     <style>
-        /* --- VARIABLES --- */
+        /* --- VARIABLES (Preserved from your original code) --- */
         :root {
             --brand-primary: #6E0FD7;
             --brand-hover: #832DF0;
             
-            /* Backgrounds */
             --bg-deep: #05080f;
             --bg-card: #0f131f;
             --bg-input: #080b12;
 
-            /* Text */
             --text-main: #ffffff;
             --text-muted: #8b9bb4;
             --text-accent: #bca0eb;
 
-            /* UI Elements */
             --radius-lg: 16px;
             --radius-md: 12px;
             --border-subtle: rgba(255, 255, 255, 0.08);
@@ -46,10 +43,8 @@
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             z-index: -1;
-            /* The ']' bracket SVG pattern */
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cpath d='M 35 15 L 45 15 L 45 45 L 35 45' fill='none' stroke='%236E0FD7' stroke-width='2' opacity='0.07' stroke-linecap='square'/%3E%3C/svg%3E");
             background-size: 60px 60px;
-            /* Radial fade to focus attention on center */
             mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
             -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
         }
@@ -66,160 +61,101 @@
         }
 
         /* --- HEADER --- */
-        header {
-            margin-bottom: 32px;
-            text-align: center;
-        }
+        header { margin-bottom: 32px; text-align: center; }
 
         .logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            margin-bottom: 8px;
-            display: inline-flex;
-            align-items: center;
+            font-size: 1.5rem; font-weight: 800; letter-spacing: -0.5px;
+            margin-bottom: 8px; display: inline-flex; align-items: center;
         }
-
         .logo span { color: var(--brand-primary); }
-        .logo::after {
-            content: ']';
-            color: var(--brand-primary);
-            margin-left: 4px;
-            opacity: 0.8;
-            font-weight: 300;
-        }
+        .logo::after { content: ']'; color: var(--brand-primary); margin-left: 4px; opacity: 0.8; font-weight: 300; }
+        .subtitle { color: var(--text-muted); font-size: 0.9rem; }
 
-        .subtitle {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-        }
+        /* --- DASHBOARD --- */
+        .dashboard { display: grid; grid-template-columns: 1fr; gap: 24px; }
 
-        /* --- GRID DASHBOARD --- */
-        .dashboard {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 24px;
-        }
-
-        /* --- CARDS --- */
         .card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-lg);
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
+            background: var(--bg-card); border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg); padding: 24px;
+            display: flex; flex-direction: column;
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
             backdrop-filter: blur(10px);
         }
 
-        .card-header {
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+        .card-header { margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .card-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-accent); font-weight: 600; }
 
-        .card-label {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-accent);
-            font-weight: 600;
+        /* --- NEW STYLES: Settings Bar & Select --- */
+        .settings-bar { margin-bottom: 15px; }
+        select {
+            width: 100%;
+            padding: 14px;
+            background: var(--bg-input);
+            color: var(--text-main);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            font-size: 0.95rem;
+            appearance: none;
+            cursor: pointer;
+            /* Custom dropdown arrow */
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 16px;
         }
+        select:focus { border-color: var(--brand-primary); outline: none; }
 
         /* --- UPLOAD ZONE --- */
         .upload-zone {
-            flex-grow: 1;
-            border: 2px dashed var(--border-subtle);
-            border-radius: var(--radius-md);
-            background: rgba(255,255,255,0.01);
-            position: relative;
-            min-height: 180px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
+            flex-grow: 1; border: 2px dashed var(--border-subtle);
+            border-radius: var(--radius-md); background: rgba(255,255,255,0.01);
+            position: relative; min-height: 180px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            cursor: pointer; transition: all 0.2s ease;
         }
-
         .upload-zone:active { transform: scale(0.98); }
-        .upload-zone:hover {
-            border-color: var(--brand-primary);
-            background: rgba(110, 15, 215, 0.05);
-        }
+        .upload-zone:hover { border-color: var(--brand-primary); background: rgba(110, 15, 215, 0.05); }
 
-        .upload-input {
-            position: absolute;
-            width: 100%; height: 100%;
-            opacity: 0; z-index: 10;
-            cursor: pointer;
-        }
-
+        .upload-input { position: absolute; width: 100%; height: 100%; opacity: 0; z-index: 10; cursor: pointer; }
         .icon-large { font-size: 2rem; margin-bottom: 12px; opacity: 0.8; }
         .upload-text { font-weight: 600; color: var(--text-main); }
         .upload-sub { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
 
         /* --- CODE OUTPUT --- */
         .code-block {
-            background: var(--bg-input);
-            border-radius: var(--radius-md);
-            border: 1px solid var(--border-subtle);
-            flex-grow: 1;
-            position: relative;
-            overflow: hidden;
-            min-height: 250px;
+            background: var(--bg-input); border-radius: var(--radius-md);
+            border: 1px solid var(--border-subtle); flex-grow: 1;
+            position: relative; overflow: hidden; min-height: 250px;
         }
-
         textarea {
-            width: 100%; height: 100%;
-            background: transparent;
-            border: none;
-            color: #a0aabf;
-            font-family: 'SF Mono', 'Menlo', 'Courier New', monospace;
-            font-size: 0.8rem;
-            line-height: 1.6;
-            padding: 20px;
-            resize: none;
-            outline: none;
+            width: 100%; height: 100%; background: transparent; border: none;
+            color: #a0aabf; font-family: 'SF Mono', 'Menlo', 'Courier New', monospace;
+            font-size: 0.8rem; line-height: 1.6; padding: 20px; resize: none; outline: none;
         }
 
-        /* --- ACTION BUTTON --- */
-        .btn-primary {
-            background: var(--brand-primary);
-            color: white;
-            border: none;
-            width: 100%;
-            padding: 16px;
-            border-radius: var(--radius-md);
-            font-weight: 600;
-            font-size: 1rem;
-            margin-top: 20px;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(110, 15, 215, 0.3);
-            transition: transform 0.1s, background 0.2s;
+        /* --- NEW STYLES: Button Group --- */
+        .btn-group { display: flex; gap: 12px; margin-top: 20px; }
+        
+        .btn {
+            border: none; padding: 16px; border-radius: var(--radius-md);
+            font-weight: 600; font-size: 1rem; cursor: pointer;
+            transition: transform 0.1s, opacity 0.2s; flex: 1;
+            text-align: center;
         }
-
-        .btn-primary:active { transform: scale(0.96); }
+        .btn:active { transform: scale(0.96); }
+        
+        /* Your original primary button style */
+        .btn-primary { background: var(--brand-primary); color: white; box-shadow: 0 4px 15px rgba(110, 15, 215, 0.3); }
         .btn-primary:hover { background: var(--brand-hover); }
 
-        /* --- STATUS --- */
-        #status-msg {
-            text-align: center;
-            margin-top: 12px;
-            font-size: 0.85rem;
-            color: var(--text-accent);
-            min-height: 20px;
-        }
+        /* New secondary button style */
+        .btn-secondary { background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--border-subtle); }
+        .btn-secondary:hover { background: rgba(255,255,255,0.1); }
 
-        /* --- RESPONSIVE DESKTOP --- */
+        #status-msg { text-align: center; margin-top: 12px; font-size: 0.85rem; color: var(--text-accent); min-height: 20px; }
+
         @media (min-width: 800px) {
-            .dashboard {
-                grid-template-columns: 320px 1fr;
-                align-items: stretch;
-                height: 550px; /* Fixed dashboard height */
-            }
+            .dashboard { grid-template-columns: 320px 1fr; align-items: stretch; height: 550px; }
             .card { height: 100%; }
             .app-container { justify-content: center; }
             header { text-align: left; margin-bottom: 40px; }
@@ -233,25 +169,38 @@
 
     <div class="app-container">
         <header>
-            <div class="logo">fmXML<span>Mobile</span></div>
-            <div class="subtitle">Generate facepack configs on the go.</div>
+            <div class="logo">fmXML<span>Pro</span></div>
+            <div class="subtitle">Smart config generator for mobile.</div>
         </header>
 
         <div class="dashboard">
             
             <div class="card">
                 <div class="card-header">
-                    <span class="card-label">Source</span>
+                    <span class="card-label">Settings & Source</span>
+                </div>
+                
+                <div class="settings-bar">
+                    <select id="config-type" onchange="generateXML()">
+                        <option value="faces">👤 Player Faces</option>
+                        <option value="logos">🛡️ Club Logos</option>
+                        <option value="logos_small">🛡️ Club Logos (Small)</option>
+                        <option value="kits">👕 Kits</option>
+                    </select>
                 </div>
                 
                 <div class="upload-zone">
                     <input type="file" id="file-upload" class="upload-input" multiple accept="image/*" onchange="generateXML()">
                     <div class="icon-large">📂</div>
                     <div class="upload-text">Select Images</div>
-                    <div class="upload-sub">Tap to browse files</div>
+                    <div class="upload-sub">IDs extracted automatically</div>
                 </div>
 
-                <button class="btn-primary" onclick="copyText()">Copy XML</button>
+                <div class="btn-group">
+                    <button class="btn btn-secondary" onclick="downloadFile()">Download</button>
+                    <button class="btn btn-primary" onclick="copyText()">Copy XML</button>
+                </div>
+                
                 <div id="status-msg"></div>
             </div>
 
@@ -261,7 +210,7 @@
                     <span class="card-label" style="opacity: 0.5">Read Only</span>
                 </div>
                 <div class="code-block">
-                    <textarea id="output" readonly placeholder="<record>..."></textarea>
+                    <textarea id="output" readonly placeholder="Select a mode and upload images..."></textarea>
                 </div>
             </div>
 
@@ -269,35 +218,53 @@
     </div>
 
     <script>
+        // Helper: Returns correct FM path based on dropdown choice
+        function getPath(type, id) {
+            switch(type) {
+                case 'faces': return `graphics/pictures/person/${id}/portrait`;
+                case 'logos': return `graphics/pictures/club/${id}/logo`;
+                case 'logos_small': return `graphics/pictures/club/${id}/icon`;
+                case 'kits': return `graphics/pictures/team/${id}/kit_textures/home`;
+                default: return `graphics/pictures/person/${id}/portrait`;
+            }
+        }
+
+        // Updated Generator Function
         function generateXML() {
             const fileInput = document.getElementById('file-upload');
+            const typeSelect = document.getElementById('config-type'); // Get dropdown value
             const outputArea = document.getElementById('output');
             const statusMsg = document.getElementById('status-msg');
+            
             const files = fileInput.files;
+            const type = typeSelect ? typeSelect.value : 'faces';
 
             if (files.length === 0) return;
 
-            statusMsg.innerText = `Found ${files.length} images...`;
+            statusMsg.innerText = `Processing ${files.length} images...`;
 
-            // Standard FM Config Header
             let xmlContent = `<record>\n\t<boolean id="preload" value="false"/>\n\t<boolean id="amap" value="false"/>\n\t<list id="maps">\n`;
 
             for (let i = 0; i < files.length; i++) {
                 let fileName = files[i].name;
-                // Strip extension to get ID
-                let id = fileName.substring(0, fileName.lastIndexOf('.')) || fileName;
                 
-                // Generates the line
-                xmlContent += `\t\t<record from="${id}" to="graphics/pictures/person/${id}/portrait"/>\n`;
+                // NEW: Regex to find the first sequence of digits (The ID)
+                // If "messi_200123.png", it finds "200123"
+                let match = fileName.match(/\d+/);
+                let id = match ? match[0] : fileName.substring(0, fileName.lastIndexOf('.'));
+                
+                let path = getPath(type, id);
+                
+                xmlContent += `\t\t<record from="${id}" to="${path}"/>\n`;
             }
 
-            // Footer
             xmlContent += `\t</list>\n</record>`;
 
             outputArea.value = xmlContent;
-            statusMsg.innerText = "Ready to Copy";
+            statusMsg.innerText = "Ready to Export";
         }
 
+        // Existing Copy Function
         function copyText() {
             const outputArea = document.getElementById('output');
             const statusMsg = document.getElementById('status-msg');
@@ -312,8 +279,28 @@
             
             navigator.clipboard.writeText(outputArea.value).then(() => {
                 statusMsg.innerText = "✅ Copied to Clipboard!";
-                setTimeout(() => { statusMsg.innerText = "Ready to Copy"; }, 2000);
+                setTimeout(() => { statusMsg.innerText = "Ready to Export"; }, 2000);
             });
+        }
+
+        // NEW: Download Function
+        function downloadFile() {
+            const outputArea = document.getElementById('output');
+            const text = outputArea.value;
+            if(!text) {
+                document.getElementById('status-msg').innerText = "Nothing to download.";
+                return;
+            }
+
+            const blob = new Blob([text], { type: "text/xml" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "config.xml";
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
         }
     </script>
 
@@ -330,8 +317,6 @@
                 // Method B: URL Scheme Fallback
                 else {
                     const url = "fmp://$/?script=" + encodeURIComponent(scriptName) + "&param=" + encodeURIComponent(parameter);
-                    // Only navigate if we are fairly sure we are in an app environment
-                    // to avoid confusing regular mobile browser users
                     if(navigator.userAgent.includes('FileMaker')) {
                         window.location.href = url;
                     }
@@ -343,6 +328,7 @@
 
         // Auto-attach to Copy Button
         document.addEventListener("DOMContentLoaded", function() {
+            // Note: We target .btn-primary specifically for the Copy action
             const actionButton = document.querySelector('.btn-primary');
             const outputField = document.getElementById('output');
 
@@ -350,7 +336,6 @@
                 actionButton.addEventListener('click', function() {
                     const xmlData = outputField.value;
                     if (xmlData && xmlData.trim() !== "") {
-                        // Change 'SaveConfig' to your actual FM Script name
                         performFileMakerScript('SaveConfig', xmlData);
                     }
                 });
