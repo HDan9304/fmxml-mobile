@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>fmXML | Mobile Pro</title>
+    <title>fmXML | Editor Edition</title>
     <style>
         /* --- VARIABLES --- */
         :root {
@@ -50,46 +50,62 @@
         .card-header { margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
         .card-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-accent); font-weight: 600; }
 
-        .settings-bar { margin-bottom: 15px; }
-        select {
-            width: 100%; padding: 14px; background: var(--bg-input); color: var(--text-main);
+        /* Controls Area */
+        .controls-row { display: flex; gap: 10px; margin-bottom: 15px; }
+        
+        .settings-select {
+            flex-grow: 1; padding: 12px; background: var(--bg-input); color: var(--text-main);
             border: 1px solid var(--border-subtle); border-radius: var(--radius-md);
-            font-family: var(--font-stack); font-size: 0.95rem; font-weight: 500;
+            font-family: var(--font-stack); font-size: 0.9rem; font-weight: 500;
             appearance: none; cursor: pointer;
             background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
             background-repeat: no-repeat; background-position: right 15px center; background-size: 16px;
         }
 
+        /* Import Button (Small & Technical) */
+        .btn-import {
+            background: rgba(255,255,255,0.05); color: var(--text-accent); 
+            border: 1px solid var(--border-subtle); border-radius: var(--radius-md);
+            padding: 0 15px; font-weight: 600; font-size: 0.85rem; cursor: pointer;
+            display: flex; align-items: center; gap: 6px; white-space: nowrap;
+        }
+        .btn-import:hover { background: rgba(255,255,255,0.1); }
+
         .upload-zone {
             flex-grow: 0; border: 2px dashed var(--border-subtle); border-radius: var(--radius-md);
-            background: rgba(255,255,255,0.01); position: relative; min-height: 160px;
+            background: rgba(255,255,255,0.01); position: relative; min-height: 140px;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             cursor: pointer; transition: all 0.2s ease; margin-bottom: 20px;
         }
         .upload-zone:active { transform: scale(0.98); }
         .upload-zone:hover { border-color: var(--brand-primary); background: rgba(110, 15, 215, 0.05); }
         .upload-input { position: absolute; width: 100%; height: 100%; opacity: 0; z-index: 10; cursor: pointer; }
-        .icon-large { margin-bottom: 15px; color: var(--brand-primary); }
+        
+        .icon-large { margin-bottom: 10px; color: var(--brand-primary); }
         .upload-text { font-weight: 600; color: var(--text-main); }
         .upload-sub { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
 
-        /* --- NEW: PREVIEW GRID --- */
+        /* PREVIEW GRID */
         #preview-container {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 10px;
-            max-height: 200px; overflow-y: auto; margin-bottom: 20px;
-            padding-right: 5px; /* space for scrollbar */
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); gap: 8px;
+            max-height: 180px; overflow-y: auto; margin-bottom: 20px;
+            padding: 5px; border: 1px solid var(--border-subtle); border-radius: var(--radius-md);
+            background: rgba(0,0,0,0.2);
         }
-        /* Custom scrollbar for preview */
         #preview-container::-webkit-scrollbar { width: 4px; }
         #preview-container::-webkit-scrollbar-thumb { background: var(--brand-primary); border-radius: 4px; }
 
         .preview-item {
-            background: var(--bg-input); border-radius: 8px; padding: 5px;
+            background: var(--bg-input); border-radius: 8px; padding: 4px;
             text-align: center; border: 1px solid var(--border-subtle);
-            font-size: 0.7rem; color: var(--text-muted);
+            font-size: 0.7rem; color: var(--text-muted); position: relative;
         }
-        .preview-img { width: 100%; height: 50px; object-fit: contain; margin-bottom: 4px; display: block; }
-        .preview-id { font-family: 'SF Mono', monospace; color: var(--text-accent); display: block; overflow: hidden; text-overflow: ellipsis; }
+        /* Style for imported text-only items */
+        .preview-item.imported { border-color: var(--brand-primary); opacity: 0.7; }
+        
+        .preview-img { width: 100%; height: 40px; object-fit: contain; margin-bottom: 4px; display: block; }
+        .preview-icon { font-size: 1.5rem; line-height: 40px; display: block; opacity: 0.5; }
+        .preview-id { font-family: 'SF Mono', monospace; color: var(--text-accent); display: block; overflow: hidden; text-overflow: ellipsis; font-size: 0.65rem;}
 
         .code-block { background: var(--bg-input); border-radius: var(--radius-md); border: 1px solid var(--border-subtle); flex-grow: 1; position: relative; overflow: hidden; min-height: 250px; }
         textarea { width: 100%; height: 100%; background: transparent; border: none; color: #a0aabf; font-family: 'SF Mono', 'Menlo', 'Courier New', monospace; font-size: 0.8rem; line-height: 1.6; padding: 20px; resize: none; outline: none; }
@@ -100,10 +116,7 @@
         
         .btn-primary { background: var(--brand-primary); color: white; box-shadow: 0 4px 15px rgba(110, 15, 215, 0.3); }
         .btn-secondary { background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--border-subtle); }
-        
-        /* Clear Button (Red/Danger hint but subtle) */
-        .btn-clear { background: rgba(255, 50, 50, 0.1); color: #ff6b6b; border: 1px solid rgba(255, 50, 50, 0.2); max-width: 60px; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; }
-        .btn-clear:hover { background: rgba(255, 50, 50, 0.2); }
+        .btn-clear { background: rgba(255, 50, 50, 0.1); color: #ff6b6b; border: 1px solid rgba(255, 50, 50, 0.2); max-width: 50px; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; }
 
         #status-msg { text-align: center; margin-top: 12px; font-size: 0.85rem; color: var(--text-accent); min-height: 20px; }
 
@@ -122,28 +135,33 @@
 
     <div class="app-container">
         <header>
-            <div class="logo">fmXML<span>Pro</span></div>
-            <div class="subtitle">Smart config generator for mobile.</div>
+            <div class="logo">fmXML<span>Editor</span></div>
+            <div class="subtitle">Import, Edit & Generate configs.</div>
         </header>
 
         <div class="dashboard">
             
             <div class="card">
                 <div class="card-header">
-                    <span class="card-label">Settings & Source</span>
+                    <span class="card-label">Tools</span>
+                    <span id="count-label" class="card-label" style="color:var(--text-main)">0 Items</span>
                 </div>
                 
-                <div class="settings-bar">
-                    <select id="config-type" onchange="regenerate()">
+                <div class="controls-row">
+                    <select id="config-type" class="settings-select" onchange="regenerate()">
                         <option value="faces">Player Faces</option>
                         <option value="logos">Club Logos</option>
-                        <option value="logos_small">Club Logos (Small)</option>
+                        <option value="logos_small">Small Logos</option>
                         <option value="kits">Kits</option>
                     </select>
+                    <input type="file" id="import-xml" accept=".xml" style="display:none" onchange="handleImport()">
+                    <button class="btn-import" onclick="document.getElementById('import-xml').click()">
+                        <span>📥 Load XML</span>
+                    </button>
                 </div>
                 
                 <div class="upload-zone">
-                    <input type="file" id="file-upload" class="upload-input" multiple accept="image/*" onchange="handleFiles()">
+                    <input type="file" id="file-upload" class="upload-input" multiple accept="image/*" onchange="handleNewFiles()">
                     
                     <div class="icon-large">
                         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -153,14 +171,18 @@
                         </svg>
                     </div>
                     
-                    <div class="upload-text">Select Images</div>
-                    <div class="upload-sub">IDs extracted automatically</div>
+                    <div class="upload-text">Add Images</div>
+                    <div class="upload-sub">Appends to list</div>
                 </div>
 
-                <div id="preview-container"></div>
+                <div id="preview-container">
+                    <div style="text-align:center; padding:20px; color:var(--text-muted); font-size:0.8rem;">
+                        No items yet.
+                    </div>
+                </div>
 
                 <div class="btn-group">
-                    <button class="btn btn-clear" onclick="clearAll()" title="Clear All">✕</button>
+                    <button class="btn btn-clear" onclick="clearAll()" title="Reset">✕</button>
                     <button class="btn btn-secondary" onclick="downloadFile()">Download</button>
                     <button class="btn btn-primary" onclick="copyText()">Copy XML</button>
                 </div>
@@ -170,11 +192,11 @@
 
             <div class="card">
                 <div class="card-header">
-                    <span class="card-label">Generated Code</span>
+                    <span class="card-label">XML Output</span>
                     <span class="card-label" style="opacity: 0.5">Read Only</span>
                 </div>
                 <div class="code-block">
-                    <textarea id="output" readonly placeholder="Select a mode and upload images..."></textarea>
+                    <textarea id="output" readonly placeholder="Import a config or upload images..."></textarea>
                 </div>
             </div>
 
@@ -182,9 +204,11 @@
     </div>
 
     <script>
-        // Store files globally to allow regeneration when dropdown changes
-        let currentFiles = [];
+        // --- STATE MANAGEMENT ---
+        let importedIDs = [];  // Stores IDs from loaded XML files
+        let newFiles = [];     // Stores File objects from new uploads
 
+        // --- CORE LOGIC ---
         function getPath(type, id) {
             switch(type) {
                 case 'faces': return `graphics/pictures/person/${id}/portrait`;
@@ -195,41 +219,85 @@
             }
         }
 
-        // Triggered when user selects new files
-        function handleFiles() {
+        // 1. IMPORT EXISTING XML
+        function handleImport() {
+            const input = document.getElementById('import-xml');
+            if(input.files.length === 0) return;
+
+            const file = input.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                const text = e.target.result;
+                // Regex to find all IDs in 'from="12345"' or 'from="messi"'
+                const regex = /from="([^"]+)"/g;
+                let match;
+                let count = 0;
+
+                while ((match = regex.exec(text)) !== null) {
+                    // match[1] contains the ID inside quotes
+                    if(!importedIDs.includes(match[1])) {
+                        importedIDs.push(match[1]);
+                        count++;
+                    }
+                }
+
+                document.getElementById('status-msg').innerText = `Imported ${count} IDs from XML.`;
+                updateUI();
+            };
+            reader.readAsText(file);
+            input.value = ""; // Reset input so same file can be selected again
+        }
+
+        // 2. HANDLE NEW IMAGE UPLOADS
+        function handleNewFiles() {
             const fileInput = document.getElementById('file-upload');
             if (fileInput.files.length > 0) {
-                currentFiles = fileInput.files;
-                renderPreviews(); // NEW: Show images
-                generateXML();    // Generate code
+                // Add new files to the array (don't replace, append)
+                newFiles = newFiles.concat(Array.from(fileInput.files));
+                updateUI();
             }
+            fileInput.value = ""; // Reset input
         }
 
-        // Triggered when dropdown changes (uses existing files)
+        // 3. REGENERATE & UPDATE UI
         function regenerate() {
-            if (currentFiles.length > 0) {
-                generateXML();
-            }
+            updateUI();
         }
 
-        // NEW: Render thumbnails
+        function updateUI() {
+            renderPreviews();
+            generateXML();
+            
+            const total = importedIDs.length + newFiles.length;
+            document.getElementById('count-label').innerText = `${total} Items`;
+        }
+
+        // 4. RENDER PREVIEWS (Merged List)
         function renderPreviews() {
             const container = document.getElementById('preview-container');
-            container.innerHTML = ""; // Clear old previews
+            container.innerHTML = "";
 
-            // Convert FileList to Array to loop
-            Array.from(currentFiles).forEach(file => {
+            // A. Render Imported IDs (Generic Icon)
+            importedIDs.forEach(id => {
+                let div = document.createElement('div');
+                div.className = 'preview-item imported';
+                div.innerHTML = `<span class="preview-icon">📜</span><span class="preview-id">${id}</span>`;
+                container.appendChild(div);
+            });
+
+            // B. Render New Files (Thumbnails)
+            newFiles.forEach(file => {
                 let fileName = file.name;
                 let match = fileName.match(/\d+/);
                 let id = match ? match[0] : "???";
 
-                // Create Elements
                 let div = document.createElement('div');
                 div.className = 'preview-item';
                 
                 let img = document.createElement('img');
                 img.className = 'preview-img';
-                img.src = URL.createObjectURL(file); // Create local blob URL
+                img.src = URL.createObjectURL(file);
                 
                 let span = document.createElement('span');
                 span.className = 'preview-id';
@@ -241,65 +309,63 @@
             });
         }
 
+        // 5. GENERATE FINAL XML
         function generateXML() {
             const typeSelect = document.getElementById('config-type'); 
             const outputArea = document.getElementById('output');
-            const statusMsg = document.getElementById('status-msg');
-            
             const type = typeSelect ? typeSelect.value : 'faces';
-
-            statusMsg.innerText = `Processing ${currentFiles.length} images...`;
 
             let xmlContent = `<record>\n\t<boolean id="preload" value="false"/>\n\t<boolean id="amap" value="false"/>\n\t<list id="maps">\n`;
 
-            for (let i = 0; i < currentFiles.length; i++) {
-                let fileName = currentFiles[i].name;
-                let match = fileName.match(/\d+/);
-                let id = match ? match[0] : fileName.substring(0, fileName.lastIndexOf('.'));
-                
+            // Process Imported IDs
+            importedIDs.forEach(id => {
                 let path = getPath(type, id);
                 xmlContent += `\t\t<record from="${id}" to="${path}"/>\n`;
-            }
+            });
+
+            // Process New Files
+            newFiles.forEach(file => {
+                let fileName = file.name;
+                let match = fileName.match(/\d+/);
+                let id = match ? match[0] : fileName.substring(0, fileName.lastIndexOf('.'));
+                let path = getPath(type, id);
+                
+                // Avoid duplicate lines if ID matches an imported one
+                if(!importedIDs.includes(id)) {
+                    xmlContent += `\t\t<record from="${id}" to="${path}"/>\n`;
+                }
+            });
 
             xmlContent += `\t</list>\n</record>`;
             outputArea.value = xmlContent;
-            statusMsg.innerText = "Ready to Export";
         }
 
+        // --- UTILS ---
         function clearAll() {
-            document.getElementById('file-upload').value = "";
+            importedIDs = [];
+            newFiles = [];
             document.getElementById('output').value = "";
-            document.getElementById('preview-container').innerHTML = "";
-            document.getElementById('status-msg').innerText = "";
-            currentFiles = [];
+            document.getElementById('preview-container').innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-muted); font-size:0.8rem;">No items yet.</div>';
+            document.getElementById('status-msg').innerText = "All cleared.";
+            document.getElementById('count-label').innerText = "0 Items";
         }
 
         function copyText() {
             const outputArea = document.getElementById('output');
             const statusMsg = document.getElementById('status-msg');
-            
-            if (!outputArea.value) {
-                statusMsg.innerText = "Nothing to copy yet.";
-                return;
-            }
-
+            if (!outputArea.value) return;
             outputArea.select();
             outputArea.setSelectionRange(0, 99999); 
-            
             navigator.clipboard.writeText(outputArea.value).then(() => {
-                statusMsg.innerText = "✅ Copied to Clipboard!";
-                setTimeout(() => { statusMsg.innerText = "Ready to Export"; }, 2000);
+                statusMsg.innerText = "✅ Copied!";
+                setTimeout(() => { statusMsg.innerText = ""; }, 2000);
             });
         }
 
         function downloadFile() {
             const outputArea = document.getElementById('output');
             const text = outputArea.value;
-            if(!text) {
-                document.getElementById('status-msg').innerText = "Nothing to download.";
-                return;
-            }
-
+            if(!text) return;
             const blob = new Blob([text], { type: "text/xml" });
             const url = URL.createObjectURL(blob);
             const a = document.createElement("a");
@@ -330,7 +396,6 @@
         document.addEventListener("DOMContentLoaded", function() {
             const actionButton = document.querySelector('.btn-primary');
             const outputField = document.getElementById('output');
-
             if (actionButton && outputField) {
                 actionButton.addEventListener('click', function() {
                     const xmlData = outputField.value;
