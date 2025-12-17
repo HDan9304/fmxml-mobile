@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile fmXML Generator</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #1e1e1e;
+            color: #ffffff;
+            padding: 20px;
+            text-align: center;
+        }
+        h2 { color: #4CAF50; margin-bottom: 10px; }
+        p { color: #aaaaaa; font-size: 0.9rem; margin-bottom: 20px; }
+        
+        /* The File Input Button */
+        .custom-file-upload {
+            display: inline-block;
+            padding: 15px 30px;
+            cursor: pointer;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 8px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            width: 80%;
+        }
+        input[type="file"] { display: none; }
+
+        /* The Output Box */
+        textarea {
+            width: 100%;
+            height: 300px;
+            background-color: #2d2d2d;
+            color: #00ff88;
+            border: 1px solid #444;
+            border-radius: 5px;
+            padding: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.8rem;
+            resize: none;
+        }
+
+        .action-btn {
+            background-color: #2196F3;
+            margin-top: 15px;
+            border: none;
+            padding: 12px 20px;
+            color: white;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>📱 Mobile fmXML</h2>
+    <p>Select your player images (PNG) to generate the config text.</p>
+
+    <label for="file-upload" class="custom-file-upload">
+        📂 Select Images
+    </label>
+    <input id="file-upload" type="file" multiple accept="image/*" onchange="generateXML()"/>
+
+    <textarea id="output" placeholder="XML code will appear here..."></textarea>
+
+    <button class="action-btn" onclick="copyText()">Copy to Clipboard</button>
+
+    <script>
+        function generateXML() {
+            const fileInput = document.getElementById('file-upload');
+            const outputArea = document.getElementById('output');
+            const files = fileInput.files;
+
+            if (files.length === 0) return;
+
+            // FM Config Header
+            let xmlContent = `<record>\n\t<boolean id="preload" value="false"/>\n\t<boolean id="amap" value="false"/>\n\t<list id="maps">\n`;
+
+            // Loop through selected files
+            for (let i = 0; i < files.length; i++) {
+                let fileName = files[i].name;
+                
+                // Remove extension (e.g., "2000123.png" -> "2000123")
+                let id = fileName.substring(0, fileName.lastIndexOf('.')) || fileName;
+
+                // Create the standard Facepack line
+                // CHANGE "person" to "club" in the line below if doing Logos
+                xmlContent += `\t\t<record from="${id}" to="graphics/pictures/person/${id}/portrait"/>\n`;
+            }
+
+            // FM Config Footer
+            xmlContent += `\t</list>\n</record>`;
+
+            outputArea.value = xmlContent;
+        }
+
+        function copyText() {
+            const outputArea = document.getElementById('output');
+            outputArea.select();
+            outputArea.setSelectionRange(0, 99999); // For mobile
+            navigator.clipboard.writeText(outputArea.value).then(() => {
+                alert("Copied XML to clipboard!");
+            });
+        }
+    </script>
+</body>
+</html>
