@@ -2,282 +2,319 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professional Modern UI | Bracket Pattern</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>fmXML | Mobile Config Generator</title>
     <style>
-        /* --- CSS Variables & Reset --- */
+        /* --- VARIABLES --- */
         :root {
-            --primary-color: #6E0FD7;
-            --primary-hover: #832DF0;
-            /* A very subtle, transparent version of the brand color for the pattern */
-            --pattern-color: rgba(110, 15, 215, 0.04);
+            --brand-primary: #6E0FD7;
+            --brand-hover: #832DF0;
             
-            --bg-white: #ffffff;
-            --bg-off-white: #F8F9FB;
-            --text-dark: #111827;
-            --text-medium: #6B7280;
-            
-            --section-spacing: 120px;
-            --border-radius: 12px;
+            /* Backgrounds */
+            --bg-deep: #05080f;
+            --bg-card: #0f131f;
+            --bg-input: #080b12;
+
+            /* Text */
+            --text-main: #ffffff;
+            --text-muted: #8b9bb4;
+            --text-accent: #bca0eb;
+
+            /* UI Elements */
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --border-active: rgba(110, 15, 215, 0.4);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        /* --- RESET --- */
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-white);
-            color: var(--text-dark);
-            line-height: 1.6;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
             overflow-x: hidden;
         }
 
-        /* --- Utility Classes --- */
-        .container {
-            width: 90%;
-            max-width: 1200px;
+        /* --- BACKGROUND PATTERN --- */
+        .bg-pattern {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            /* The ']' bracket SVG pattern */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cpath d='M 35 15 L 45 15 L 45 45 L 35 45' fill='none' stroke='%236E0FD7' stroke-width='2' opacity='0.07' stroke-linecap='square'/%3E%3C/svg%3E");
+            background-size: 60px 60px;
+            /* Radial fade to focus attention on center */
+            mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+            -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+        }
+
+        /* --- LAYOUT --- */
+        .app-container {
+            width: 100%;
+            max-width: 1000px;
             margin: 0 auto;
-        }
-
-        h1, h2, h3 {
-            font-weight: 800;
-            letter-spacing: -0.03em;
-            line-height: 1.1;
-        }
-
-        a { text-decoration: none; }
-
-        /* --- Buttons --- */
-        .btn {
-            display: inline-block;
-            padding: 16px 36px;
-            font-weight: 600;
-            border-radius: 8px;
-            transition: all 0.2s ease;
-            font-size: 1.05rem;
-        }
-
-        .btn-primary {
-            background-color: var(--primary-color);
-            color: white;
-            box-shadow: 0 4px 14px 0 rgba(110, 15, 215, 0.25);
-        }
-
-        .btn-primary:hover {
-            background-color: var(--primary-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px 0 rgba(110, 15, 215, 0.3);
-        }
-
-        /* --- Navigation --- */
-        .navbar {
+            padding: 24px;
+            flex-grow: 1;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 24px 0;
+            flex-direction: column;
+        }
+
+        /* --- HEADER --- */
+        header {
+            margin-bottom: 32px;
+            text-align: center;
         }
 
         .logo {
             font-size: 1.5rem;
             font-weight: 800;
-            color: var(--primary-color);
-            display: flex;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+            display: inline-flex;
             align-items: center;
         }
-        
-        /* Subtle accent next to logo using the bracket concept */
+
+        .logo span { color: var(--brand-primary); }
         .logo::after {
             content: ']';
+            color: var(--brand-primary);
             margin-left: 4px;
-            opacity: 0.5;
+            opacity: 0.8;
+            font-weight: 300;
         }
 
-        .nav-links a {
-            color: var(--text-medium);
-            margin-left: 40px;
-            font-weight: 500;
-            font-size: 0.95rem;
-            transition: color 0.2s;
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 0.9rem;
         }
 
-        .nav-links a:hover {
-            color: var(--primary-color);
-        }
-
-        /* --- Hero Section with Dynamic Pattern --- */
-        .hero-section {
-            position: relative;
-            background-color: var(--bg-off-white);
-            padding: 140px 0 180px;
-            overflow: hidden;
-        }
-
-        /* The Pattern Definition 
-           This uses an inline SVG to draw the ']' shape.
-           It is tiled and overlayed with a gradient fade to ensure readability.
-        */
-        .hero-pattern-bg {
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            z-index: 0;
-            /* 1. The gradient fade (lighter at bottom) */
-            /* 2. The encoded SVG pattern based on the ']' character stroke */
-            background-image: 
-                linear-gradient(to bottom, rgba(248, 249, 251, 0.6) 0%, rgba(248, 249, 251, 1) 100%),
-                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cpath d='M 35 15 L 45 15 L 45 45 L 35 45' fill='none' stroke='%236E0FD7' stroke-width='2.5' opacity='0.05' stroke-linecap='square'/%3E%3C/svg%3E");
-            background-size: auto, 60px 60px; /* Gradient gets auto size, pattern tiles at 60px */
-            background-position: center top;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 1; /* Ensures content sits above pattern */
-            text-align: center;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        h1 {
-            font-size: 4rem;
-            color: var(--text-dark);
-            margin-bottom: 24px;
-        }
-
-        .hero-subtitle {
-            font-size: 1.35rem;
-            color: var(--text-medium);
-            margin-bottom: 48px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            font-weight: 400;
-        }
-
-        /* --- Content Grid Section --- */
-        .features-section {
-            padding: var(--section-spacing) 0;
-        }
-
-        .section-header {
-            margin-bottom: 80px;
-            max-width: 600px;
-        }
-
-        h2 { font-size: 2.5rem; margin-bottom: 16px; }
-        .section-subtext { font-size: 1.1rem; color: var(--text-medium); }
-
-        .grid-layout {
+        /* --- GRID DASHBOARD --- */
+        .dashboard {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 40px;
+            grid-template-columns: 1fr;
+            gap: 24px;
         }
 
-        .feature-card {
-            background: var(--bg-white);
-            padding: 48px;
-            border-radius: var(--border-radius);
-            border: 1px solid rgba(0,0,0,0.06);
-            box-shadow: 0 4px 25px rgba(0,0,0,0.03);
-            transition: all 0.3s ease;
+        /* --- CARDS --- */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .card-header {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-accent);
+            font-weight: 600;
+        }
+
+        /* --- UPLOAD ZONE --- */
+        .upload-zone {
+            flex-grow: 1;
+            border: 2px dashed var(--border-subtle);
+            border-radius: var(--radius-md);
+            background: rgba(255,255,255,0.01);
+            position: relative;
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .upload-zone:active { transform: scale(0.98); }
+        .upload-zone:hover {
+            border-color: var(--brand-primary);
+            background: rgba(110, 15, 215, 0.05);
+        }
+
+        .upload-input {
+            position: absolute;
+            width: 100%; height: 100%;
+            opacity: 0; z-index: 10;
+            cursor: pointer;
+        }
+
+        .icon-large { font-size: 2rem; margin-bottom: 12px; opacity: 0.8; }
+        .upload-text { font-weight: 600; color: var(--text-main); }
+        .upload-sub { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+
+        /* --- CODE OUTPUT --- */
+        .code-block {
+            background: var(--bg-input);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-subtle);
+            flex-grow: 1;
             position: relative;
             overflow: hidden;
+            min-height: 250px;
         }
 
-        /* A very subtle top border accent using the brand color */
-        .feature-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 3px;
-            background: var(--primary-color);
-            opacity: 0;
-            transition: opacity 0.3s ease;
+        textarea {
+            width: 100%; height: 100%;
+            background: transparent;
+            border: none;
+            color: #a0aabf;
+            font-family: 'SF Mono', 'Menlo', 'Courier New', monospace;
+            font-size: 0.8rem;
+            line-height: 1.6;
+            padding: 20px;
+            resize: none;
+            outline: none;
         }
 
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 40px rgba(110, 15, 215, 0.07);
+        /* --- ACTION BUTTON --- */
+        .btn-primary {
+            background: var(--brand-primary);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 16px;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 1rem;
+            margin-top: 20px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(110, 15, 215, 0.3);
+            transition: transform 0.1s, background 0.2s;
         }
 
-        .feature-card:hover::before {
-            opacity: 1;
+        .btn-primary:active { transform: scale(0.96); }
+        .btn-primary:hover { background: var(--brand-hover); }
+
+        /* --- STATUS --- */
+        #status-msg {
+            text-align: center;
+            margin-top: 12px;
+            font-size: 0.85rem;
+            color: var(--text-accent);
+            min-height: 20px;
         }
 
-        .accent-icon {
-            color: var(--primary-color);
-            font-weight: 800;
-            font-size: 2rem;
-            margin-bottom: 24px;
-            display: block;
-        }
-
-        .feature-card h3 { font-size: 1.5rem; margin-bottom: 16px; }
-        .feature-card p { color: var(--text-medium); }
-
-        /* --- Responsive --- */
-        @media (max-width: 768px) {
-            .navbar { flex-direction: column; padding-bottom: 0; }
-            .nav-links { margin-top: 20px; }
-            .nav-links a { margin: 0 15px; }
-            h1 { font-size: 2.8rem; }
-            .hero-section { padding: 100px 0 120px; }
+        /* --- RESPONSIVE DESKTOP --- */
+        @media (min-width: 800px) {
+            .dashboard {
+                grid-template-columns: 320px 1fr;
+                align-items: stretch;
+                height: 550px; /* Fixed dashboard height */
+            }
+            .card { height: 100%; }
+            .app-container { justify-content: center; }
+            header { text-align: left; margin-bottom: 40px; }
+            .logo { font-size: 2rem; }
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <nav class="navbar">
-            <div class="logo">BracketUI</div>
-            <div class="nav-links">
-                <a href="#">Products</a>
-                <a href="#">Solutions</a>
-                <a href="#">Pricing</a>
-                <a href="#" style="color: var(--primary-color)">Sign In</a>
+    <div class="bg-pattern"></div>
+
+    <div class="app-container">
+        <header>
+            <div class="logo">fmXML<span>Mobile</span></div>
+            <div class="subtitle">Generate facepack configs on the go.</div>
+        </header>
+
+        <div class="dashboard">
+            
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-label">Source</span>
+                </div>
+                
+                <div class="upload-zone">
+                    <input type="file" id="file-upload" class="upload-input" multiple accept="image/*" onchange="generateXML()">
+                    <div class="icon-large">📂</div>
+                    <div class="upload-text">Select Images</div>
+                    <div class="upload-sub">Tap to browse files</div>
+                </div>
+
+                <button class="btn-primary" onclick="copyText()">Copy XML</button>
+                <div id="status-msg"></div>
             </div>
-        </nav>
+
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-label">Generated Code</span>
+                    <span class="card-label" style="opacity: 0.5">Read Only</span>
+                </div>
+                <div class="code-block">
+                    <textarea id="output" readonly placeholder="<record>..."></textarea>
+                </div>
+            </div>
+
+        </div>
     </div>
 
-    <header class="hero-section">
-        <div class="hero-pattern-bg"></div>
-        
-        <div class="container hero-content">
-            <h1>Structure your workflow with modern precision.</h1>
-            <p class="hero-subtitle">
-                A clean, contemporary interface designed for clarity. 
-                Subtle details define professional tools.
-            </p>
-            <a href="#" class="btn btn-primary">Start Building Now</a>
-        </div>
-    </header>
+    <script>
+        function generateXML() {
+            const fileInput = document.getElementById('file-upload');
+            const outputArea = document.getElementById('output');
+            const statusMsg = document.getElementById('status-msg');
+            const files = fileInput.files;
 
-    <section class="container features-section">
-        <div class="section-header">
-            <h2>Designed for focus.</h2>
-            <p class="section-subtext">We removed the clutter so you can focus on what matters most. Clear hierarchy and balanced spacing.</p>
-        </div>
+            if (files.length === 0) return;
 
-        <div class="grid-layout">
-            <div class="feature-card">
-                <span class="accent-icon">[ 01 ]</span>
-                <h3>Dynamic Alignment</h3>
-                <p>Utilizing modern CSS Grid and Flexbox to ensure every element is perfectly positioned across all devices.</p>
-            </div>
-            <div class="feature-card">
-                 <span class="accent-icon">[ 02 ]</span>
-                <h3>Visual Hierarchy</h3>
-                <p>Bold typography paired with generous whitespace creates an interface that is easy to scan and understand.</p>
-            </div>
-            <div class="feature-card">
-                 <span class="accent-icon">[ 03 ]</span>
-                <h3>Subtle Branding</h3>
-                <p>The brand color is used sparingly for high-impact actions and delicate background accents, never distracting.</p>
-            </div>
-        </div>
-    </section>
+            statusMsg.innerText = `Found ${files.length} images...`;
 
+            // Standard FM Config Header
+            let xmlContent = `<record>\n\t<boolean id="preload" value="false"/>\n\t<boolean id="amap" value="false"/>\n\t<list id="maps">\n`;
+
+            for (let i = 0; i < files.length; i++) {
+                let fileName = files[i].name;
+                // Strip extension to get ID
+                let id = fileName.substring(0, fileName.lastIndexOf('.')) || fileName;
+                
+                // Generates the line
+                xmlContent += `\t\t<record from="${id}" to="graphics/pictures/person/${id}/portrait"/>\n`;
+            }
+
+            // Footer
+            xmlContent += `\t</list>\n</record>`;
+
+            outputArea.value = xmlContent;
+            statusMsg.innerText = "Ready to Copy";
+        }
+
+        function copyText() {
+            const outputArea = document.getElementById('output');
+            const statusMsg = document.getElementById('status-msg');
+            
+            if (!outputArea.value) {
+                statusMsg.innerText = "Nothing to copy yet.";
+                return;
+            }
+
+            outputArea.select();
+            outputArea.setSelectionRange(0, 99999); 
+            
+            navigator.clipboard.writeText(outputArea.value).then(() => {
+                statusMsg.innerText = "✅ Copied to Clipboard!";
+                setTimeout(() => { statusMsg.innerText = "Ready to Copy"; }, 2000);
+            });
+        }
+    </script>
 </body>
 </html>
