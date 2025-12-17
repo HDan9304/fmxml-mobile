@@ -3,307 +3,281 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>fmXML Generator</title>
+    <title>Professional Modern UI | Bracket Pattern</title>
     <style>
+        /* --- CSS Variables & Reset --- */
         :root {
-            /* Color Palette */
-            --bg-body: #05080f;       /* Darkest background */
-            --bg-card: #0f131f;       /* Panel background */
-            --bg-input: #080b12;      /* Input/Code background */
+            --primary-color: #6E0FD7;
+            --primary-hover: #832DF0;
+            /* A very subtle, transparent version of the brand color for the pattern */
+            --pattern-color: rgba(110, 15, 215, 0.04);
             
-            --border-subtle: rgba(255, 255, 255, 0.08);
-            --border-active: rgba(175, 120, 255, 0.5);
-
-            --text-main: #ffffff;
-            --text-muted: #8b9bb4;
-            --accent-primary: #AF78FF;
-
-            --grad-primary: linear-gradient(135deg, #E664FF 0%, #FF4164 100%);
-
-            /* Spacing & Radius */
-            --radius-md: 12px;
-            --radius-lg: 20px;
-            --space-md: 24px;
+            --bg-white: #ffffff;
+            --bg-off-white: #F8F9FB;
+            --text-dark: #111827;
+            --text-medium: #6B7280;
+            
+            --section-spacing: 120px;
+            --border-radius: 12px;
         }
 
-        /* RESET & BASE */
-        * { box-sizing: border-box; outline: none; }
-        
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-body);
-            color: var(--text-main);
+        * {
             margin: 0;
             padding: 0;
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            box-sizing: border-box;
         }
 
-        /* LAYOUT CONTAINER */
-        .app-container {
-            width: 100%;
-            max-width: 1100px;
-            padding: 20px;
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-white);
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* --- Utility Classes --- */
+        .container {
+            width: 90%;
+            max-width: 1200px;
             margin: 0 auto;
         }
 
-        /* HEADER */
-        header {
-            margin-bottom: 30px;
-            text-align: center;
-        }
-        
-        h1 {
-            font-size: 1.75rem;
-            font-weight: 700;
+        h1, h2, h3 {
+            font-weight: 800;
             letter-spacing: -0.03em;
-            margin: 0 0 8px 0;
+            line-height: 1.1;
         }
 
-        .subtitle {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            font-weight: 400;
+        a { text-decoration: none; }
+
+        /* --- Buttons --- */
+        .btn {
+            display: inline-block;
+            padding: 16px 36px;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            font-size: 1.05rem;
         }
 
-        /* MAIN GRID DASHBOARD */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: 0 4px 14px 0 rgba(110, 15, 215, 0.25);
         }
 
-        /* CARD STYLES */
-        .card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-lg);
-            padding: var(--space-md);
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px 0 rgba(110, 15, 215, 0.3);
         }
 
-        .card-header {
-            margin-bottom: 20px;
+        /* --- Navigation --- */
+        .navbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 24px 0;
         }
 
-        .card-title {
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--text-main);
-            margin: 0;
-        }
-
-        /* UPLOAD ZONE */
-        .upload-area {
-            flex-grow: 1;
-            border: 2px dashed var(--border-subtle);
-            border-radius: var(--radius-md);
-            background: rgba(255,255,255,0.01);
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary-color);
             display: flex;
-            flex-direction: column;
             align-items: center;
-            justify-content: center;
-            min-height: 200px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            position: relative;
+        }
+        
+        /* Subtle accent next to logo using the bracket concept */
+        .logo::after {
+            content: ']';
+            margin-left: 4px;
+            opacity: 0.5;
         }
 
-        .upload-area:hover {
-            border-color: var(--accent-primary);
-            background: rgba(175, 120, 255, 0.03);
-        }
-
-        .upload-area input {
-            position: absolute;
-            width: 100%; height: 100%;
-            opacity: 0; cursor: pointer;
-        }
-
-        .icon-box {
-            font-size: 2rem;
-            margin-bottom: 15px;
-            opacity: 0.8;
-        }
-
-        .upload-label {
-            color: var(--text-main);
+        .nav-links a {
+            color: var(--text-medium);
+            margin-left: 40px;
             font-weight: 500;
-            margin-bottom: 5px;
+            font-size: 0.95rem;
+            transition: color 0.2s;
         }
 
-        .upload-hint {
-            color: var(--text-muted);
-            font-size: 0.8rem;
+        .nav-links a:hover {
+            color: var(--primary-color);
         }
 
-        /* CODE EDITOR AREA */
-        .code-wrapper {
-            flex-grow: 1;
+        /* --- Hero Section with Dynamic Pattern --- */
+        .hero-section {
             position: relative;
-            background: var(--bg-input);
-            border-radius: var(--radius-md);
-            border: 1px solid var(--border-subtle);
+            background-color: var(--bg-off-white);
+            padding: 140px 0 180px;
             overflow: hidden;
         }
 
-        textarea {
-            width: 100%;
-            height: 100%;
-            min-height: 300px; /* Default height */
-            background: transparent;
-            color: #a5b3ce; /* Soft blue-grey text */
-            border: none;
-            padding: 20px;
-            font-family: 'SF Mono', 'Menlo', 'Monaco', 'Courier New', monospace;
-            font-size: 0.85rem;
-            line-height: 1.6;
-            resize: none;
+        /* The Pattern Definition 
+           This uses an inline SVG to draw the ']' shape.
+           It is tiled and overlayed with a gradient fade to ensure readability.
+        */
+        .hero-pattern-bg {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 0;
+            /* 1. The gradient fade (lighter at bottom) */
+            /* 2. The encoded SVG pattern based on the ']' character stroke */
+            background-image: 
+                linear-gradient(to bottom, rgba(248, 249, 251, 0.6) 0%, rgba(248, 249, 251, 1) 100%),
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cpath d='M 35 15 L 45 15 L 45 45 L 35 45' fill='none' stroke='%236E0FD7' stroke-width='2.5' opacity='0.05' stroke-linecap='square'/%3E%3C/svg%3E");
+            background-size: auto, 60px 60px; /* Gradient gets auto size, pattern tiles at 60px */
+            background-position: center top;
         }
 
-        /* ACTION BUTTON */
-        .btn-primary {
-            width: 100%;
-            padding: 16px;
-            margin-top: 20px;
-            background: var(--grad-primary);
-            border: none;
-            border-radius: var(--radius-md);
-            color: white;
-            font-weight: 600;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: transform 0.1s, opacity 0.2s;
-        }
-
-        .btn-primary:active { transform: scale(0.98); }
-        .btn-primary:hover { opacity: 0.9; }
-
-        /* STATUS */
-        .status-bar {
-            margin-top: 15px;
+        .hero-content {
+            position: relative;
+            z-index: 1; /* Ensures content sits above pattern */
             text-align: center;
-            font-size: 0.85rem;
-            color: var(--accent-primary);
-            min-height: 20px;
+            max-width: 800px;
+            margin: 0 auto;
         }
 
-        /* RESPONSIVE: DESKTOP (> 900px) */
-        @media (min-width: 900px) {
-            .dashboard-grid {
-                grid-template-columns: 350px 1fr; /* Sidebar | Main Editor */
-                align-items: stretch;
-                height: 600px; /* Fixed height for dashboard feel */
-            }
-
-            .card {
-                height: 100%; /* Fill the grid height */
-            }
-
-            header {
-                text-align: left;
-                margin-bottom: 40px;
-            }
+        h1 {
+            font-size: 4rem;
+            color: var(--text-dark);
+            margin-bottom: 24px;
         }
 
-        /* SCROLLBAR CUSTOMIZATION */
-        textarea::-webkit-scrollbar { width: 8px; }
-        textarea::-webkit-scrollbar-track { background: var(--bg-input); }
-        textarea::-webkit-scrollbar-thumb { background: #2c3545; border-radius: 4px; }
-        textarea::-webkit-scrollbar-thumb:hover { background: #3d4a61; }
+        .hero-subtitle {
+            font-size: 1.35rem;
+            color: var(--text-medium);
+            margin-bottom: 48px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: 400;
+        }
+
+        /* --- Content Grid Section --- */
+        .features-section {
+            padding: var(--section-spacing) 0;
+        }
+
+        .section-header {
+            margin-bottom: 80px;
+            max-width: 600px;
+        }
+
+        h2 { font-size: 2.5rem; margin-bottom: 16px; }
+        .section-subtext { font-size: 1.1rem; color: var(--text-medium); }
+
+        .grid-layout {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 40px;
+        }
+
+        .feature-card {
+            background: var(--bg-white);
+            padding: 48px;
+            border-radius: var(--border-radius);
+            border: 1px solid rgba(0,0,0,0.06);
+            box-shadow: 0 4px 25px rgba(0,0,0,0.03);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* A very subtle top border accent using the brand color */
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 3px;
+            background: var(--primary-color);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(110, 15, 215, 0.07);
+        }
+
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+
+        .accent-icon {
+            color: var(--primary-color);
+            font-weight: 800;
+            font-size: 2rem;
+            margin-bottom: 24px;
+            display: block;
+        }
+
+        .feature-card h3 { font-size: 1.5rem; margin-bottom: 16px; }
+        .feature-card p { color: var(--text-medium); }
+
+        /* --- Responsive --- */
+        @media (max-width: 768px) {
+            .navbar { flex-direction: column; padding-bottom: 0; }
+            .nav-links { margin-top: 20px; }
+            .nav-links a { margin: 0 15px; }
+            h1 { font-size: 2.8rem; }
+            .hero-section { padding: 100px 0 120px; }
+        }
     </style>
 </head>
 <body>
 
-    <div class="app-container">
-        
-        <header>
-            <h1>fmXML Generator</h1>
-            <div class="subtitle">Generate config.xml files for Football Manager faces & logos</div>
-        </header>
-
-        <div class="dashboard-grid">
-            
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title">Upload</h2>
-                </div>
-                
-                <div class="upload-area">
-                    <input id="file-upload" type="file" multiple accept="image/*" onchange="generateXML()"/>
-                    <div class="icon-box">📂</div>
-                    <div class="upload-label">Select Images</div>
-                    <div class="upload-hint">PNG or JPG supported</div>
-                </div>
-
-                <button class="btn-primary" onclick="copyText()">Copy Code</button>
-                <div class="status-bar" id="status-msg"></div>
+    <div class="container">
+        <nav class="navbar">
+            <div class="logo">BracketUI</div>
+            <div class="nav-links">
+                <a href="#">Products</a>
+                <a href="#">Solutions</a>
+                <a href="#">Pricing</a>
+                <a href="#" style="color: var(--primary-color)">Sign In</a>
             </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <h2 class="card-title">XML Output</h2>
-                    <span style="font-size:0.8rem; color:var(--text-muted)">Read-only</span>
-                </div>
-                <div class="code-wrapper">
-                    <textarea id="output" readonly placeholder=""></textarea>
-                </div>
-            </div>
-
-        </div>
+        </nav>
     </div>
 
-    <script>
-        function generateXML() {
-            const fileInput = document.getElementById('file-upload');
-            const outputArea = document.getElementById('output');
-            const statusMsg = document.getElementById('status-msg');
-            const files = fileInput.files;
+    <header class="hero-section">
+        <div class="hero-pattern-bg"></div>
+        
+        <div class="container hero-content">
+            <h1>Structure your workflow with modern precision.</h1>
+            <p class="hero-subtitle">
+                A clean, contemporary interface designed for clarity. 
+                Subtle details define professional tools.
+            </p>
+            <a href="#" class="btn btn-primary">Start Building Now</a>
+        </div>
+    </header>
 
-            if (files.length === 0) return;
+    <section class="container features-section">
+        <div class="section-header">
+            <h2>Designed for focus.</h2>
+            <p class="section-subtext">We removed the clutter so you can focus on what matters most. Clear hierarchy and balanced spacing.</p>
+        </div>
 
-            statusMsg.innerText = `Processing ${files.length} images...`;
+        <div class="grid-layout">
+            <div class="feature-card">
+                <span class="accent-icon">[ 01 ]</span>
+                <h3>Dynamic Alignment</h3>
+                <p>Utilizing modern CSS Grid and Flexbox to ensure every element is perfectly positioned across all devices.</p>
+            </div>
+            <div class="feature-card">
+                 <span class="accent-icon">[ 02 ]</span>
+                <h3>Visual Hierarchy</h3>
+                <p>Bold typography paired with generous whitespace creates an interface that is easy to scan and understand.</p>
+            </div>
+            <div class="feature-card">
+                 <span class="accent-icon">[ 03 ]</span>
+                <h3>Subtle Branding</h3>
+                <p>The brand color is used sparingly for high-impact actions and delicate background accents, never distracting.</p>
+            </div>
+        </div>
+    </section>
 
-            let xmlContent = `<record>\n\t<boolean id="preload" value="false"/>\n\t<boolean id="amap" value="false"/>\n\t<list id="maps">\n`;
-
-            for (let i = 0; i < files.length; i++) {
-                let fileName = files[i].name;
-                let id = fileName.substring(0, fileName.lastIndexOf('.')) || fileName;
-                
-                // Generates the line
-                xmlContent += `\t\t<record from="${id}" to="graphics/pictures/person/${id}/portrait"/>\n`;
-            }
-
-            xmlContent += `\t</list>\n</record>`;
-
-            outputArea.value = xmlContent;
-            statusMsg.innerText = "Processing Complete";
-        }
-
-        function copyText() {
-            const outputArea = document.getElementById('output');
-            const statusMsg = document.getElementById('status-msg');
-            
-            if (!outputArea.value) {
-                statusMsg.innerText = "No code to copy.";
-                return;
-            }
-
-            outputArea.select();
-            outputArea.setSelectionRange(0, 99999); 
-            
-            navigator.clipboard.writeText(outputArea.value).then(() => {
-                statusMsg.innerText = "✅ Copied to clipboard";
-                setTimeout(() => { statusMsg.innerText = ""; }, 2000);
-            });
-        }
-    </script>
 </body>
 </html>
