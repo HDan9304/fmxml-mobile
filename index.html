@@ -2,108 +2,255 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mobile fmXML Generator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mobile fmXML | Modern</title>
     <style>
+        :root {
+            /* Palette from your image */
+            --bg-midnight: #0A0F1E;
+            --col-twilight: #6E0FD7;
+            --col-horizon: #AF78FF;
+            --col-cloud: #D2C8F5;
+            --col-white: #FFFFFF;
+            
+            /* Gradient from your image */
+            --grad-highlight: linear-gradient(135deg, #E664FF 0%, #FF4164 50%, #FF5A28 100%);
+            
+            /* UI Variables */
+            --card-bg: rgba(110, 15, 215, 0.05); /* Very low opacity Twilight */
+            --border-radius: 24px;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #1e1e1e;
-            color: #ffffff;
-            padding: 20px;
-            text-align: center;
+            background-color: var(--bg-midnight);
+            color: var(--col-white);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
-        h2 { color: #4CAF50; margin-bottom: 10px; }
-        p { color: #aaaaaa; font-size: 0.9rem; margin-bottom: 20px; }
-        
-        /* The File Input Button */
-        .custom-file-upload {
-            display: inline-block;
-            padding: 15px 30px;
-            cursor: pointer;
-            background-color: #4CAF50;
-            color: white;
-            border-radius: 8px;
-            font-weight: bold;
-            margin-bottom: 20px;
-            width: 80%;
-        }
-        input[type="file"] { display: none; }
 
-        /* The Output Box */
+        .container {
+            width: 100%;
+            max-width: 400px;
+            padding: 30px;
+        }
+
+        /* Header Styling */
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin: 0;
+            background: var(--grad-highlight);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        p.subtitle {
+            color: var(--col-cloud);
+            margin-top: 5px;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* The Glass Card */
+        .glass-panel {
+            background: var(--card-bg);
+            border: 1px solid rgba(175, 120, 255, 0.1);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        /* File Upload Zone */
+        .upload-zone {
+            position: relative;
+            border: 2px dashed var(--col-horizon);
+            background: rgba(175, 120, 255, 0.05);
+            border-radius: 16px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 25px;
+        }
+
+        .upload-zone:active {
+            background: rgba(175, 120, 255, 0.15);
+            transform: scale(0.98);
+        }
+
+        .upload-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .upload-text {
+            color: var(--col-horizon);
+            font-weight: 600;
+        }
+
+        input[type="file"] {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        /* Output Area */
+        .output-wrapper {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
         textarea {
             width: 100%;
-            height: 300px;
-            background-color: #2d2d2d;
-            color: #00ff88;
-            border: 1px solid #444;
-            border-radius: 5px;
-            padding: 10px;
+            height: 180px;
+            background-color: rgba(0,0,0,0.3);
+            color: var(--col-cloud);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 15px;
             font-family: 'Courier New', monospace;
             font-size: 0.8rem;
             resize: none;
+            outline: none;
         }
 
-        .action-btn {
-            background-color: #2196F3;
-            margin-top: 15px;
-            border: none;
-            padding: 12px 20px;
-            color: white;
-            border-radius: 5px;
-            font-size: 1rem;
-            cursor: pointer;
+        textarea:focus {
+            border-color: var(--col-horizon);
         }
+
+        /* Floating Label */
+        .label {
+            font-size: 0.75rem;
+            color: var(--col-cloud);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        /* Main Gradient Button */
+        .btn-gradient {
+            width: 100%;
+            padding: 18px;
+            border: none;
+            border-radius: 16px;
+            background: var(--grad-highlight);
+            color: white;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(230, 100, 255, 0.2);
+            transition: transform 0.2s;
+        }
+
+        .btn-gradient:active {
+            transform: scale(0.95);
+        }
+
+        /* Status Text */
+        #status-msg {
+            text-align: center;
+            color: var(--col-horizon);
+            font-size: 0.8rem;
+            margin-top: 15px;
+            min-height: 20px;
+        }
+
     </style>
 </head>
 <body>
 
-    <h2>📱 Mobile fmXML</h2>
-    <p>Select your player images (PNG) to generate the config text.</p>
+    <div class="container">
+        <header>
+            <h1>fmXML</h1>
+            <p class="subtitle">Config Generator</p>
+        </header>
 
-    <label for="file-upload" class="custom-file-upload">
-        📂 Select Images
-    </label>
-    <input id="file-upload" type="file" multiple accept="image/*" onchange="generateXML()"/>
+        <div class="glass-panel">
+            
+            <div class="upload-zone">
+                <span class="upload-icon">🖼️</span>
+                <span class="upload-text">Tap to Select Images</span>
+                <input id="file-upload" type="file" multiple accept="image/*" onchange="generateXML()"/>
+            </div>
 
-    <textarea id="output" placeholder="XML code will appear here..."></textarea>
+            <label class="label">Generated Code</label>
+            <div class="output-wrapper">
+                <textarea id="output" readonly placeholder="<record>..."></textarea>
+            </div>
 
-    <button class="action-btn" onclick="copyText()">Copy to Clipboard</button>
+            <button class="btn-gradient" onclick="copyText()">Copy Code</button>
+            <div id="status-msg"></div>
+
+        </div>
+    </div>
 
     <script>
         function generateXML() {
             const fileInput = document.getElementById('file-upload');
             const outputArea = document.getElementById('output');
+            const statusMsg = document.getElementById('status-msg');
             const files = fileInput.files;
 
             if (files.length === 0) return;
 
+            // Update status
+            statusMsg.innerText = `Processing ${files.length} images...`;
+
             // FM Config Header
             let xmlContent = `<record>\n\t<boolean id="preload" value="false"/>\n\t<boolean id="amap" value="false"/>\n\t<list id="maps">\n`;
 
-            // Loop through selected files
             for (let i = 0; i < files.length; i++) {
                 let fileName = files[i].name;
-                
-                // Remove extension (e.g., "2000123.png" -> "2000123")
                 let id = fileName.substring(0, fileName.lastIndexOf('.')) || fileName;
-
-                // Create the standard Facepack line
-                // CHANGE "person" to "club" in the line below if doing Logos
+                
+                // IMPORTANT: Default is for Player Faces ("person"). 
+                // If you are doing Logos, change "person" to "club" below.
                 xmlContent += `\t\t<record from="${id}" to="graphics/pictures/person/${id}/portrait"/>\n`;
             }
 
-            // FM Config Footer
             xmlContent += `\t</list>\n</record>`;
 
             outputArea.value = xmlContent;
+            statusMsg.innerText = "Done! Ready to copy.";
         }
 
         function copyText() {
             const outputArea = document.getElementById('output');
+            const statusMsg = document.getElementById('status-msg');
+            
+            if (!outputArea.value) {
+                statusMsg.innerText = "Nothing to copy yet!";
+                return;
+            }
+
             outputArea.select();
-            outputArea.setSelectionRange(0, 99999); // For mobile
+            outputArea.setSelectionRange(0, 99999); 
+            
             navigator.clipboard.writeText(outputArea.value).then(() => {
-                alert("Copied XML to clipboard!");
+                statusMsg.innerText = "✅ Copied to clipboard!";
+                // Reset message after 2 seconds
+                setTimeout(() => { statusMsg.innerText = "Done! Ready to copy."; }, 2000);
             });
         }
     </script>
