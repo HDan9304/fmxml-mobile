@@ -9,171 +9,106 @@
         :root {
             --brand-primary: #6E0FD7;
             --brand-hover: #832DF0;
-            
             --bg-deep: #05080f;
             --bg-card: #0f131f;
             --bg-input: #080b12;
-
             --text-main: #ffffff;
             --text-muted: #8b9bb4;
             --text-accent: #bca0eb;
-
             --radius-lg: 16px;
             --radius-md: 12px;
             --border-subtle: rgba(255, 255, 255, 0.08);
-            --border-active: rgba(110, 15, 215, 0.4);
-            
-            /* Font Stack */
             --font-stack: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
-        /* --- RESET --- */
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         
         body {
             font-family: var(--font-stack);
             background-color: var(--bg-deep);
             color: var(--text-main);
-            margin: 0;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow-x: hidden;
+            margin: 0; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden;
         }
 
-        /* --- BACKGROUND PATTERN --- */
         .bg-pattern {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            z-index: -1;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cpath d='M 35 15 L 45 15 L 45 45 L 35 45' fill='none' stroke='%236E0FD7' stroke-width='2' opacity='0.07' stroke-linecap='square'/%3E%3C/svg%3E");
             background-size: 60px 60px;
             mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
             -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
         }
 
-        /* --- LAYOUT --- */
-        .app-container {
-            width: 100%;
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 24px;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* --- HEADER --- */
+        .app-container { width: 100%; max-width: 1000px; margin: 0 auto; padding: 24px; flex-grow: 1; display: flex; flex-direction: column; }
         header { margin-bottom: 32px; text-align: center; }
-
-        .logo {
-            font-size: 1.5rem; font-weight: 800; letter-spacing: -0.5px;
-            margin-bottom: 8px; display: inline-flex; align-items: center;
-        }
+        .logo { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 8px; display: inline-flex; align-items: center; }
         .logo span { color: var(--brand-primary); }
         .logo::after { content: ']'; color: var(--brand-primary); margin-left: 4px; opacity: 0.8; font-weight: 300; }
         .subtitle { color: var(--text-muted); font-size: 0.9rem; }
 
-        /* --- DASHBOARD --- */
         .dashboard { display: grid; grid-template-columns: 1fr; gap: 24px; }
-
-        .card {
-            background: var(--bg-card); border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-lg); padding: 24px;
-            display: flex; flex-direction: column;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            backdrop-filter: blur(10px);
-        }
-
+        .card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 24px; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.3); backdrop-filter: blur(10px); }
         .card-header { margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
         .card-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-accent); font-weight: 600; }
 
-        /* --- CONTROLS --- */
         .settings-bar { margin-bottom: 15px; }
-        
         select {
-            width: 100%;
-            padding: 14px;
-            background: var(--bg-input);
-            color: var(--text-main);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-md);
-            
-            /* FONT UPDATES HERE */
-            font-family: var(--font-stack); /* Forces the modern font */
-            font-size: 0.95rem;
-            font-weight: 500; /* Makes text slightly bolder/cleaner */
-            letter-spacing: 0.01em;
-            
-            appearance: none;
-            cursor: pointer;
+            width: 100%; padding: 14px; background: var(--bg-input); color: var(--text-main);
+            border: 1px solid var(--border-subtle); border-radius: var(--radius-md);
+            font-family: var(--font-stack); font-size: 0.95rem; font-weight: 500;
+            appearance: none; cursor: pointer;
             background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 15px center;
-            background-size: 16px;
+            background-repeat: no-repeat; background-position: right 15px center; background-size: 16px;
         }
-        select:focus { border-color: var(--brand-primary); outline: none; }
-        
-        /* Ensure options also try to use the font (browser dependent) */
-        option { font-family: var(--font-stack); background: var(--bg-input); color: var(--text-main); }
 
-        /* --- UPLOAD ZONE --- */
         .upload-zone {
-            flex-grow: 1; border: 2px dashed var(--border-subtle);
-            border-radius: var(--radius-md); background: rgba(255,255,255,0.01);
-            position: relative; min-height: 180px;
+            flex-grow: 0; border: 2px dashed var(--border-subtle); border-radius: var(--radius-md);
+            background: rgba(255,255,255,0.01); position: relative; min-height: 160px;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            cursor: pointer; transition: all 0.2s ease;
+            cursor: pointer; transition: all 0.2s ease; margin-bottom: 20px;
         }
         .upload-zone:active { transform: scale(0.98); }
         .upload-zone:hover { border-color: var(--brand-primary); background: rgba(110, 15, 215, 0.05); }
-
         .upload-input { position: absolute; width: 100%; height: 100%; opacity: 0; z-index: 10; cursor: pointer; }
-        
-        .icon-large { 
-            margin-bottom: 15px; 
-            opacity: 1; 
-            color: var(--brand-primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
+        .icon-large { margin-bottom: 15px; color: var(--brand-primary); }
         .upload-text { font-weight: 600; color: var(--text-main); }
         .upload-sub { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
 
-        /* --- OUTPUT --- */
-        .code-block {
-            background: var(--bg-input); border-radius: var(--radius-md);
-            border: 1px solid var(--border-subtle); flex-grow: 1;
-            position: relative; overflow: hidden; min-height: 250px;
+        /* --- NEW: PREVIEW GRID --- */
+        #preview-container {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 10px;
+            max-height: 200px; overflow-y: auto; margin-bottom: 20px;
+            padding-right: 5px; /* space for scrollbar */
         }
-        textarea {
-            width: 100%; height: 100%; background: transparent; border: none;
-            color: #a0aabf; font-family: 'SF Mono', 'Menlo', 'Courier New', monospace;
-            font-size: 0.8rem; line-height: 1.6; padding: 20px; resize: none; outline: none;
-        }
+        /* Custom scrollbar for preview */
+        #preview-container::-webkit-scrollbar { width: 4px; }
+        #preview-container::-webkit-scrollbar-thumb { background: var(--brand-primary); border-radius: 4px; }
 
-        /* --- BUTTONS --- */
-        .btn-group { display: flex; gap: 12px; margin-top: 20px; }
-        .btn {
-            border: none; padding: 16px; border-radius: var(--radius-md);
-            font-family: var(--font-stack); /* Ensure buttons use the font too */
-            font-weight: 600; font-size: 1rem; cursor: pointer;
-            transition: transform 0.1s, opacity 0.2s; flex: 1; text-align: center;
+        .preview-item {
+            background: var(--bg-input); border-radius: 8px; padding: 5px;
+            text-align: center; border: 1px solid var(--border-subtle);
+            font-size: 0.7rem; color: var(--text-muted);
         }
+        .preview-img { width: 100%; height: 50px; object-fit: contain; margin-bottom: 4px; display: block; }
+        .preview-id { font-family: 'SF Mono', monospace; color: var(--text-accent); display: block; overflow: hidden; text-overflow: ellipsis; }
+
+        .code-block { background: var(--bg-input); border-radius: var(--radius-md); border: 1px solid var(--border-subtle); flex-grow: 1; position: relative; overflow: hidden; min-height: 250px; }
+        textarea { width: 100%; height: 100%; background: transparent; border: none; color: #a0aabf; font-family: 'SF Mono', 'Menlo', 'Courier New', monospace; font-size: 0.8rem; line-height: 1.6; padding: 20px; resize: none; outline: none; }
+
+        .btn-group { display: flex; gap: 10px; margin-top: auto; }
+        .btn { border: none; padding: 14px; border-radius: var(--radius-md); font-family: var(--font-stack); font-weight: 600; font-size: 0.95rem; cursor: pointer; transition: transform 0.1s, opacity 0.2s; flex: 1; text-align: center; }
         .btn:active { transform: scale(0.96); }
         
         .btn-primary { background: var(--brand-primary); color: white; box-shadow: 0 4px 15px rgba(110, 15, 215, 0.3); }
-        .btn-primary:hover { background: var(--brand-hover); }
-
         .btn-secondary { background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--border-subtle); }
-        .btn-secondary:hover { background: rgba(255,255,255,0.1); }
+        
+        /* Clear Button (Red/Danger hint but subtle) */
+        .btn-clear { background: rgba(255, 50, 50, 0.1); color: #ff6b6b; border: 1px solid rgba(255, 50, 50, 0.2); max-width: 60px; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; }
+        .btn-clear:hover { background: rgba(255, 50, 50, 0.2); }
 
         #status-msg { text-align: center; margin-top: 12px; font-size: 0.85rem; color: var(--text-accent); min-height: 20px; }
 
         @media (min-width: 800px) {
-            .dashboard { grid-template-columns: 320px 1fr; align-items: stretch; height: 550px; }
+            .dashboard { grid-template-columns: 350px 1fr; align-items: stretch; height: 600px; }
             .card { height: 100%; }
             .app-container { justify-content: center; }
             header { text-align: left; margin-bottom: 40px; }
@@ -199,7 +134,7 @@
                 </div>
                 
                 <div class="settings-bar">
-                    <select id="config-type" onchange="generateXML()">
+                    <select id="config-type" onchange="regenerate()">
                         <option value="faces">Player Faces</option>
                         <option value="logos">Club Logos</option>
                         <option value="logos_small">Club Logos (Small)</option>
@@ -208,7 +143,7 @@
                 </div>
                 
                 <div class="upload-zone">
-                    <input type="file" id="file-upload" class="upload-input" multiple accept="image/*" onchange="generateXML()">
+                    <input type="file" id="file-upload" class="upload-input" multiple accept="image/*" onchange="handleFiles()">
                     
                     <div class="icon-large">
                         <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -222,7 +157,10 @@
                     <div class="upload-sub">IDs extracted automatically</div>
                 </div>
 
+                <div id="preview-container"></div>
+
                 <div class="btn-group">
+                    <button class="btn btn-clear" onclick="clearAll()" title="Clear All">✕</button>
                     <button class="btn btn-secondary" onclick="downloadFile()">Download</button>
                     <button class="btn btn-primary" onclick="copyText()">Copy XML</button>
                 </div>
@@ -244,6 +182,9 @@
     </div>
 
     <script>
+        // Store files globally to allow regeneration when dropdown changes
+        let currentFiles = [];
+
         function getPath(type, id) {
             switch(type) {
                 case 'faces': return `graphics/pictures/person/${id}/portrait`;
@@ -254,35 +195,83 @@
             }
         }
 
-        function generateXML() {
+        // Triggered when user selects new files
+        function handleFiles() {
             const fileInput = document.getElementById('file-upload');
+            if (fileInput.files.length > 0) {
+                currentFiles = fileInput.files;
+                renderPreviews(); // NEW: Show images
+                generateXML();    // Generate code
+            }
+        }
+
+        // Triggered when dropdown changes (uses existing files)
+        function regenerate() {
+            if (currentFiles.length > 0) {
+                generateXML();
+            }
+        }
+
+        // NEW: Render thumbnails
+        function renderPreviews() {
+            const container = document.getElementById('preview-container');
+            container.innerHTML = ""; // Clear old previews
+
+            // Convert FileList to Array to loop
+            Array.from(currentFiles).forEach(file => {
+                let fileName = file.name;
+                let match = fileName.match(/\d+/);
+                let id = match ? match[0] : "???";
+
+                // Create Elements
+                let div = document.createElement('div');
+                div.className = 'preview-item';
+                
+                let img = document.createElement('img');
+                img.className = 'preview-img';
+                img.src = URL.createObjectURL(file); // Create local blob URL
+                
+                let span = document.createElement('span');
+                span.className = 'preview-id';
+                span.innerText = id;
+
+                div.appendChild(img);
+                div.appendChild(span);
+                container.appendChild(div);
+            });
+        }
+
+        function generateXML() {
             const typeSelect = document.getElementById('config-type'); 
             const outputArea = document.getElementById('output');
             const statusMsg = document.getElementById('status-msg');
             
-            const files = fileInput.files;
             const type = typeSelect ? typeSelect.value : 'faces';
 
-            if (files.length === 0) return;
-
-            statusMsg.innerText = `Processing ${files.length} images...`;
+            statusMsg.innerText = `Processing ${currentFiles.length} images...`;
 
             let xmlContent = `<record>\n\t<boolean id="preload" value="false"/>\n\t<boolean id="amap" value="false"/>\n\t<list id="maps">\n`;
 
-            for (let i = 0; i < files.length; i++) {
-                let fileName = files[i].name;
+            for (let i = 0; i < currentFiles.length; i++) {
+                let fileName = currentFiles[i].name;
                 let match = fileName.match(/\d+/);
                 let id = match ? match[0] : fileName.substring(0, fileName.lastIndexOf('.'));
                 
                 let path = getPath(type, id);
-                
                 xmlContent += `\t\t<record from="${id}" to="${path}"/>\n`;
             }
 
             xmlContent += `\t</list>\n</record>`;
-
             outputArea.value = xmlContent;
             statusMsg.innerText = "Ready to Export";
+        }
+
+        function clearAll() {
+            document.getElementById('file-upload').value = "";
+            document.getElementById('output').value = "";
+            document.getElementById('preview-container').innerHTML = "";
+            document.getElementById('status-msg').innerText = "";
+            currentFiles = [];
         }
 
         function copyText() {
