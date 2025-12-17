@@ -315,6 +315,47 @@
                 setTimeout(() => { statusMsg.innerText = "Ready to Copy"; }, 2000);
             });
         }
+    <script>
+    /**
+     * fmxml-mobile Script Bridge
+     * Enables communication between this HTML interface and Claris FileMaker.
+     */
+
+    // 1. Core Function: Calls a FileMaker Script safely
+    function performFileMakerScript(scriptName, parameter) {
+        try {
+            // Method A: Modern FileMaker WebViewer Bridge (FM19+)
+            if (window.FileMaker && typeof window.FileMaker.PerformScript === 'function') {
+                window.FileMaker.PerformScript(scriptName, parameter);
+            } 
+            // Method B: FMP URL Scheme Fallback (iOS/Go/Older Versions)
+            else {
+                // Note: The filename '$' targets the current open file
+                const url = "fmp://$/?script=" + encodeURIComponent(scriptName) + "&param=" + encodeURIComponent(parameter);
+                window.location.href = url;
+            }
+        } catch (e) {
+            console.log("FileMaker Bridge Error: " + e.message);
+        }
+    }
+
+    // 2. Non-Destructive Event Listener
+    // Automatically attaches to the existing "Copy" button (.btn-primary)
+    document.addEventListener("DOMContentLoaded", function() {
+        const actionButton = document.querySelector('.btn-primary');
+        const outputField = document.getElementById('output');
+
+        if (actionButton && outputField) {
+            actionButton.addEventListener('click', function() {
+                // When 'Copy' is clicked, ALSO try to send data to FileMaker
+                const xmlData = outputField.value;
+                if (xmlData && xmlData.trim() !== "") {
+                    // CHANGE 'SaveConfig' below to match your actual FileMaker script name
+                    performFileMakerScript('SaveConfig', xmlData);
+                }
+            });
+        }
+    });
     </script>
 </body>
 </html>
