@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>fmXML | Mobile Pro</title>
     <style>
-        /* --- VARIABLES (Preserved from your original code) --- */
+        /* --- VARIABLES --- */
         :root {
             --brand-primary: #6E0FD7;
             --brand-hover: #832DF0;
@@ -85,7 +85,7 @@
         .card-header { margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
         .card-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-accent); font-weight: 600; }
 
-        /* --- NEW STYLES: Settings Bar & Select --- */
+        /* --- CONTROLS --- */
         .settings-bar { margin-bottom: 15px; }
         select {
             width: 100%;
@@ -97,7 +97,6 @@
             font-size: 0.95rem;
             appearance: none;
             cursor: pointer;
-            /* Custom dropdown arrow */
             background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
             background-repeat: no-repeat;
             background-position: right 15px center;
@@ -117,11 +116,21 @@
         .upload-zone:hover { border-color: var(--brand-primary); background: rgba(110, 15, 215, 0.05); }
 
         .upload-input { position: absolute; width: 100%; height: 100%; opacity: 0; z-index: 10; cursor: pointer; }
-        .icon-large { font-size: 2rem; margin-bottom: 12px; opacity: 0.8; }
+        
+        /* Updated Icon Style for SVG */
+        .icon-large { 
+            margin-bottom: 15px; 
+            opacity: 1; 
+            color: var(--brand-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
         .upload-text { font-weight: 600; color: var(--text-main); }
         .upload-sub { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
 
-        /* --- CODE OUTPUT --- */
+        /* --- OUTPUT --- */
         .code-block {
             background: var(--bg-input); border-radius: var(--radius-md);
             border: 1px solid var(--border-subtle); flex-grow: 1;
@@ -133,22 +142,18 @@
             font-size: 0.8rem; line-height: 1.6; padding: 20px; resize: none; outline: none;
         }
 
-        /* --- NEW STYLES: Button Group --- */
+        /* --- BUTTONS --- */
         .btn-group { display: flex; gap: 12px; margin-top: 20px; }
-        
         .btn {
             border: none; padding: 16px; border-radius: var(--radius-md);
             font-weight: 600; font-size: 1rem; cursor: pointer;
-            transition: transform 0.1s, opacity 0.2s; flex: 1;
-            text-align: center;
+            transition: transform 0.1s, opacity 0.2s; flex: 1; text-align: center;
         }
         .btn:active { transform: scale(0.96); }
         
-        /* Your original primary button style */
         .btn-primary { background: var(--brand-primary); color: white; box-shadow: 0 4px 15px rgba(110, 15, 215, 0.3); }
         .btn-primary:hover { background: var(--brand-hover); }
 
-        /* New secondary button style */
         .btn-secondary { background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--border-subtle); }
         .btn-secondary:hover { background: rgba(255,255,255,0.1); }
 
@@ -182,16 +187,24 @@
                 
                 <div class="settings-bar">
                     <select id="config-type" onchange="generateXML()">
-                        <option value="faces">👤 Player Faces</option>
-                        <option value="logos">🛡️ Club Logos</option>
-                        <option value="logos_small">🛡️ Club Logos (Small)</option>
-                        <option value="kits">👕 Kits</option>
+                        <option value="faces">Player Faces</option>
+                        <option value="logos">Club Logos</option>
+                        <option value="logos_small">Club Logos (Small)</option>
+                        <option value="kits">Kits</option>
                     </select>
                 </div>
                 
                 <div class="upload-zone">
                     <input type="file" id="file-upload" class="upload-input" multiple accept="image/*" onchange="generateXML()">
-                    <div class="icon-large">📂</div>
+                    
+                    <div class="icon-large">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                    </div>
+                    
                     <div class="upload-text">Select Images</div>
                     <div class="upload-sub">IDs extracted automatically</div>
                 </div>
@@ -218,7 +231,6 @@
     </div>
 
     <script>
-        // Helper: Returns correct FM path based on dropdown choice
         function getPath(type, id) {
             switch(type) {
                 case 'faces': return `graphics/pictures/person/${id}/portrait`;
@@ -229,10 +241,9 @@
             }
         }
 
-        // Updated Generator Function
         function generateXML() {
             const fileInput = document.getElementById('file-upload');
-            const typeSelect = document.getElementById('config-type'); // Get dropdown value
+            const typeSelect = document.getElementById('config-type'); 
             const outputArea = document.getElementById('output');
             const statusMsg = document.getElementById('status-msg');
             
@@ -247,9 +258,6 @@
 
             for (let i = 0; i < files.length; i++) {
                 let fileName = files[i].name;
-                
-                // NEW: Regex to find the first sequence of digits (The ID)
-                // If "messi_200123.png", it finds "200123"
                 let match = fileName.match(/\d+/);
                 let id = match ? match[0] : fileName.substring(0, fileName.lastIndexOf('.'));
                 
@@ -264,7 +272,6 @@
             statusMsg.innerText = "Ready to Export";
         }
 
-        // Existing Copy Function
         function copyText() {
             const outputArea = document.getElementById('output');
             const statusMsg = document.getElementById('status-msg');
@@ -283,7 +290,6 @@
             });
         }
 
-        // NEW: Download Function
         function downloadFile() {
             const outputArea = document.getElementById('output');
             const text = outputArea.value;
@@ -302,20 +308,13 @@
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
         }
-    </script>
 
-    <script>
-        /**
-         * Safely attempts to run a FileMaker script if the environment exists.
-         */
+        /* --- FILEMAKER BRIDGE --- */
         function performFileMakerScript(scriptName, parameter) {
             try {
-                // Method A: Modern FM WebViewer
                 if (window.FileMaker && typeof window.FileMaker.PerformScript === 'function') {
                     window.FileMaker.PerformScript(scriptName, parameter);
-                } 
-                // Method B: URL Scheme Fallback
-                else {
+                } else {
                     const url = "fmp://$/?script=" + encodeURIComponent(scriptName) + "&param=" + encodeURIComponent(parameter);
                     if(navigator.userAgent.includes('FileMaker')) {
                         window.location.href = url;
@@ -326,9 +325,7 @@
             }
         }
 
-        // Auto-attach to Copy Button
         document.addEventListener("DOMContentLoaded", function() {
-            // Note: We target .btn-primary specifically for the Copy action
             const actionButton = document.querySelector('.btn-primary');
             const outputField = document.getElementById('output');
 
