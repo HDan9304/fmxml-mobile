@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>fmXML | Kit Editor</title>
+    <title>fmXML | Smart Editor</title>
     <style>
         /* --- VARIABLES --- */
         :root {
@@ -39,7 +39,7 @@
         }
 
         .app-container { width: 100%; max-width: 1000px; margin: 0 auto; padding: 24px; flex-grow: 1; display: flex; flex-direction: column; }
-        header { margin-bottom: 32px; text-align: center; }
+        header { margin-bottom: 20px; text-align: center; }
         .logo { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 8px; display: inline-flex; align-items: center; }
         .logo span { color: var(--brand-primary); }
         .logo::after { content: ']'; color: var(--brand-primary); margin-left: 4px; opacity: 0.8; font-weight: 300; }
@@ -47,7 +47,7 @@
 
         .dashboard { display: grid; grid-template-columns: 1fr; gap: 24px; }
         .card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 24px; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.3); backdrop-filter: blur(10px); }
-        .card-header { margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+        .card-header { margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
         .card-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-accent); font-weight: 600; }
 
         .controls-row { display: flex; gap: 10px; margin-bottom: 15px; }
@@ -69,9 +69,10 @@
         }
         .btn-import:hover { background: rgba(255,255,255,0.1); }
 
+        /* --- STANDARD UPLOAD ZONE --- */
         .upload-zone {
             flex-grow: 0; border: 2px dashed var(--border-subtle); border-radius: var(--radius-md);
-            background: rgba(255,255,255,0.01); position: relative; min-height: 140px;
+            background: rgba(255,255,255,0.01); position: relative; min-height: 120px;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             cursor: pointer; transition: all 0.2s ease; margin-bottom: 20px;
         }
@@ -79,13 +80,30 @@
         .upload-zone:hover { border-color: var(--brand-primary); background: rgba(110, 15, 215, 0.05); }
         .upload-input { position: absolute; width: 100%; height: 100%; opacity: 0; z-index: 10; cursor: pointer; }
         
-        .icon-large { margin-bottom: 10px; color: var(--brand-primary); }
+        .icon-large { margin-bottom: 8px; color: var(--brand-primary); }
         .upload-text { font-weight: 600; color: var(--text-main); }
         .upload-sub { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
 
+        /* --- MULTI-KIT GRID (Hidden by Default) --- */
+        #multi-kit-container {
+            display: none; 
+            grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px;
+        }
+        .mini-zone {
+            border: 1px dashed var(--border-subtle); border-radius: var(--radius-md);
+            background: rgba(255,255,255,0.01); position: relative; height: 110px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            cursor: pointer; text-align: center;
+        }
+        .mini-zone:hover { border-color: var(--brand-primary); background: rgba(110, 15, 215, 0.05); }
+        .mini-label { font-size: 0.75rem; color: var(--text-accent); font-weight: 700; margin-bottom: 5px; }
+        .mini-count { font-size: 0.7rem; color: var(--text-muted); }
+        .mini-icon { font-size: 1.2rem; margin-bottom: 5px; opacity: 0.8; }
+
+        /* --- PREVIEW GRID --- */
         #preview-container {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); gap: 8px;
-            max-height: 180px; overflow-y: auto; margin-bottom: 20px;
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(50px, 1fr)); gap: 6px;
+            max-height: 150px; overflow-y: auto; margin-bottom: 20px;
             padding: 5px; border: 1px solid var(--border-subtle); border-radius: var(--radius-md);
             background: rgba(0,0,0,0.2);
         }
@@ -93,15 +111,19 @@
         #preview-container::-webkit-scrollbar-thumb { background: var(--brand-primary); border-radius: 4px; }
 
         .preview-item {
-            background: var(--bg-input); border-radius: 8px; padding: 4px;
+            background: var(--bg-input); border-radius: 6px; padding: 4px;
             text-align: center; border: 1px solid var(--border-subtle);
             font-size: 0.7rem; color: var(--text-muted); position: relative;
         }
         .preview-item.imported { border-color: var(--brand-primary); opacity: 0.7; }
+        .preview-img { width: 100%; height: 35px; object-fit: contain; margin-bottom: 2px; display: block; }
+        .preview-icon { font-size: 1.2rem; line-height: 35px; display: block; opacity: 0.5; }
+        .preview-id { font-family: 'SF Mono', monospace; color: var(--text-accent); display: block; overflow: hidden; text-overflow: ellipsis; font-size: 0.6rem;}
         
-        .preview-img { width: 100%; height: 40px; object-fit: contain; margin-bottom: 4px; display: block; }
-        .preview-icon { font-size: 1.5rem; line-height: 40px; display: block; opacity: 0.5; }
-        .preview-id { font-family: 'SF Mono', monospace; color: var(--text-accent); display: block; overflow: hidden; text-overflow: ellipsis; font-size: 0.65rem;}
+        .type-tag { font-size: 0.5rem; padding: 2px 4px; border-radius: 3px; position: absolute; top: 2px; right: 2px; color: white; font-weight: bold; }
+        .tag-home { background: #6E0FD7; }
+        .tag-away { background: #FF4164; }
+        .tag-third { background: #2196F3; }
 
         .code-block { background: var(--bg-input); border-radius: var(--radius-md); border: 1px solid var(--border-subtle); flex-grow: 1; position: relative; overflow: hidden; min-height: 250px; }
         textarea { width: 100%; height: 100%; background: transparent; border: none; color: #a0aabf; font-family: 'SF Mono', 'Menlo', 'Courier New', monospace; font-size: 0.8rem; line-height: 1.6; padding: 20px; resize: none; outline: none; }
@@ -144,37 +166,50 @@
                 </div>
                 
                 <div class="controls-row">
-                    <select id="config-type" class="settings-select" onchange="regenerate()">
+                    <select id="config-type" class="settings-select" onchange="toggleInterface()">
                         <option value="faces">Player Faces</option>
-                        <option value="logos">Club Logos (Normal)</option>
-                        <option value="logos_small">Club Logos (Small)</option>
-                        <option value="kits_home">Kits (Home)</option>
-                        <option value="kits_away">Kits (Away)</option>
-                        <option value="kits_third">Kits (Third)</option>
+                        <option value="logos">Club Logos</option>
+                        <option value="logos_small">Small Logos</option>
+                        <option value="kits">Kits</option>
                     </select>
+                    
                     <input type="file" id="import-xml" accept=".xml" style="display:none" onchange="handleImport()">
                     <button class="btn-import" onclick="document.getElementById('import-xml').click()">
-                        <span>📥 Load XML</span>
+                        <span>📥 Load</span>
                     </button>
                 </div>
                 
-                <div class="upload-zone">
-                    <input type="file" id="file-upload" class="upload-input" multiple accept="image/*" onchange="handleNewFiles()">
-                    
+                <div id="single-zone" class="upload-zone">
+                    <input type="file" id="file-upload-single" class="upload-input" multiple accept="image/*" onchange="handleSingleUpload()">
                     <div class="icon-large">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                            <polyline points="17 8 12 3 7 8"></polyline>
-                            <line x1="12" y1="3" x2="12" y2="15"></line>
-                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
                     </div>
-                    
                     <div class="upload-text">Add Images</div>
-                    <div class="upload-sub">Appends to list</div>
+                </div>
+
+                <div id="multi-kit-container">
+                    <div class="mini-zone">
+                        <input type="file" class="upload-input" multiple accept="image/*" onchange="handleMultiUpload('home', this)">
+                        <div class="mini-icon">🏠</div>
+                        <div class="mini-label">HOME</div>
+                        <div class="mini-count" id="count-home">0 files</div>
+                    </div>
+                    <div class="mini-zone">
+                        <input type="file" class="upload-input" multiple accept="image/*" onchange="handleMultiUpload('away', this)">
+                        <div class="mini-icon">✈️</div>
+                        <div class="mini-label">AWAY</div>
+                        <div class="mini-count" id="count-away">0 files</div>
+                    </div>
+                    <div class="mini-zone">
+                        <input type="file" class="upload-input" multiple accept="image/*" onchange="handleMultiUpload('third', this)">
+                        <div class="mini-icon">👕</div>
+                        <div class="mini-label">THIRD</div>
+                        <div class="mini-count" id="count-third">0 files</div>
+                    </div>
                 </div>
 
                 <div id="preview-container">
-                    <div style="text-align:center; padding:20px; color:var(--text-muted); font-size:0.8rem;">
+                    <div style="text-align:center; padding:10px; color:var(--text-muted); font-size:0.8rem;">
                         No items yet.
                     </div>
                 </div>
@@ -204,25 +239,39 @@
     <script>
         // --- STATE MANAGEMENT ---
         let importedIDs = [];
-        let newFiles = [];
+        let allFiles = []; // { file, type }
 
-        // --- UPDATED CORE LOGIC ---
+        // --- INTERFACE TOGGLE ---
+        function toggleInterface() {
+            const type = document.getElementById('config-type').value;
+            const singleZone = document.getElementById('single-zone');
+            const multiZone = document.getElementById('multi-kit-container');
+
+            if (type === 'kits') {
+                singleZone.style.display = 'none';
+                multiZone.style.display = 'grid';
+            } else {
+                singleZone.style.display = 'flex';
+                multiZone.style.display = 'none';
+            }
+            updateUI(); 
+        }
+
+        // --- CORE LOGIC ---
         function getPath(type, id) {
             switch(type) {
                 case 'faces': return `graphics/pictures/person/${id}/portrait`;
                 case 'logos': return `graphics/pictures/club/${id}/logo`;
                 case 'logos_small': return `graphics/pictures/club/${id}/icon`;
-                
-                // NEW KIT PATHS
-                case 'kits_home': return `graphics/pictures/team/${id}/kit_textures/home`;
-                case 'kits_away': return `graphics/pictures/team/${id}/kit_textures/away`;
-                case 'kits_third': return `graphics/pictures/team/${id}/kit_textures/third`;
-                
+                // Kits use these explicit paths
+                case 'home': return `graphics/pictures/team/${id}/kit_textures/home`;
+                case 'away': return `graphics/pictures/team/${id}/kit_textures/away`;
+                case 'third': return `graphics/pictures/team/${id}/kit_textures/third`;
                 default: return `graphics/pictures/person/${id}/portrait`;
             }
         }
 
-        // 1. IMPORT EXISTING XML
+        // 1. IMPORT
         function handleImport() {
             const input = document.getElementById('import-xml');
             if(input.files.length === 0) return;
@@ -235,7 +284,6 @@
                 const regex = /from="([^"]+)"/g;
                 let match;
                 let count = 0;
-
                 while ((match = regex.exec(text)) !== null) {
                     if(!importedIDs.includes(match[1])) {
                         importedIDs.push(match[1]);
@@ -249,29 +297,43 @@
             input.value = ""; 
         }
 
-        // 2. HANDLE NEW IMAGE UPLOADS
-        function handleNewFiles() {
-            const fileInput = document.getElementById('file-upload');
-            if (fileInput.files.length > 0) {
-                newFiles = newFiles.concat(Array.from(fileInput.files));
-                updateUI();
-            }
-            fileInput.value = ""; 
+        // 2a. SINGLE UPLOAD (Faces/Logos)
+        function handleSingleUpload() {
+            const input = document.getElementById('file-upload-single');
+            const files = Array.from(input.files);
+            
+            files.forEach(f => {
+                allFiles.push({ file: f, type: 'generic' });
+            });
+            
+            input.value = ""; 
+            updateUI();
         }
 
-        // 3. REGENERATE
-        function regenerate() {
+        // 2b. MULTI UPLOAD (Kits)
+        function handleMultiUpload(kitType, inputElement) {
+            const files = Array.from(inputElement.files);
+            
+            files.forEach(f => {
+                allFiles.push({ file: f, type: kitType });
+            });
+            
+            // Update Mini Counts
+            const count = allFiles.filter(i => i.type === kitType).length;
+            document.getElementById(`count-${kitType}`).innerText = `${count} files`;
+
+            inputElement.value = ""; 
             updateUI();
         }
 
         function updateUI() {
             renderPreviews();
             generateXML();
-            const total = importedIDs.length + newFiles.length;
+            const total = importedIDs.length + allFiles.length;
             document.getElementById('count-label').innerText = `${total} Items`;
         }
 
-        // 4. RENDER PREVIEWS
+        // 3. RENDER PREVIEWS
         function renderPreviews() {
             const container = document.getElementById('preview-container');
             container.innerHTML = "";
@@ -283,7 +345,8 @@
                 container.appendChild(div);
             });
 
-            newFiles.forEach(file => {
+            allFiles.forEach(item => {
+                let file = item.file;
                 let fileName = file.name;
                 let match = fileName.match(/\d+/);
                 let id = match ? match[0] : "???";
@@ -299,106 +362,36 @@
                 span.className = 'preview-id';
                 span.innerText = id;
 
+                // Add Tag for Kits
+                if (item.type !== 'generic') {
+                    let tag = document.createElement('span');
+                    tag.className = `type-tag tag-${item.type}`;
+                    tag.innerText = item.type.charAt(0).toUpperCase();
+                    div.appendChild(tag);
+                }
+
                 div.appendChild(img);
                 div.appendChild(span);
                 container.appendChild(div);
             });
         }
 
-        // 5. GENERATE FINAL XML
+        // 4. GENERATE XML
         function generateXML() {
-            const typeSelect = document.getElementById('config-type'); 
+            const dropdownType = document.getElementById('config-type').value; 
             const outputArea = document.getElementById('output');
-            const type = typeSelect ? typeSelect.value : 'faces';
 
             let xmlContent = `<record>\n\t<boolean id="preload" value="false"/>\n\t<boolean id="amap" value="false"/>\n\t<list id="maps">\n`;
 
             // Process Imported IDs
             importedIDs.forEach(id => {
-                let path = getPath(type, id);
+                // If in kit mode, default import to 'home' or generic? 
+                // Simple logic: imports follow dropdown type.
+                // If dropdown is 'kits', we need a fallback. Let's assume 'home' for kits if generic.
+                let pathType = (dropdownType === 'kits') ? 'home' : dropdownType;
+                let path = getPath(pathType, id);
                 xmlContent += `\t\t<record from="${id}" to="${path}"/>\n`;
             });
 
-            // Process New Files
-            newFiles.forEach(file => {
-                let fileName = file.name;
-                let match = fileName.match(/\d+/);
-                let id = match ? match[0] : fileName.substring(0, fileName.lastIndexOf('.'));
-                let path = getPath(type, id);
-                
-                if(!importedIDs.includes(id)) {
-                    xmlContent += `\t\t<record from="${id}" to="${path}"/>\n`;
-                }
-            });
-
-            xmlContent += `\t</list>\n</record>`;
-            outputArea.value = xmlContent;
-        }
-
-        // --- UTILS ---
-        function clearAll() {
-            importedIDs = [];
-            newFiles = [];
-            document.getElementById('output').value = "";
-            document.getElementById('preview-container').innerHTML = '<div style="text-align:center; padding:20px; color:var(--text-muted); font-size:0.8rem;">No items yet.</div>';
-            document.getElementById('status-msg').innerText = "All cleared.";
-            document.getElementById('count-label').innerText = "0 Items";
-        }
-
-        function copyText() {
-            const outputArea = document.getElementById('output');
-            const statusMsg = document.getElementById('status-msg');
-            if (!outputArea.value) return;
-            outputArea.select();
-            outputArea.setSelectionRange(0, 99999); 
-            navigator.clipboard.writeText(outputArea.value).then(() => {
-                statusMsg.innerText = "✅ Copied!";
-                setTimeout(() => { statusMsg.innerText = ""; }, 2000);
-            });
-        }
-
-        function downloadFile() {
-            const outputArea = document.getElementById('output');
-            const text = outputArea.value;
-            if(!text) return;
-            const blob = new Blob([text], { type: "text/xml" });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = "config.xml";
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
-
-        function performFileMakerScript(scriptName, parameter) {
-            try {
-                if (window.FileMaker && typeof window.FileMaker.PerformScript === 'function') {
-                    window.FileMaker.PerformScript(scriptName, parameter);
-                } else {
-                    const url = "fmp://$/?script=" + encodeURIComponent(scriptName) + "&param=" + encodeURIComponent(parameter);
-                    if(navigator.userAgent.includes('FileMaker')) {
-                        window.location.href = url;
-                    }
-                }
-            } catch (e) {
-                console.log("FM Bridge Error: " + e.message);
-            }
-        }
-
-        document.addEventListener("DOMContentLoaded", function() {
-            const actionButton = document.querySelector('.btn-primary');
-            const outputField = document.getElementById('output');
-            if (actionButton && outputField) {
-                actionButton.addEventListener('click', function() {
-                    const xmlData = outputField.value;
-                    if (xmlData && xmlData.trim() !== "") {
-                        performFileMakerScript('SaveConfig', xmlData);
-                    }
-                });
-            }
-        });
-    </script>
-</body>
-</html>
+            // Process Uploaded Files
+   
