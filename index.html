@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>fmXML | Editor Edition</title>
+    <title>fmXML | Kit Editor</title>
     <style>
         /* --- VARIABLES --- */
         :root {
@@ -50,7 +50,6 @@
         .card-header { margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
         .card-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-accent); font-weight: 600; }
 
-        /* Controls Area */
         .controls-row { display: flex; gap: 10px; margin-bottom: 15px; }
         
         .settings-select {
@@ -62,7 +61,6 @@
             background-repeat: no-repeat; background-position: right 15px center; background-size: 16px;
         }
 
-        /* Import Button (Small & Technical) */
         .btn-import {
             background: rgba(255,255,255,0.05); color: var(--text-accent); 
             border: 1px solid var(--border-subtle); border-radius: var(--radius-md);
@@ -85,7 +83,6 @@
         .upload-text { font-weight: 600; color: var(--text-main); }
         .upload-sub { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
 
-        /* PREVIEW GRID */
         #preview-container {
             display: grid; grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); gap: 8px;
             max-height: 180px; overflow-y: auto; margin-bottom: 20px;
@@ -100,7 +97,6 @@
             text-align: center; border: 1px solid var(--border-subtle);
             font-size: 0.7rem; color: var(--text-muted); position: relative;
         }
-        /* Style for imported text-only items */
         .preview-item.imported { border-color: var(--brand-primary); opacity: 0.7; }
         
         .preview-img { width: 100%; height: 40px; object-fit: contain; margin-bottom: 4px; display: block; }
@@ -150,9 +146,11 @@
                 <div class="controls-row">
                     <select id="config-type" class="settings-select" onchange="regenerate()">
                         <option value="faces">Player Faces</option>
-                        <option value="logos">Club Logos</option>
-                        <option value="logos_small">Small Logos</option>
-                        <option value="kits">Kits</option>
+                        <option value="logos">Club Logos (Normal)</option>
+                        <option value="logos_small">Club Logos (Small)</option>
+                        <option value="kits_home">Kits (Home)</option>
+                        <option value="kits_away">Kits (Away)</option>
+                        <option value="kits_third">Kits (Third)</option>
                     </select>
                     <input type="file" id="import-xml" accept=".xml" style="display:none" onchange="handleImport()">
                     <button class="btn-import" onclick="document.getElementById('import-xml').click()">
@@ -205,16 +203,21 @@
 
     <script>
         // --- STATE MANAGEMENT ---
-        let importedIDs = [];  // Stores IDs from loaded XML files
-        let newFiles = [];     // Stores File objects from new uploads
+        let importedIDs = [];
+        let newFiles = [];
 
-        // --- CORE LOGIC ---
+        // --- UPDATED CORE LOGIC ---
         function getPath(type, id) {
             switch(type) {
                 case 'faces': return `graphics/pictures/person/${id}/portrait`;
                 case 'logos': return `graphics/pictures/club/${id}/logo`;
                 case 'logos_small': return `graphics/pictures/club/${id}/icon`;
-                case 'kits': return `graphics/pictures/team/${id}/kit_textures/home`;
+                
+                // NEW KIT PATHS
+                case 'kits_home': return `graphics/pictures/team/${id}/kit_textures/home`;
+                case 'kits_away': return `graphics/pictures/team/${id}/kit_textures/away`;
+                case 'kits_third': return `graphics/pictures/team/${id}/kit_textures/third`;
+                
                 default: return `graphics/pictures/person/${id}/portrait`;
             }
         }
@@ -229,38 +232,34 @@
 
             reader.onload = function(e) {
                 const text = e.target.result;
-                // Regex to find all IDs in 'from="12345"' or 'from="messi"'
                 const regex = /from="([^"]+)"/g;
                 let match;
                 let count = 0;
 
                 while ((match = regex.exec(text)) !== null) {
-                    // match[1] contains the ID inside quotes
                     if(!importedIDs.includes(match[1])) {
                         importedIDs.push(match[1]);
                         count++;
                     }
                 }
-
-                document.getElementById('status-msg').innerText = `Imported ${count} IDs from XML.`;
+                document.getElementById('status-msg').innerText = `Imported ${count} IDs.`;
                 updateUI();
             };
             reader.readAsText(file);
-            input.value = ""; // Reset input so same file can be selected again
+            input.value = ""; 
         }
 
         // 2. HANDLE NEW IMAGE UPLOADS
         function handleNewFiles() {
             const fileInput = document.getElementById('file-upload');
             if (fileInput.files.length > 0) {
-                // Add new files to the array (don't replace, append)
                 newFiles = newFiles.concat(Array.from(fileInput.files));
                 updateUI();
             }
-            fileInput.value = ""; // Reset input
+            fileInput.value = ""; 
         }
 
-        // 3. REGENERATE & UPDATE UI
+        // 3. REGENERATE
         function regenerate() {
             updateUI();
         }
@@ -268,17 +267,15 @@
         function updateUI() {
             renderPreviews();
             generateXML();
-            
             const total = importedIDs.length + newFiles.length;
             document.getElementById('count-label').innerText = `${total} Items`;
         }
 
-        // 4. RENDER PREVIEWS (Merged List)
+        // 4. RENDER PREVIEWS
         function renderPreviews() {
             const container = document.getElementById('preview-container');
             container.innerHTML = "";
 
-            // A. Render Imported IDs (Generic Icon)
             importedIDs.forEach(id => {
                 let div = document.createElement('div');
                 div.className = 'preview-item imported';
@@ -286,7 +283,6 @@
                 container.appendChild(div);
             });
 
-            // B. Render New Files (Thumbnails)
             newFiles.forEach(file => {
                 let fileName = file.name;
                 let match = fileName.match(/\d+/);
@@ -330,7 +326,6 @@
                 let id = match ? match[0] : fileName.substring(0, fileName.lastIndexOf('.'));
                 let path = getPath(type, id);
                 
-                // Avoid duplicate lines if ID matches an imported one
                 if(!importedIDs.includes(id)) {
                     xmlContent += `\t\t<record from="${id}" to="${path}"/>\n`;
                 }
@@ -377,7 +372,6 @@
             URL.revokeObjectURL(url);
         }
 
-        /* --- FILEMAKER BRIDGE --- */
         function performFileMakerScript(scriptName, parameter) {
             try {
                 if (window.FileMaker && typeof window.FileMaker.PerformScript === 'function') {
