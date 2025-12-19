@@ -109,7 +109,7 @@
         }
         .section-title:first-child { margin-top: 0; }
 
-        /* --- Strict Grid System --- */
+        /* --- Grid & Inputs --- */
         .form-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -117,18 +117,11 @@
         }
 
         @media (min-width: 768px) {
-            .form-grid { 
-                grid-template-columns: repeat(3, 1fr); 
-            }
+            .form-grid { grid-template-columns: repeat(3, 1fr); }
             .col-span-3 { grid-column: span 3; }
         }
 
-        /* --- Inputs & Selects --- */
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
+        .input-group { display: flex; flex-direction: column; gap: 8px; }
 
         label {
             font-size: 0.7rem; 
@@ -138,10 +131,7 @@
             color: var(--text-muted);
         }
 
-        .required-label::after {
-            content: " *";
-            color: var(--danger);
-        }
+        .required-label::after { content: " *"; color: var(--danger); }
 
         input, select {
             width: 100%;
@@ -153,8 +143,7 @@
             font-family: 'Inter', sans-serif;
             font-size: 0.95rem;
             transition: border-color 0.2s, box-shadow 0.2s;
-            appearance: none;
-            -webkit-appearance: none;
+            appearance: none; -webkit-appearance: none;
         }
 
         select {
@@ -176,16 +165,9 @@
             box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1) !important;
             animation: shake 0.3s ease-in-out;
         }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
 
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-        }
-
-        input::placeholder { color: var(--text-muted); opacity: 0.5; }
-
-        /* --- Buttons --- */
+        /* --- Primary Button --- */
         .btn-primary {
             background-color: var(--primary);
             color: white;
@@ -206,43 +188,62 @@
         .btn-primary:active { transform: scale(0.99); }
         .btn-primary:hover { background-color: var(--primary-hover); }
 
-        /* --- List Output --- */
+        /* --- Output Section --- */
         .output-section {
             margin-top: 40px;
             padding-top: 20px;
             border-top: 1px dashed var(--border-color);
         }
 
+        /* --- NEW: Professional Toolbar Header --- */
         .output-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap; /* Allows wrapping on small screens */
+            gap: 15px;
             margin-bottom: 20px;
         }
 
-        .action-group { display: flex; gap: 10px; }
+        .action-group {
+            display: flex;
+            gap: 12px;
+        }
 
+        /* --- NEW: Button Action Style --- */
         .btn-action {
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--text-main);
-            background-color: var(--bg-body);
-            border: 1px solid var(--border-color);
-            padding: 8px 12px;
-            border-radius: 6px;
-            cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 6px;
-            transition: all 0.2s;
+            gap: 8px;
+            padding: 10px 16px;
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        .btn-action i {
+            font-size: 1.1rem;
+            color: var(--primary); /* Icon color pops */
         }
 
         .btn-action:hover {
             border-color: var(--primary);
-            color: var(--primary);
             background-color: var(--bg-card);
+            transform: translateY(-2px); /* Subtle lift effect */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
         }
 
+        .btn-action:active {
+            transform: translateY(0);
+        }
+
+        /* --- List Styles --- */
         .list-container { display: flex; flex-direction: column; gap: 12px; }
 
         .list-item {
@@ -256,11 +257,7 @@
             gap: 15px;
             animation: slideIn 0.3s ease;
         }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         .code-text {
             font-family: 'JetBrains Mono', monospace;
@@ -374,18 +371,18 @@
 
             <div class="output-section">
                 <div class="output-header">
-                    <label style="margin:0;">Generated Database Lines</label>
+                    <label style="margin:0; font-size: 0.8rem; opacity: 0.8;">GENERATED ENTRIES</label>
                     
                     <div class="action-group">
                         <input type="file" id="fileInput" accept=".txt" style="display: none;">
                         
-                        <button id="upload-btn" class="btn-action">
+                        <button id="upload-btn" class="btn-action" title="Import from file">
                             <i class="ph ph-upload-simple"></i> Upload
                         </button>
-                        <button id="copy-all-btn" class="btn-action">
+                        <button id="copy-all-btn" class="btn-action" title="Copy to clipboard">
                             <i class="ph ph-copy"></i> Copy
                         </button>
-                        <button id="download-btn" class="btn-action">
+                        <button id="download-btn" class="btn-action" title="Save as .txt">
                             <i class="ph ph-download-simple"></i> Download
                         </button>
                     </div>
@@ -412,14 +409,10 @@
         const downloadBtn = document.getElementById('download-btn');
         const currClubSelect = document.getElementById('currClub');
         const newClubSelect = document.getElementById('newClub');
-        
-        // Upload Elements
         const uploadBtn = document.getElementById('upload-btn');
         const fileInput = document.getElementById('fileInput');
 
-        // ============================================
-        // 1. FETCH DATA
-        // ============================================
+        // --- Fetch Data ---
         async function loadClubs() {
             try {
                 const response = await fetch('clubs.json');
@@ -443,13 +436,9 @@
                 selectElement.appendChild(opt);
             });
         }
-
         loadClubs();
 
-        // ============================================
-        // 2. MAIN LOGIC
-        // ============================================
-        
+        // --- Logic ---
         const quote = (str) => `"${str ? str.trim() : ''}"`;
         const validateMax = (val) => {
             if (!val) return ""; 
@@ -458,12 +447,10 @@
             return num > 200 ? "200" : val;
         };
 
-        // --- Validation ---
         function validateRequired() {
             const fName = document.getElementById('currFName');
             const sName = document.getElementById('currSName');
             const club = document.getElementById('currClub');
-            
             const required = [fName, sName, club];
             let isValid = true;
 
@@ -478,7 +465,6 @@
             return isValid;
         }
 
-        // --- Generate Button Click ---
         generateBtn.addEventListener('click', () => {
             if(!validateRequired()) return;
 
@@ -505,7 +491,6 @@
             createListItem(resultString);
         });
 
-        // --- Create List Item (UI) ---
         function createListItem(text) {
             if(emptyState) emptyState.style.display = 'none';
 
@@ -537,14 +522,8 @@
             listContainer.appendChild(itemDiv);
         }
 
-        // ============================================
-        // 3. FILE OPERATIONS
-        // ============================================
-
-        // --- Upload Logic ---
-        uploadBtn.addEventListener('click', () => {
-            fileInput.click(); // Trigger hidden input
-        });
+        // --- File Operations ---
+        uploadBtn.addEventListener('click', () => fileInput.click());
 
         fileInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
@@ -553,8 +532,7 @@
             const reader = new FileReader();
             reader.onload = function(e) {
                 const text = e.target.result;
-                const lines = text.split(/\r?\n/); // Split by new line
-
+                const lines = text.split(/\r?\n/);
                 let addedCount = 0;
                 lines.forEach(line => {
                     if (line.trim() !== "") {
@@ -562,53 +540,35 @@
                         addedCount++;
                     }
                 });
-
-                // Reset input so same file can be selected again if needed
                 fileInput.value = '';
-                
-                if(addedCount > 0) {
-                   alert(`Imported ${addedCount} lines.`);
-                }
+                if(addedCount > 0) alert(`Imported ${addedCount} lines.`);
             };
             reader.readAsText(file);
         });
 
-        // --- Helper: Get All Text ---
         function getAllText() {
             const items = document.querySelectorAll('.code-text');
             if(items.length === 0) return null;
             let allText = "";
-            items.forEach(span => {
-                allText += span.textContent + "\n";
-            });
+            items.forEach(span => { allText += span.textContent + "\n"; });
             return allText;
         }
 
-        // --- Copy ---
         copyAllBtn.addEventListener('click', () => {
             const text = getAllText();
             if(!text) return;
-
             navigator.clipboard.writeText(text).then(() => {
                 const originalHtml = copyAllBtn.innerHTML;
                 copyAllBtn.innerHTML = '<i class="ph ph-check"></i> Copied';
-                setTimeout(() => {
-                    copyAllBtn.innerHTML = originalHtml;
-                }, 2000);
+                setTimeout(() => { copyAllBtn.innerHTML = originalHtml; }, 2000);
             });
         });
 
-        // --- Download ---
         downloadBtn.addEventListener('click', () => {
             const text = getAllText();
-            if(!text) {
-                alert("Generate some lines first!");
-                return;
-            }
-
+            if(!text) { alert("Generate some lines first!"); return; }
             const blob = new Blob([text], { type: 'text/plain' });
             const url = URL.createObjectURL(blob);
-            
             const a = document.createElement('a');
             a.href = url;
             a.download = 'changes.txt';
@@ -618,7 +578,6 @@
             URL.revokeObjectURL(url);
         });
 
-        // --- Theme & Input Limits ---
         themeBtn.addEventListener('click', () => {
             document.body.classList.toggle('dark-mode');
             if (document.body.classList.contains('dark-mode')) {
