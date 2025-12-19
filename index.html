@@ -123,7 +123,7 @@
             .col-span-3 { grid-column: span 3; }
         }
 
-        /* --- Professional Input & Select Styling --- */
+        /* --- Inputs & Selects --- */
         .input-group {
             display: flex;
             flex-direction: column;
@@ -138,7 +138,6 @@
             color: var(--text-muted);
         }
 
-        /* Styling both Input and Select exactly the same */
         input, select {
             width: 100%;
             padding: 12px 16px;
@@ -149,12 +148,10 @@
             font-family: 'Inter', sans-serif;
             font-size: 0.95rem;
             transition: border-color 0.2s, box-shadow 0.2s;
-            appearance: none; /* Removes default OS styling for dropdowns */
+            appearance: none;
             -webkit-appearance: none;
-            -moz-appearance: none;
         }
 
-        /* Add a custom arrow for the Select box */
         select {
             background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
             background-repeat: no-repeat;
@@ -306,8 +303,8 @@
                 <div class="input-group">
                     <label>Current Club</label>
                     <select id="currClub">
-                        <option value="" disabled selected>Select Club</option>
-                        </select>
+                        <option value="" disabled selected>Loading Clubs...</option>
+                    </select>
                 </div>
             </div>
 
@@ -349,8 +346,8 @@
                 <div class="input-group col-span-3">
                     <label>New Club Destination</label>
                     <select id="newClub">
-                        <option value="" disabled selected>Select Club</option>
-                        </select>
+                        <option value="" disabled selected>Loading Clubs...</option>
+                    </select>
                 </div>
             </div>
 
@@ -383,35 +380,6 @@
     </div>
 
     <script>
-        // ============================================
-        // 1. CLUB DATABASE CONFIGURATION
-        // ============================================
-        // EDIT THIS LIST to add more clubs.
-        // 'menu': What you see in the dropdown.
-        // 'code': The value that gets generated in the code.
-        const clubList = [
-            { menu: "Arsenal", code: "Arsenal FC" },
-            { menu: "Aston Villa", code: "Aston Villa" },
-            { menu: "Chelsea", code: "Chelsea FC" },
-            { menu: "Everton", code: "Everton FC" },
-            { menu: "Liverpool", code: "Liverpool FC" },
-            { menu: "Man City", code: "Manchester City" },
-            { menu: "Man Utd", code: "Manchester United" },
-            { menu: "Newcastle", code: "Newcastle United" },
-            { menu: "Spurs", code: "Tottenham Hotspur" },
-            { menu: "West Ham", code: "West Ham United" },
-            { menu: "Real Madrid", code: "Real Madrid" },
-            { menu: "Barcelona", code: "FC Barcelona" },
-            { menu: "Bayern", code: "Bayern Munich" },
-            { menu: "PSG", code: "Paris Saint-Germain" },
-            { menu: "Juventus", code: "Juventus FC" },
-            { menu: "Free Agent", code: "Free Agent" }
-        ];
-        
-        // ============================================
-        // 2. APP LOGIC
-        // ============================================
-        
         // --- DOM Elements ---
         const themeBtn = document.getElementById('theme-toggle');
         const themeIcon = themeBtn.querySelector('i');
@@ -420,35 +388,54 @@
         const emptyState = document.getElementById('empty-state');
         const copyAllBtn = document.getElementById('copy-all-btn');
         const downloadBtn = document.getElementById('download-btn');
-        
-        // Select Dropdowns
         const currClubSelect = document.getElementById('currClub');
         const newClubSelect = document.getElementById('newClub');
 
-        // --- Helper: Populate Dropdowns ---
-        function populateDropdowns() {
-            clubList.forEach(club => {
-                // Create option for Current Club
-                const opt1 = document.createElement('option');
-                opt1.value = club.code; // The full name goes into value
-                opt1.textContent = club.menu; // The short name shows in menu
-                currClubSelect.appendChild(opt1);
+        // ============================================
+        // 1. FETCH DATA FROM EXTERNAL FILE
+        // ============================================
+        async function loadClubs() {
+            try {
+                // Fetch the JSON file
+                const response = await fetch('clubs.json');
+                if (!response.ok) {
+                    throw new Error("HTTP error " + response.status);
+                }
+                const clubList = await response.json();
+                
+                // Populate the dropdowns
+                populateDropdown(currClubSelect, clubList);
+                populateDropdown(newClubSelect, clubList);
+            } catch (error) {
+                console.error("Could not load clubs.json:", error);
+                // Fallback / Error handling
+                currClubSelect.innerHTML = '<option disabled>Error loading clubs</option>';
+                newClubSelect.innerHTML = '<option disabled>Error loading clubs</option>';
+            }
+        }
 
-                // Create option for New Club
-                const opt2 = document.createElement('option');
-                opt2.value = club.code;
-                opt2.textContent = club.menu;
-                newClubSelect.appendChild(opt2);
+        function populateDropdown(selectElement, data) {
+            // Clear loading text
+            selectElement.innerHTML = '<option value="" disabled selected>Select Club</option>';
+            
+            data.forEach(club => {
+                const opt = document.createElement('option');
+                opt.value = club.code; // Full Name
+                opt.textContent = club.menu; // Short Name
+                selectElement.appendChild(opt);
             });
         }
-        
-        // Run population on load
-        populateDropdowns();
 
-        // --- Helper: Quote Wrapper ---
+        // Run this when the page loads
+        loadClubs();
+
+
+        // ============================================
+        // 2. MAIN LOGIC (Same as before)
+        // ============================================
+        
         const quote = (str) => `"${str ? str.trim() : ''}"`;
 
-        // --- Helper: Validate Max 200 ---
         const validateMax = (val) => {
             if (!val) return ""; 
             const num = parseInt(val);
@@ -456,7 +443,6 @@
             return num > 200 ? "200" : val;
         };
 
-        // --- Generate Function ---
         generateBtn.addEventListener('click', () => {
             let ca = document.getElementById('newCA').value;
             let pa = document.getElementById('newPA').value;
@@ -466,14 +452,14 @@
             const data = {
                 cf: document.getElementById('currFName').value,
                 cs: document.getElementById('currSName').value,
-                cc: currClubSelect.value, // Gets the full name from value
+                cc: currClubSelect.value,
                 nf: document.getElementById('newFName').value,
                 ns: document.getElementById('newSName').value,
                 cn: document.getElementById('commonName').value,
                 birth: document.getElementById('birthYear').value,
                 ca: ca,
                 pa: pa,
-                nc: newClubSelect.value // Gets the full name from value
+                nc: newClubSelect.value
             };
 
             const resultString = `${quote("PLAYER")} ${quote(data.cf)} ${quote(data.cs)} ${quote(data.cc)} ${quote(data.nf)} ${quote(data.ns)} ${quote(data.cn)} ${quote(data.birth)} ${quote(data.ca)} ${quote(data.pa)} ${quote(data.nc)}`;
@@ -512,7 +498,6 @@
             listContainer.appendChild(itemDiv);
         }
 
-        // --- Helper: Get All Text ---
         function getAllText() {
             const items = document.querySelectorAll('.code-text');
             if(items.length === 0) return null;
@@ -523,7 +508,6 @@
             return allText;
         }
 
-        // --- Copy All Function ---
         copyAllBtn.addEventListener('click', () => {
             const text = getAllText();
             if(!text) return;
@@ -537,7 +521,6 @@
             });
         });
 
-        // --- Download Function ---
         downloadBtn.addEventListener('click', () => {
             const text = getAllText();
             if(!text) {
@@ -557,7 +540,6 @@
             URL.revokeObjectURL(url);
         });
 
-        // --- Theme Toggle ---
         themeBtn.addEventListener('click', () => {
             document.body.classList.toggle('dark-mode');
             if (document.body.classList.contains('dark-mode')) {
@@ -567,7 +549,6 @@
             }
         });
 
-        // --- Input Enforcement ---
         const limitInputs = [document.getElementById('newCA'), document.getElementById('newPA')];
         limitInputs.forEach(input => {
             input.addEventListener('input', (e) => {

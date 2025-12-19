@@ -1,0 +1,18 @@
+[
+  { "menu": "Arsenal", "code": "Arsenal FC" },
+  { "menu": "Aston Villa", "code": "Aston Villa" },
+  { "menu": "Chelsea", "code": "Chelsea FC" },
+  { "menu": "Everton", "code": "Everton FC" },
+  { "menu": "Liverpool", "code": "Liverpool FC" },
+  { "menu": "Man City", "code": "Manchester City" },
+  { "menu": "Man Utd", "code": "Manchester United" },
+  { "menu": "Newcastle", "code": "Newcastle United" },
+  { "menu": "Spurs", "code": "Tottenham Hotspur" },
+  { "menu": "West Ham", "code": "West Ham United" },
+  { "menu": "Real Madrid", "code": "Real Madrid" },
+  { "menu": "Barcelona", "code": "FC Barcelona" },
+  { "menu": "Bayern", "code": "Bayern Munich" },
+  { "menu": "PSG", "code": "Paris Saint-Germain" },
+  { "menu": "Juventus", "code": "Juventus FC" },
+  { "menu": "Free Agent", "code": "Free Agent" }
+]
