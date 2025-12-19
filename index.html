@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FaceMap Pro | Name to ID Mapper</title>
+    <title>FaceMap Pro | Import & Export</title>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 
@@ -121,7 +121,7 @@
 
         /* --- Card Components --- */
         .card-header {
-            padding: 16px;
+            padding: 12px 16px;
             border-bottom: 1px solid rgba(0,0,0,0.06);
             display: flex;
             justify-content: space-between;
@@ -146,6 +146,46 @@
             gap: 8px;
         }
 
+        /* Action Buttons in Header */
+        .header-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-action {
+            border: 1px solid rgba(0,0,0,0.1);
+            background: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: inherit;
+            color: var(--color-darkest);
+            transition: 0.2s;
+        }
+
+        .btn-action:hover {
+            background: var(--color-bg-light);
+            border-color: var(--color-vibrant);
+            color: var(--color-vibrant);
+        }
+
+        /* Dark Mode Buttons (Output Section) */
+        .btn-action.dark {
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.2);
+            color: var(--color-white);
+        }
+        
+        .btn-action.dark:hover {
+            background: var(--color-vibrant);
+            border-color: var(--color-vibrant);
+        }
+
         /* --- Input Area --- */
         .drop-area {
             padding: 15px;
@@ -167,7 +207,8 @@
 
         .drop-zone i { font-size: 32px; color: var(--color-vibrant); margin-bottom: 6px; }
         .drop-zone p { margin: 0; font-weight: 600; font-size: 14px; color: #555; }
-        #fileElem { display: none; }
+        
+        #fileElem, #importElem { display: none; }
 
         .image-list {
             flex: 1;
@@ -192,6 +233,20 @@
             object-fit: cover;
             border-radius: 8px;
             background: #eee;
+            border: 1px solid #ddd;
+        }
+        
+        .thumb-placeholder {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ccc;
+            font-size: 20px;
         }
 
         .item-details { flex: 1; }
@@ -266,9 +321,7 @@
             line-height: 1.5;
         }
 
-        @media (min-width: 901px) {
-            textarea.xml-preview { font-size: 13px; }
-        }
+        @media (min-width: 901px) { textarea.xml-preview { font-size: 13px; } }
 
         @media (max-width: 900px) {
             textarea.xml-preview {
@@ -279,22 +332,6 @@
 
         textarea.xml-preview:focus { outline: none; }
 
-        .btn-copy {
-            background: rgba(255,255,255,0.15);
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 11px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        
         .empty-state {
             padding: 30px 10px;
             text-align: center;
@@ -315,7 +352,13 @@
         
         <section class="input-section">
             <div class="card-header">
-                <h2>Upload List (<span id="countDisplay">0</span>)</h2>
+                <h2>Upload (<span id="countDisplay">0</span>)</h2>
+                <div class="header-actions">
+                    <button class="btn-action" onclick="document.getElementById('importElem').click()">
+                        <i class="ph ph-file-arrow-up"></i> Import XML
+                    </button>
+                    <input type="file" id="importElem" accept=".xml">
+                </div>
             </div>
 
             <div class="drop-area">
@@ -336,9 +379,14 @@
         <section class="output-section">
             <div class="card-header">
                 <h2>config.xml</h2>
-                <button class="btn-copy" id="copyBtn">
-                    <i class="ph ph-copy"></i> Copy
-                </button>
+                <div class="header-actions">
+                    <button class="btn-action dark" id="downloadBtn">
+                        <i class="ph ph-download-simple"></i> Save
+                    </button>
+                    <button class="btn-action dark" id="copyBtn">
+                        <i class="ph ph-copy"></i> Copy
+                    </button>
+                </div>
             </div>
             <div class="xml-container">
                 <textarea class="xml-preview" id="xmlOutput" readonly spellcheck="false"></textarea>
@@ -352,21 +400,20 @@
 
         const dropZone = document.getElementById('dropZone');
         const fileElem = document.getElementById('fileElem');
+        const importElem = document.getElementById('importElem');
         const imageList = document.getElementById('imageList');
         const xmlOutput = document.getElementById('xmlOutput');
         const countDisplay = document.getElementById('countDisplay');
         const copyBtn = document.getElementById('copyBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
 
-        // Drag & Drop Handlers
+        // --- Drag & Drop ---
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
             dropZone.addEventListener(eventName, preventDefaults, false);
             document.body.addEventListener(eventName, preventDefaults, false);
         });
 
-        function preventDefaults (e) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
+        function preventDefaults (e) { e.preventDefault(); e.stopPropagation(); }
 
         ['dragenter', 'dragover'].forEach(eventName => {
             dropZone.addEventListener(eventName, () => dropZone.style.borderColor = '#6a00d7', false);
@@ -380,6 +427,9 @@
         dropZone.addEventListener('click', () => fileElem.click());
         fileElem.addEventListener('change', function() { handleFiles(this.files); });
 
+        // --- Import Handler ---
+        importElem.addEventListener('change', function() { handleImport(this.files[0]); });
+
         function handleDrop(e) {
             const dt = e.dataTransfer;
             const files = dt.files;
@@ -390,25 +440,60 @@
             ([...files]).forEach(uploadFile);
         }
 
+        // --- Logic: Add Image Entry ---
         function uploadFile(file) {
             if (!file.type.startsWith('image/')) return;
 
             const fileName = file.name;
-            // Get clean filename without extension for the 'from' attribute
             const fileNameNoExt = fileName.substring(0, fileName.lastIndexOf('.')) || fileName;
             const entryId = Date.now() + Math.random();
 
             const entry = {
                 uid: entryId,
                 fileObj: file,
-                originalName: fileName, // Full name with extension
-                cleanName: fileNameNoExt, // Clean name for logic
-                playerId: fileNameNoExt // Initial ID assumption
+                originalName: fileName, 
+                cleanName: fileNameNoExt, 
+                playerId: fileNameNoExt 
             };
 
             filesData.push(entry);
             addListItem(entry);
             updateUI();
+        }
+
+        // --- Logic: Import XML ---
+        function handleImport(file) {
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const text = e.target.result;
+                // Regex to find: from="FILENAME" to=".../ID/portrait"
+                const regex = /<record from="([^"]+)" to="graphics\/pictures\/person\/([^"]+)\/portrait"\/>/g;
+                let match;
+                let count = 0;
+
+                while ((match = regex.exec(text)) !== null) {
+                    const cleanName = match[1];
+                    const playerId = match[2];
+                    const entryId = Date.now() + Math.random() + count; // ensure unique ID
+
+                    const entry = {
+                        uid: entryId,
+                        fileObj: null, // No image data available on import
+                        originalName: cleanName + " (Imported)", 
+                        cleanName: cleanName, 
+                        playerId: playerId
+                    };
+                    
+                    filesData.push(entry);
+                    addListItem(entry);
+                    count++;
+                }
+                updateUI();
+                // Reset input
+                importElem.value = ''; 
+            };
+            reader.readAsText(file);
         }
 
         function addListItem(entry) {
@@ -420,28 +505,35 @@
             item.className = 'image-item';
             item.id = `item-${entry.uid}`;
 
-            const img = document.createElement('img');
-            img.className = 'thumb-preview';
-            
-            const reader = new FileReader();
-            reader.onload = (e) => { img.src = e.target.result; };
-            reader.readAsDataURL(entry.fileObj);
+            // Handle Preview (Real Image vs Placeholder)
+            let thumbnailHTML;
+            if (entry.fileObj) {
+                thumbnailHTML = `<img class="thumb-preview" id="thumb-${entry.uid}">`;
+            } else {
+                thumbnailHTML = `<div class="thumb-placeholder"><i class="ph ph-file-text"></i></div>`;
+            }
 
-            // Added labels to make it clear what is being edited
             item.innerHTML = `
-                <div class="thumb-wrapper"></div>
+                <div class="thumb-wrapper">${thumbnailHTML}</div>
                 <div class="item-details">
                     <div class="input-label-small">Set Player ID</div>
                     <input type="text" class="id-input" value="${entry.playerId}" placeholder="Enter ID" oninput="updateId(${entry.uid}, this.value)">
-                    <div class="file-name-display" title="Original Filename"><i class="ph ph-file-image"></i> ${entry.originalName}</div>
+                    <div class="file-name-display" title="Mapped Name"><i class="ph ph-link"></i> ${entry.cleanName}</div>
                 </div>
                 <button class="btn-remove" onclick="removeEntry(${entry.uid})">
                     <i class="ph ph-x"></i>
                 </button>
             `;
             
-            item.querySelector('.thumb-wrapper').appendChild(img);
             imageList.prepend(item);
+
+            // Lazy load image if it exists
+            if (entry.fileObj) {
+                const img = document.getElementById(`thumb-${entry.uid}`);
+                const reader = new FileReader();
+                reader.onload = (e) => { img.src = e.target.result; };
+                reader.readAsDataURL(entry.fileObj);
+            }
         }
 
         window.updateId = function(uid, newId) {
@@ -473,7 +565,6 @@
             
             let body = '';
             filesData.forEach(entry => {
-                // LOGIC: from="OriginalFileName" to=".../PlayerID/..."
                 body += `\t\t<record from="${entry.cleanName}" to="graphics/pictures/person/${entry.playerId}/portrait"/>\n`;
             });
 
@@ -488,6 +579,7 @@
 
         generateXML();
 
+        // --- Copy Logic ---
         copyBtn.addEventListener('click', () => {
             if (filesData.length === 0) return;
             
@@ -497,11 +589,43 @@
                 const originalHTML = copyBtn.innerHTML;
                 copyBtn.innerHTML = 'COPIED';
                 copyBtn.style.background = '#2ecc71';
+                copyBtn.style.borderColor = '#2ecc71';
                 setTimeout(() => {
                     copyBtn.innerHTML = originalHTML;
                     copyBtn.style.background = '';
+                    copyBtn.style.borderColor = '';
                 }, 2000);
             });
+        });
+
+        // --- Download Logic ---
+        downloadBtn.addEventListener('click', () => {
+            if (filesData.length === 0) return;
+            
+            const textToSave = xmlOutput.value;
+            const blob = new Blob([textToSave], { type: "text/xml" });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = "config.xml";
+            document.body.appendChild(a);
+            a.click();
+            
+            // Clean up
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            // Visual feedback
+            const originalHTML = downloadBtn.innerHTML;
+            downloadBtn.innerHTML = 'SAVED';
+            downloadBtn.style.background = '#2ecc71';
+            downloadBtn.style.borderColor = '#2ecc71';
+            setTimeout(() => {
+                downloadBtn.innerHTML = originalHTML;
+                downloadBtn.style.background = '';
+                downloadBtn.style.borderColor = '';
+            }, 2000);
         });
     </script>
 </body>
