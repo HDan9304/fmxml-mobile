@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Player Database Generator</title>
+    <title>Player Data Generator</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
     
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
     <style>
-        /* --- CSS Variables --- */
+        /* --- Themes --- */
         :root {
             --primary: #6A00D8;
             --primary-hover: #5000A6;
@@ -22,28 +22,28 @@
             --bg-body: #F3F4F6;
             --bg-card: #FFFFFF;
             --bg-item: #F9FAFB;
-            --text-main: #1F2937;
+            --text-main: #111827;
             --text-muted: #6B7280;
             --border-color: #E5E7EB;
             --input-bg: #FFFFFF;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
 
         body.dark-mode {
-            --bg-body: #111827; 
-            --bg-card: #1F2937;
-            --bg-item: #374151;
-            --text-main: #F9FAFB;
-            --text-muted: #9CA3AF;
-            --border-color: #374151;
-            --input-bg: #111827;
+            --bg-body: #0F172A; 
+            --bg-card: #1E293B;
+            --bg-item: #334155;
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+            --border-color: #334155;
+            --input-bg: #0F172A;
             --primary: #A870FF; 
             --primary-hover: #C099FF;
             --primary-light: #2A1B3D;
             --danger: #F87171;
         }
 
-        /* --- Base Styles --- */
+        /* --- Base Layout --- */
         * { box-sizing: border-box; }
         
         body {
@@ -51,23 +51,22 @@
             background-color: var(--bg-body);
             color: var(--text-main);
             margin: 0;
-            padding: 20px;
+            padding: 40px 20px;
             min-height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: flex-start; /* Aligns to top so list can grow */
-            transition: background 0.3s, color 0.3s;
+            align-items: flex-start;
+            transition: all 0.3s ease;
         }
 
         .app-container {
             background-color: var(--bg-card);
             width: 100%;
-            max-width: 900px;
-            border-radius: 16px;
+            max-width: 960px; /* Slightly wider for better spacing */
+            border-radius: 12px;
             box-shadow: var(--shadow);
-            padding: 30px;
-            margin-top: 20px;
-            margin-bottom: 40px;
+            padding: 40px;
+            border: 1px solid var(--border-color);
         }
 
         /* --- Header --- */
@@ -79,68 +78,97 @@
             padding-bottom: 20px;
             border-bottom: 1px solid var(--border-color);
         }
-
-        .brand { display: flex; align-items: center; gap: 10px; }
-        h1 { margin: 0; font-size: 1.25rem; font-weight: 700; }
-        .subtitle { font-size: 0.875rem; color: var(--text-muted); margin: 0; }
+        
+        h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.025em; }
+        .subtitle { font-size: 0.875rem; color: var(--text-muted); margin-top: 4px; }
 
         .icon-btn {
             background: transparent;
             border: 1px solid var(--border-color);
             color: var(--text-main);
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
+            width: 36px;
+            height: 36px;
+            border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all 0.2s;
-            font-size: 1.2rem;
+            transition: 0.2s;
         }
-        .icon-btn:hover { background-color: var(--primary-light); color: var(--primary); border-color: var(--primary); }
+        .icon-btn:hover { border-color: var(--primary); color: var(--primary); }
 
-        /* --- Form Grid --- */
+        /* --- Section Separators --- */
+        .section-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--primary);
+            font-weight: 700;
+            margin: 20px 0 10px 0;
+            display: block;
+        }
+        .section-title:first-child { margin-top: 0; }
+
+        /* --- Strict Grid System --- */
         .form-grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 20px;
+            gap: 24px; /* Consistent gap */
         }
 
-        @media (min-width: 640px) {
-            .form-grid { grid-template-columns: repeat(2, 1fr); }
-            .col-span-2-desktop { grid-column: span 2; }
-        }
-        
         @media (min-width: 768px) {
-            .form-grid { grid-template-columns: repeat(3, 1fr); }
+            .form-grid { 
+                grid-template-columns: repeat(3, 1fr); /* Strictly 3 columns */
+            }
             .col-span-3 { grid-column: span 3; }
         }
 
-        .input-group { display: flex; flexDirection: column; gap: 6px; }
-        label { font-size: 0.85rem; font-weight: 500; color: var(--text-muted); }
+        /* --- Professional Input Styling --- */
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        /* The "Professional Header" Look */
+        label {
+            font-size: 0.7rem; /* Smaller */
+            text-transform: uppercase; /* All caps */
+            letter-spacing: 0.05em; /* Spaced out */
+            font-weight: 700; /* Bold */
+            color: var(--text-muted);
+        }
 
         input {
-            padding: 12px;
-            border-radius: 8px;
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 6px;
             border: 1px solid var(--border-color);
             background-color: var(--input-bg);
             color: var(--text-main);
-            font-family: inherit;
+            font-family: 'Inter', sans-serif; /* Explicitly use sans-serif */
             font-size: 0.95rem;
-            transition: all 0.2s ease;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
-        input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); }
+
+        input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px var(--primary-light);
+        }
+
+        /* Placeholder styling */
+        input::placeholder { color: var(--text-muted); opacity: 0.5; }
 
         /* --- Buttons --- */
         .btn-primary {
             background-color: var(--primary);
-            color: #fff;
+            color: white;
             border: none;
-            padding: 14px;
+            padding: 16px;
             border-radius: 8px;
             font-weight: 600;
-            font-size: 1rem;
+            font-size: 0.95rem;
             cursor: pointer;
             width: 100%;
             margin-top: 30px;
@@ -148,90 +176,81 @@
             justify-content: center;
             align-items: center;
             gap: 8px;
-            transition: background 0.2s;
+            transition: transform 0.1s, background-color 0.2s;
         }
+        .btn-primary:active { transform: scale(0.99); }
         .btn-primary:hover { background-color: var(--primary-hover); }
 
-        /* --- List Output Section --- */
+        /* --- List Output --- */
         .output-section {
             margin-top: 40px;
-            border-top: 1px solid var(--border-color);
             padding-top: 20px;
+            border-top: 1px dashed var(--border-color);
         }
 
         .output-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .list-container {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
         }
 
-        /* Individual List Item */
         .list-item {
             background-color: var(--bg-item);
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            padding: 12px;
+            padding: 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 10px;
-            animation: fadeIn 0.3s ease;
+            gap: 15px;
+            animation: slideIn 0.3s ease;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         .code-text {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.8rem;
-            word-break: break-all;
+            font-size: 0.85rem;
             color: var(--text-main);
-            flex-grow: 1;
+            word-break: break-all;
+            line-height: 1.5;
         }
 
         .delete-btn {
             background: transparent;
-            border: none;
-            color: var(--text-muted);
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 6px;
-            transition: 0.2s;
-        }
-        .delete-btn:hover { background-color: rgba(220, 38, 38, 0.1); color: var(--danger); }
-
-        .btn-copy-all {
-            background-color: var(--bg-item);
             border: 1px solid var(--border-color);
-            color: var(--text-main);
-            padding: 8px 16px;
+            color: var(--text-muted);
+            width: 32px;
+            height: 32px;
+            display: flex; align-items: center; justify-content: center;
             border-radius: 6px;
-            font-weight: 500;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
+            flex-shrink: 0;
             transition: 0.2s;
         }
-        .btn-copy-all:hover { border-color: var(--primary); color: var(--primary); }
+        .delete-btn:hover { background-color: var(--danger); color: white; border-color: var(--danger); }
 
-        /* Empty State */
-        .empty-state {
-            text-align: center;
-            color: var(--text-muted);
-            padding: 20px;
-            font-size: 0.9rem;
-            font-style: italic;
+        .btn-copy-text {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--primary);
+            background: none;
+            border: none;
+            cursor: pointer;
         }
+        .btn-copy-text:hover { text-decoration: underline; }
+
+        .empty-state { text-align: center; padding: 40px; color: var(--text-muted); font-size: 0.9rem; border: 1px dashed var(--border-color); border-radius: 8px; }
 
     </style>
 </head>
@@ -239,11 +258,13 @@
 
     <div class="app-container">
         <header>
-            <div class="brand">
-                <i class="ph ph-database" style="font-size: 1.5rem; color: var(--primary);"></i>
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="background: var(--primary-light); padding: 8px; border-radius: 8px;">
+                    <i class="ph-fill ph-database" style="font-size: 1.5rem; color: var(--primary);"></i>
+                </div>
                 <div>
                     <h1>Code Generator</h1>
-                    <p class="subtitle">Multi-line Player Data Entry</p>
+                    <p class="subtitle">Streamlined Player Entry System</p>
                 </div>
             </div>
             <button id="theme-toggle" class="icon-btn" title="Toggle Dark Mode">
@@ -252,67 +273,74 @@
         </header>
 
         <main>
+            <span class="section-title">Current Details</span>
             <div class="form-grid">
-                
                 <div class="input-group">
-                    <label>Current First Name</label>
-                    <input type="text" id="currFName" placeholder="e.g. John">
+                    <label>First Name</label>
+                    <input type="text" id="currFName" placeholder="John">
                 </div>
                 <div class="input-group">
-                    <label>Current Surname</label>
-                    <input type="text" id="currSName" placeholder="e.g. Doe">
+                    <label>Surname</label>
+                    <input type="text" id="currSName" placeholder="Doe">
                 </div>
-                <div class="input-group col-span-2-desktop">
+                <div class="input-group">
                     <label>Current Club</label>
-                    <input type="text" id="currClub" placeholder="e.g. Old Town FC">
+                    <input type="text" id="currClub" placeholder="Old Team FC">
                 </div>
+            </div>
 
+            <div style="height: 30px;"></div> <span class="section-title">New Identity</span>
+            <div class="form-grid">
                 <div class="input-group">
                     <label>New First Name</label>
-                    <input type="text" id="newFName">
+                    <input type="text" id="newFName" placeholder="New First">
                 </div>
                 <div class="input-group">
                     <label>New Surname</label>
-                    <input type="text" id="newSName">
+                    <input type="text" id="newSName" placeholder="New Surname">
                 </div>
                 <div class="input-group">
                     <label>Common Name</label>
-                    <input type="text" id="commonName">
+                    <input type="text" id="commonName" placeholder="Nickname">
                 </div>
+            </div>
 
+            <div style="height: 30px;"></div> <span class="section-title">Statistics</span>
+            <div class="form-grid">
                 <div class="input-group">
-                    <label>Player Birth Year</label>
+                    <label>Birth Year</label>
                     <input type="number" id="birthYear" placeholder="2000">
                 </div>
                 <div class="input-group">
-                    <label>New CA (Max 200)</label>
+                    <label>New CA <span style="font-weight: 400; opacity: 0.6;">(Max 200)</span></label>
                     <input type="number" id="newCA" placeholder="150" max="200">
                 </div>
                 <div class="input-group">
-                    <label>New PA (Max 200)</label>
+                    <label>New PA <span style="font-weight: 400; opacity: 0.6;">(Max 200)</span></label>
                     <input type="number" id="newPA" placeholder="180" max="200">
                 </div>
-
+                
                 <div class="input-group col-span-3">
-                    <label>New Club</label>
-                    <input type="text" id="newClub" placeholder="e.g. New City United">
+                    <label>New Club Destination</label>
+                    <input type="text" id="newClub" placeholder="New City United">
                 </div>
             </div>
 
             <button id="generate-btn" class="btn-primary">
-                <i class="ph ph-plus-circle"></i> Add to List
+                <i class="ph-bold ph-plus"></i> Add Entry
             </button>
 
             <div class="output-section">
                 <div class="output-header">
-                    <span style="font-weight: 600; font-size: 0.9rem;">Generated Lines</span>
-                    <button id="copy-all-btn" class="btn-copy-all">
-                        <i class="ph ph-copy"></i> Copy All Lines
-                    </button>
+                    <label style="margin:0;">Generated Database Lines</label>
+                    <button id="copy-all-btn" class="btn-copy-text">Copy All to Clipboard</button>
                 </div>
                 
                 <div id="list-container" class="list-container">
-                    <div class="empty-state" id="empty-state">No lines generated yet.</div>
+                    <div class="empty-state" id="empty-state">
+                        <i class="ph ph-list-dashes" style="font-size: 2rem; margin-bottom: 10px; display: block;"></i>
+                        No entries generated yet.<br>Fill the form above and click "Add Entry".
+                    </div>
                 </div>
             </div>
         </main>
@@ -334,16 +362,14 @@
         const validateMax = (val) => {
             if (!val) return ""; 
             const num = parseInt(val);
+            if(isNaN(num)) return val;
             return num > 200 ? "200" : val;
         };
 
-        // --- Logic: Add to List ---
+        // --- Generate Function ---
         generateBtn.addEventListener('click', () => {
-            // Get raw values
             let ca = document.getElementById('newCA').value;
             let pa = document.getElementById('newPA').value;
-            
-            // Validate Max 200
             ca = validateMax(ca);
             pa = validateMax(pa);
 
@@ -360,18 +386,14 @@
                 nc: document.getElementById('newClub').value
             };
 
-            // Construct string
             const resultString = `${quote("PLAYER")} ${quote(data.cf)} ${quote(data.cs)} ${quote(data.cc)} ${quote(data.nf)} ${quote(data.ns)} ${quote(data.cn)} ${quote(data.birth)} ${quote(data.ca)} ${quote(data.pa)} ${quote(data.nc)}`;
 
-            // Create List Item UI
             createListItem(resultString);
         });
 
         function createListItem(text) {
-            // Hide empty state
             if(emptyState) emptyState.style.display = 'none';
 
-            // Create elements
             const itemDiv = document.createElement('div');
             itemDiv.className = 'list-item';
 
@@ -382,24 +404,25 @@
             const delBtn = document.createElement('button');
             delBtn.className = 'delete-btn';
             delBtn.innerHTML = '<i class="ph ph-trash"></i>';
-            delBtn.title = "Delete this line";
+            delBtn.title = "Delete Line";
 
-            // Delete Logic
             delBtn.addEventListener('click', () => {
-                itemDiv.remove();
-                // Check if empty
-                if(listContainer.children.length === 0 || (listContainer.children.length === 1 && listContainer.children[0].id === 'empty-state')) {
-                    emptyState.style.display = 'block';
-                }
+                itemDiv.style.opacity = '0';
+                itemDiv.style.transform = 'translateY(10px)';
+                setTimeout(() => {
+                    itemDiv.remove();
+                    if(listContainer.children.length === 0 || (listContainer.children.length === 1 && listContainer.children[0].id === 'empty-state')) {
+                        emptyState.style.display = 'block';
+                    }
+                }, 300);
             });
 
-            // Append
             itemDiv.appendChild(codeSpan);
             itemDiv.appendChild(delBtn);
             listContainer.appendChild(itemDiv);
         }
 
-        // --- Logic: Copy All ---
+        // --- Copy All Function ---
         copyAllBtn.addEventListener('click', () => {
             const items = document.querySelectorAll('.code-text');
             if(items.length === 0) return;
@@ -410,15 +433,15 @@
             });
 
             navigator.clipboard.writeText(allText).then(() => {
-                const originalText = copyAllBtn.innerHTML;
-                copyAllBtn.innerHTML = '<i class="ph ph-check"></i> Copied!';
+                const originalText = copyAllBtn.textContent;
+                copyAllBtn.textContent = 'Copied!';
                 setTimeout(() => {
-                    copyAllBtn.innerHTML = originalText;
+                    copyAllBtn.textContent = originalText;
                 }, 2000);
             });
         });
 
-        // --- Logic: Theme Toggle ---
+        // --- Theme Toggle ---
         themeBtn.addEventListener('click', () => {
             document.body.classList.toggle('dark-mode');
             if (document.body.classList.contains('dark-mode')) {
@@ -428,14 +451,13 @@
             }
         });
 
-        // --- Auto-enforce max 200 on typing (Optional UX improvement) ---
+        // --- Input Enforcement ---
         const limitInputs = [document.getElementById('newCA'), document.getElementById('newPA')];
         limitInputs.forEach(input => {
             input.addEventListener('input', (e) => {
                 if(parseInt(e.target.value) > 200) e.target.value = 200;
             });
         });
-
     </script>
 </body>
 </html>
