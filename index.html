@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>fmXML | Smart Editor</title>
+    <title>fmXML | Kit Master</title>
     <style>
         /* --- VARIABLES --- */
         :root {
@@ -67,9 +67,8 @@
             padding: 0 15px; font-weight: 600; font-size: 0.85rem; cursor: pointer;
             display: flex; align-items: center; gap: 6px; white-space: nowrap;
         }
-        .btn-import:hover { background: rgba(255,255,255,0.1); }
 
-        /* --- STANDARD UPLOAD ZONE --- */
+        /* --- SINGLE UPLOAD ZONE --- */
         .upload-zone {
             flex-grow: 0; border: 2px dashed var(--border-subtle); border-radius: var(--radius-md);
             background: rgba(255,255,255,0.01); position: relative; min-height: 120px;
@@ -77,14 +76,18 @@
             cursor: pointer; transition: all 0.2s ease; margin-bottom: 20px;
         }
         .upload-zone:active { transform: scale(0.98); }
-        .upload-zone:hover { border-color: var(--brand-primary); background: rgba(110, 15, 215, 0.05); }
-        .upload-input { position: absolute; width: 100%; height: 100%; opacity: 0; z-index: 10; cursor: pointer; }
         
-        .icon-large { margin-bottom: 8px; color: var(--brand-primary); }
-        .upload-text { font-weight: 600; color: var(--text-main); }
-        .upload-sub { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; }
+        /* CLICK FIX: Make input cover everything with high Z-Index */
+        .upload-input { 
+            position: absolute; width: 100%; height: 100%; top: 0; left: 0;
+            opacity: 0; z-index: 99; cursor: pointer; 
+        }
+        
+        .icon-large { margin-bottom: 8px; color: var(--brand-primary); pointer-events: none; }
+        .upload-text { font-weight: 600; color: var(--text-main); pointer-events: none; }
+        .upload-sub { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; pointer-events: none; }
 
-        /* --- MULTI-KIT GRID (Hidden by Default) --- */
+        /* --- MULTI-KIT GRID (Hidden Default) --- */
         #multi-kit-container {
             display: none; 
             grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px;
@@ -95,10 +98,10 @@
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             cursor: pointer; text-align: center;
         }
-        .mini-zone:hover { border-color: var(--brand-primary); background: rgba(110, 15, 215, 0.05); }
-        .mini-label { font-size: 0.75rem; color: var(--text-accent); font-weight: 700; margin-bottom: 5px; }
-        .mini-count { font-size: 0.7rem; color: var(--text-muted); }
-        .mini-icon { font-size: 1.2rem; margin-bottom: 5px; opacity: 0.8; }
+        .mini-zone:active { background: rgba(110, 15, 215, 0.1); }
+        .mini-label { font-size: 0.75rem; color: var(--text-accent); font-weight: 700; margin-bottom: 5px; pointer-events: none;}
+        .mini-count { font-size: 0.7rem; color: var(--text-muted); pointer-events: none; }
+        .mini-icon { font-size: 1.2rem; margin-bottom: 5px; opacity: 0.8; pointer-events: none; }
 
         /* --- PREVIEW GRID --- */
         #preview-container {
@@ -107,8 +110,6 @@
             padding: 5px; border: 1px solid var(--border-subtle); border-radius: var(--radius-md);
             background: rgba(0,0,0,0.2);
         }
-        #preview-container::-webkit-scrollbar { width: 4px; }
-        #preview-container::-webkit-scrollbar-thumb { background: var(--brand-primary); border-radius: 4px; }
 
         .preview-item {
             background: var(--bg-input); border-radius: 6px; padding: 4px;
@@ -120,7 +121,7 @@
         .preview-icon { font-size: 1.2rem; line-height: 35px; display: block; opacity: 0.5; }
         .preview-id { font-family: 'SF Mono', monospace; color: var(--text-accent); display: block; overflow: hidden; text-overflow: ellipsis; font-size: 0.6rem;}
         
-        .type-tag { font-size: 0.5rem; padding: 2px 4px; border-radius: 3px; position: absolute; top: 2px; right: 2px; color: white; font-weight: bold; }
+        .type-tag { font-size: 0.5rem; padding: 2px 4px; border-radius: 3px; position: absolute; top: 2px; right: 2px; color: white; font-weight: bold; pointer-events: none;}
         .tag-home { background: #6E0FD7; }
         .tag-away { background: #FF4164; }
         .tag-third { background: #2196F3; }
@@ -170,7 +171,7 @@
                         <option value="faces">Player Faces</option>
                         <option value="logos">Club Logos</option>
                         <option value="logos_small">Small Logos</option>
-                        <option value="kits">Kits</option>
+                        <option value="kits">Kits (All-in-One)</option>
                     </select>
                     
                     <input type="file" id="import-xml" accept=".xml" style="display:none" onchange="handleImport()">
@@ -241,7 +242,7 @@
         let importedIDs = [];
         let allFiles = []; // { file, type }
 
-        // --- INTERFACE TOGGLE ---
+        // --- INTERFACE LOGIC ---
         function toggleInterface() {
             const type = document.getElementById('config-type').value;
             const singleZone = document.getElementById('single-zone');
@@ -257,16 +258,18 @@
             updateUI(); 
         }
 
-        // --- CORE LOGIC ---
+        // --- PATH LOGIC ---
         function getPath(type, id) {
             switch(type) {
                 case 'faces': return `graphics/pictures/person/${id}/portrait`;
                 case 'logos': return `graphics/pictures/club/${id}/logo`;
                 case 'logos_small': return `graphics/pictures/club/${id}/icon`;
-                // Kits use these explicit paths
+                
+                // Kit Paths
                 case 'home': return `graphics/pictures/team/${id}/kit_textures/home`;
                 case 'away': return `graphics/pictures/team/${id}/kit_textures/away`;
                 case 'third': return `graphics/pictures/team/${id}/kit_textures/third`;
+                
                 default: return `graphics/pictures/person/${id}/portrait`;
             }
         }
@@ -297,23 +300,20 @@
             input.value = ""; 
         }
 
-        // 2a. SINGLE UPLOAD (Faces/Logos)
+        // 2a. SINGLE UPLOAD
         function handleSingleUpload() {
             const input = document.getElementById('file-upload-single');
             const files = Array.from(input.files);
-            
             files.forEach(f => {
                 allFiles.push({ file: f, type: 'generic' });
             });
-            
             input.value = ""; 
             updateUI();
         }
 
-        // 2b. MULTI UPLOAD (Kits)
+        // 2b. MULTI UPLOAD
         function handleMultiUpload(kitType, inputElement) {
             const files = Array.from(inputElement.files);
-            
             files.forEach(f => {
                 allFiles.push({ file: f, type: kitType });
             });
@@ -362,7 +362,6 @@
                 span.className = 'preview-id';
                 span.innerText = id;
 
-                // Add Tag for Kits
                 if (item.type !== 'generic') {
                     let tag = document.createElement('span');
                     tag.className = `type-tag tag-${item.type}`;
@@ -383,15 +382,20 @@
 
             let xmlContent = `<record>\n\t<boolean id="preload" value="false"/>\n\t<boolean id="amap" value="false"/>\n\t<list id="maps">\n`;
 
-            // Process Imported IDs
+            // Process Imported
             importedIDs.forEach(id => {
-                // If in kit mode, default import to 'home' or generic? 
-                // Simple logic: imports follow dropdown type.
-                // If dropdown is 'kits', we need a fallback. Let's assume 'home' for kits if generic.
+                // If in kit mode, default import logic to 'home' fallback
                 let pathType = (dropdownType === 'kits') ? 'home' : dropdownType;
                 let path = getPath(pathType, id);
                 xmlContent += `\t\t<record from="${id}" to="${path}"/>\n`;
             });
 
-            // Process Uploaded Files
-   
+            // Process New
+            allFiles.forEach(item => {
+                let file = item.file;
+                let fileName = file.name;
+                let match = fileName.match(/\d+/);
+                let id = match ? match[0] : fileName.substring(0, fileName.lastIndexOf('.'));
+                
+                let typeToUse;
+                if (item.type !== 'generic
