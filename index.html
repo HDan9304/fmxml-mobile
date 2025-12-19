@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FaceMap Pro | Import & Export</title>
+    <title>FaceMap Pro | Smart Import</title>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 
@@ -36,7 +36,7 @@
             background-attachment: fixed;
         }
 
-        /* --- LIQUID GLASS HEADER --- */
+        /* --- HEADER --- */
         header {
             position: sticky;
             top: 10px;
@@ -146,7 +146,6 @@
             gap: 8px;
         }
 
-        /* Action Buttons in Header */
         .header-actions {
             display: flex;
             gap: 8px;
@@ -174,7 +173,6 @@
             color: var(--color-vibrant);
         }
 
-        /* Dark Mode Buttons (Output Section) */
         .btn-action.dark {
             background: rgba(255,255,255,0.1);
             border-color: rgba(255,255,255,0.2);
@@ -204,7 +202,6 @@
         }
         
         .drop-zone:active { background: #f0f0f0; }
-
         .drop-zone i { font-size: 32px; color: var(--color-vibrant); margin-bottom: 6px; }
         .drop-zone p { margin: 0; font-weight: 600; font-size: 14px; color: #555; }
         
@@ -352,9 +349,9 @@
         
         <section class="input-section">
             <div class="card-header">
-                <h2>Upload (<span id="countDisplay">0</span>)</h2>
+                <h2>List (<span id="countDisplay">0</span>)</h2>
                 <div class="header-actions">
-                    <button class="btn-action" onclick="document.getElementById('importElem').click()">
+                    <button class="btn-action" onclick="document.getElementById('importElem').value=null; document.getElementById('importElem').click()">
                         <i class="ph ph-file-arrow-up"></i> Import XML
                     </button>
                     <input type="file" id="importElem" accept=".xml">
@@ -461,25 +458,31 @@
             updateUI();
         }
 
-        // --- Logic: Import XML ---
+        // --- Logic: Import XML (FIXED) ---
         function handleImport(file) {
             if (!file) return;
             const reader = new FileReader();
             reader.onload = (e) => {
                 const text = e.target.result;
-                // Regex to find: from="FILENAME" to=".../ID/portrait"
-                const regex = /<record from="([^"]+)" to="graphics\/pictures\/person\/([^"]+)\/portrait"\/>/g;
+                
+                // NEW FLEXIBLE REGEX:
+                // Allows single/double quotes, spaces around =, and lax whitespace
+                // Captures: 1=Filename, 2=PlayerID
+                const regex = /from=["'](.*?)["'].*?to=["']graphics\/pictures\/person\/(.*?)\/portrait["']/g;
+                
                 let match;
                 let count = 0;
 
                 while ((match = regex.exec(text)) !== null) {
                     const cleanName = match[1];
                     const playerId = match[2];
-                    const entryId = Date.now() + Math.random() + count; // ensure unique ID
+                    const entryId = Date.now() + Math.random() + count;
 
+                    // Avoid duplicate UIDs
+                    
                     const entry = {
                         uid: entryId,
-                        fileObj: null, // No image data available on import
+                        fileObj: null,
                         originalName: cleanName + " (Imported)", 
                         cleanName: cleanName, 
                         playerId: playerId
@@ -489,9 +492,12 @@
                     addListItem(entry);
                     count++;
                 }
-                updateUI();
-                // Reset input
-                importElem.value = ''; 
+
+                if (count > 0) {
+                    updateUI();
+                } else {
+                    alert("No player records found in this XML file. Make sure it follows the standard Football Manager config format.");
+                }
             };
             reader.readAsText(file);
         }
@@ -505,12 +511,12 @@
             item.className = 'image-item';
             item.id = `item-${entry.uid}`;
 
-            // Handle Preview (Real Image vs Placeholder)
+            // Handle Preview
             let thumbnailHTML;
             if (entry.fileObj) {
                 thumbnailHTML = `<img class="thumb-preview" id="thumb-${entry.uid}">`;
             } else {
-                thumbnailHTML = `<div class="thumb-placeholder"><i class="ph ph-file-text"></i></div>`;
+                thumbnailHTML = `<div class="thumb-placeholder"><i class="ph ph-user"></i></div>`;
             }
 
             item.innerHTML = `
@@ -527,7 +533,6 @@
             
             imageList.prepend(item);
 
-            // Lazy load image if it exists
             if (entry.fileObj) {
                 const img = document.getElementById(`thumb-${entry.uid}`);
                 const reader = new FileReader();
@@ -612,11 +617,9 @@
             document.body.appendChild(a);
             a.click();
             
-            // Clean up
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
             
-            // Visual feedback
             const originalHTML = downloadBtn.innerHTML;
             downloadBtn.innerHTML = 'SAVED';
             downloadBtn.style.background = '#2ecc71';
