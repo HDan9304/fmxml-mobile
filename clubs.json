@@ -2,31 +2,19 @@
   { 
     "menu": "Arsenal", 
     "code": "Arsenal FC", 
+    "nation": "England",
     "logo": "https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg" 
   },
   { 
-    "menu": "Aston Villa", 
-    "code": "Aston Villa", 
-    "logo": "https://upload.wikimedia.org/wikipedia/en/f/f9/Aston_Villa_FC_crest_%282016%29.svg" 
+    "menu": "Real Madrid", 
+    "code": "Real Madrid", 
+    "nation": "Spain",
+    "logo": "https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg" 
   },
   { 
-    "menu": "Chelsea", 
-    "code": "Chelsea FC", 
-    "logo": "https://upload.wikimedia.org/wikipedia/en/c/cc/Chelsea_FC.svg" 
-  },
-  { 
-    "menu": "Liverpool", 
-    "code": "Liverpool FC", 
-    "logo": "https://upload.wikimedia.org/wikipedia/en/0/0c/Liverpool_FC.svg" 
-  },
-  { 
-    "menu": "Man City", 
-    "code": "Manchester City", 
-    "logo": "https://upload.wikimedia.org/wikipedia/en/e/eb/Manchester_City_FC_badge.svg" 
-  },
-  { 
-    "menu": "Man Utd", 
-    "code": "Manchester United", 
-    "logo": "https://upload.wikimedia.org/wikipedia/en/7/7a/Manchester_United_FC_crest.svg" 
+    "menu": "Bayern Munich", 
+    "code": "FC Bayern Munich", 
+    "nation": "Germany",
+    "logo": "https://upload.wikimedia.org/wikipedia/commons/1/1b/FC_Bayern_München_logo_%282017%29.svg" 
   }
 ]

@@ -26,7 +26,6 @@
             --text-main: #111827;
             --text-muted: #6B7280;
             
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
             --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             --focus-ring: 0 0 0 3px rgba(106, 0, 216, 0.15);
         }
@@ -55,7 +54,7 @@
             min-height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: flex-start; /* Better for long forms */
+            align-items: flex-start;
             transition: background-color 0.3s, color 0.3s;
         }
 
@@ -79,257 +78,103 @@
             border-bottom: 1px solid var(--border-color);
         }
 
-        .brand {
-            display: flex; align-items: center; gap: 12px;
-        }
-        
+        .brand { display: flex; align-items: center; gap: 12px; }
         .brand-icon {
-            background: var(--primary-light);
-            color: var(--primary);
-            width: 40px; height: 40px;
-            border-radius: 8px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.5rem;
+            background: var(--primary-light); color: var(--primary);
+            width: 40px; height: 40px; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center; font-size: 1.5rem;
         }
-
         h1 { margin: 0; font-size: 1.25rem; font-weight: 700; letter-spacing: -0.01em; }
         .subtitle { font-size: 0.85rem; color: var(--text-muted); margin: 0; display: none; }
         @media(min-width: 600px) { .subtitle { display: block; } }
 
-        /* Header Buttons */
         .header-actions { display: flex; gap: 10px; }
-
         .btn-icon {
-            width: 40px; height: 40px;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            background: transparent;
-            color: var(--text-muted);
-            cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.2rem;
-            transition: all 0.2s;
+            width: 40px; height: 40px; border-radius: 8px; border: 1px solid var(--border-color);
+            background: transparent; color: var(--text-muted); cursor: pointer;
+            display: flex; align-items: center; justify-content: center; font-size: 1.2rem; transition: all 0.2s;
         }
-        .btn-icon:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-            background-color: var(--bg-body);
-        }
+        .btn-icon:hover { border-color: var(--primary); color: var(--primary); background-color: var(--bg-body); }
 
-        /* --- Layout Grid --- */
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-        }
-        @media (min-width: 768px) {
-            .form-grid { grid-template-columns: repeat(3, 1fr); gap: 24px; }
-            .col-span-3 { grid-column: span 3; }
-        }
+        /* --- Inputs --- */
+        .form-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+        @media (min-width: 768px) { .form-grid { grid-template-columns: repeat(3, 1fr); gap: 24px; } .col-span-3 { grid-column: span 3; } }
 
         .section-title {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-            font-weight: 700;
-            color: var(--primary);
-            margin: 24px 0 12px 0;
-            display: block;
+            font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em;
+            font-weight: 700; color: var(--primary); margin: 24px 0 12px 0; display: block;
         }
         .section-title:first-child { margin-top: 0; }
 
-        /* --- Inputs & Labels --- */
         .input-group { display: flex; flex-direction: column; gap: 6px; }
-
-        label {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.02em;
-        }
+        label { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.02em; }
         .required-label::after { content: "*"; color: var(--danger); margin-left: 2px; }
 
-        /* --- CRITICAL: Unified Input Height --- */
-        input[type="text"], 
-        input[type="number"], 
-        .custom-select-trigger {
-            width: 100%;
-            height: 48px; /* Fixed Height for Alignment */
-            padding: 0 12px;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            background-color: var(--bg-input);
-            color: var(--text-main);
-            font-family: 'Inter', sans-serif;
-            font-size: 0.95rem;
-            transition: all 0.2s ease;
-            display: flex; /* Flex needed for dropdown trigger content */
-            align-items: center; 
+        input[type="text"], input[type="number"], .custom-select-trigger {
+            width: 100%; height: 48px; padding: 0 12px;
+            border-radius: 8px; border: 1px solid var(--border-color); background-color: var(--bg-input);
+            color: var(--text-main); font-family: 'Inter', sans-serif; font-size: 0.95rem;
+            transition: all 0.2s ease; display: flex; align-items: center; 
         }
-
-        input:focus, .custom-select-trigger:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: var(--focus-ring);
-        }
-
+        input:focus, .custom-select-trigger:focus { outline: none; border-color: var(--primary); box-shadow: var(--focus-ring); }
         input::placeholder { color: var(--text-muted); opacity: 0.5; }
+        .input-error { border-color: var(--danger) !important; animation: shake 0.3s ease-in-out; }
 
-        .input-error {
-            border-color: var(--danger) !important;
-            animation: shake 0.3s ease-in-out;
-        }
-
-        /* --- CUSTOM DROPDOWN STYLING --- */
-        .custom-select-wrapper {
-            position: relative;
-            width: 100%;
-        }
-
-        .custom-select-trigger {
-            justify-content: space-between;
-            cursor: pointer;
-        }
-        
+        /* --- Custom Dropdown --- */
+        .custom-select-wrapper { position: relative; width: 100%; }
+        .custom-select-trigger { justify-content: space-between; cursor: pointer; }
         .custom-select-trigger:hover { border-color: #9CA3AF; }
-
-        .custom-select-wrapper.open .custom-select-trigger {
-            border-color: var(--primary);
-            box-shadow: var(--focus-ring);
-        }
-
+        .custom-select-wrapper.open .custom-select-trigger { border-color: var(--primary); box-shadow: var(--focus-ring); }
+        
         .custom-options {
-            position: absolute;
-            top: 54px; /* Push down slightly */
-            left: 0; right: 0;
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.15);
-            max-height: 240px;
-            overflow-y: auto;
-            z-index: 100; /* Float above everything */
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-            transition: all 0.2s ease;
+            position: absolute; top: 54px; left: 0; right: 0;
+            background-color: var(--bg-card); border: 1px solid var(--border-color);
+            border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.15);
+            max-height: 240px; overflow-y: auto; z-index: 100;
+            opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.2s ease;
         }
-
-        .custom-select-wrapper.open .custom-options {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-
-        .custom-option {
-            display: flex;
-            align-items: center;
-            padding: 10px 12px;
-            cursor: pointer;
-            border-bottom: 1px solid var(--border-color);
-            transition: background 0.1s;
-        }
+        .custom-select-wrapper.open .custom-options { opacity: 1; visibility: visible; transform: translateY(0); }
+        
+        .custom-option { display: flex; align-items: center; padding: 10px 12px; cursor: pointer; border-bottom: 1px solid var(--border-color); transition: background 0.1s; }
         .custom-option:last-child { border-bottom: none; }
         .custom-option:hover { background-color: var(--bg-body); }
         
-        .option-img {
-            width: 24px; height: 24px;
-            object-fit: contain;
-            margin-right: 12px;
-        }
+        .option-img { width: 24px; height: 24px; object-fit: contain; margin-right: 12px; }
         .option-text { font-size: 0.9rem; color: var(--text-main); }
         .caret { transition: transform 0.2s; color: var(--text-muted); }
         .custom-select-wrapper.open .caret { transform: rotate(180deg); color: var(--primary); }
 
-        /* --- Main CTA Button --- */
+        /* --- Buttons --- */
         .btn-primary {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 14px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 1rem;
-            width: 100%;
-            margin-top: 32px;
-            cursor: pointer;
-            display: flex; justify-content: center; align-items: center; gap: 8px;
-            transition: background 0.2s, transform 0.1s;
-            box-shadow: 0 4px 6px -1px rgba(106, 0, 216, 0.25);
+            background-color: var(--primary); color: white; border: none; padding: 14px;
+            border-radius: 8px; font-weight: 600; font-size: 1rem; width: 100%; margin-top: 32px;
+            cursor: pointer; display: flex; justify-content: center; align-items: center; gap: 8px;
+            transition: background 0.2s, transform 0.1s; box-shadow: 0 4px 6px -1px rgba(106, 0, 216, 0.25);
         }
         .btn-primary:hover { background-color: var(--primary-hover); transform: translateY(-1px); }
         .btn-primary:active { transform: translateY(0); }
 
         /* --- Output Section --- */
         .output-section { margin-top: 40px; padding-top: 24px; border-top: 1px dashed var(--border-color); }
-        
-        .toolbar {
-            display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;
-        }
-        @media (min-width: 600px) {
-            .toolbar { flex-direction: row; justify-content: space-between; align-items: center; }
-        }
-
+        .toolbar { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+        @media (min-width: 600px) { .toolbar { flex-direction: row; justify-content: space-between; align-items: center; } }
         .action-group { display: flex; gap: 12px; width: 100%; }
         @media (min-width: 600px) { .action-group { width: auto; } }
 
         .btn-action {
-            flex: 1;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-            padding: 10px 16px;
-            background-color: var(--bg-body);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            color: var(--text-main);
-            font-size: 0.85rem; font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
+            flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;
+            padding: 10px 16px; background-color: var(--bg-body); border: 1px solid var(--border-color);
+            border-radius: 8px; color: var(--text-main); font-size: 0.85rem; font-weight: 600;
+            cursor: pointer; transition: all 0.2s;
         }
-        .btn-action:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-            background-color: var(--bg-card);
-            box-shadow: var(--shadow-sm);
-        }
+        .btn-action:hover { border-color: var(--primary); color: var(--primary); background-color: var(--bg-card); }
 
-        /* --- List --- */
         .list-container { display: flex; flex-direction: column; gap: 12px; }
-        
-        .list-item {
-            background-color: var(--bg-input);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 12px 16px;
-            display: flex; align-items: center; justify-content: space-between;
-            gap: 12px;
-            animation: fadeIn 0.3s ease;
-        }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-
-        .code-text {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.8rem;
-            color: var(--text-main);
-            word-break: break-all;
-        }
-
-        .delete-btn {
-            background: transparent; border: none; color: var(--text-muted);
-            width: 32px; height: 32px;
-            display: flex; align-items: center; justify-content: center;
-            border-radius: 6px; cursor: pointer; transition: 0.2s;
-        }
+        .list-item { background-color: var(--bg-input); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+        .code-text { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--text-main); word-break: break-all; }
+        .delete-btn { background: transparent; border: none; color: var(--text-muted); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 6px; cursor: pointer; transition: 0.2s; }
         .delete-btn:hover { background: #FEF2F2; color: var(--danger); }
-        
-        .empty-state {
-            text-align: center; padding: 40px; color: var(--text-muted);
-            font-size: 0.9rem;
-            border: 2px dashed var(--border-color);
-            border-radius: 12px;
-            background: var(--bg-body);
-        }
-
+        .empty-state { text-align: center; padding: 40px; color: var(--text-muted); font-size: 0.9rem; border: 2px dashed var(--border-color); border-radius: 12px; background: var(--bg-body); }
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
 
     </style>
@@ -339,24 +184,13 @@
     <div class="app-container">
         <header>
             <div class="brand">
-                <div class="brand-icon">
-                    <i class="ph-fill ph-database"></i>
-                </div>
-                <div>
-                    <h1>Generator</h1>
-                    <p class="subtitle">Player Entry System</p>
-                </div>
+                <div class="brand-icon"><i class="ph-fill ph-database"></i></div>
+                <div><h1>Generator</h1><p class="subtitle">Player Entry System</p></div>
             </div>
-            
             <div class="header-actions">
                 <input type="file" id="fileInput" accept=".txt" style="display: none;">
-                
-                <button id="upload-btn" class="btn-icon" title="Import File">
-                    <i class="ph-bold ph-upload-simple"></i>
-                </button>
-                <button id="theme-toggle" class="btn-icon" title="Toggle Dark Mode">
-                    <i class="ph ph-moon"></i>
-                </button>
+                <button id="upload-btn" class="btn-icon" title="Import File"><i class="ph-bold ph-upload-simple"></i></button>
+                <button id="theme-toggle" class="btn-icon" title="Toggle Dark Mode"><i class="ph ph-moon"></i></button>
             </div>
         </header>
 
@@ -371,7 +205,6 @@
                     <label class="required-label">Surname</label>
                     <input type="text" id="currSName" placeholder="Doe" required>
                 </div>
-                
                 <div class="input-group">
                     <label class="required-label">Current Club</label>
                     <input type="hidden" id="currClubValue">
@@ -380,8 +213,7 @@
                             <span class="option-text" style="opacity: 0.5;">Select Club...</span>
                             <i class="ph-bold ph-caret-down caret"></i>
                         </div>
-                        <div class="custom-options">
-                            </div>
+                        <div class="custom-options"></div>
                     </div>
                 </div>
             </div>
@@ -416,7 +248,6 @@
                     <label>New PA <span style="font-weight: 400; opacity: 0.6; font-size: 0.7em;">(Max 200)</span></label>
                     <input type="number" id="newPA" placeholder="180" max="200">
                 </div>
-                
                 <div class="input-group col-span-3">
                     <label>New Club Destination</label>
                     <input type="hidden" id="newClubValue">
@@ -425,8 +256,7 @@
                             <span class="option-text" style="opacity: 0.5;">Select Club...</span>
                             <i class="ph-bold ph-caret-down caret"></i>
                         </div>
-                        <div class="custom-options">
-                            </div>
+                        <div class="custom-options"></div>
                     </div>
                 </div>
             </div>
@@ -439,15 +269,10 @@
                 <div class="toolbar">
                     <label style="margin:0; font-size: 0.75rem; font-weight: 700; color: var(--text-muted);">GENERATED ENTRIES</label>
                     <div class="action-group">
-                        <button id="copy-all-btn" class="btn-action">
-                            <i class="ph ph-copy"></i> Copy
-                        </button>
-                        <button id="download-btn" class="btn-action">
-                            <i class="ph ph-download-simple"></i> Save
-                        </button>
+                        <button id="copy-all-btn" class="btn-action"><i class="ph ph-copy"></i> Copy</button>
+                        <button id="download-btn" class="btn-action"><i class="ph ph-download-simple"></i> Save .txt</button>
                     </div>
                 </div>
-                
                 <div id="list-container" class="list-container">
                     <div class="empty-state" id="empty-state">
                         <i class="ph ph-list-dashes" style="font-size: 2rem; margin-bottom: 12px; display: block; opacity: 0.3;"></i>
@@ -459,9 +284,11 @@
     </div>
 
     <script>
+        // --- GLOBAL STORAGE FOR CLUBS ---
+        let globalClubList = [];
+
         // --- DOM Elements ---
         const themeBtn = document.getElementById('theme-toggle');
-        const themeIcon = themeBtn.querySelector('i');
         const generateBtn = document.getElementById('generate-btn');
         const listContainer = document.getElementById('list-container');
         const emptyState = document.getElementById('empty-state');
@@ -470,19 +297,19 @@
         const uploadBtn = document.getElementById('upload-btn');
         const fileInput = document.getElementById('fileInput');
 
-        // --- Custom Dropdown Logic ---
+        // --- Init ---
         async function initCustomDropdowns() {
             try {
                 const response = await fetch('clubs.json');
                 if(!response.ok) throw new Error("JSON not found");
-                const clubList = await response.json();
-
-                setupCustomSelect('currClub-wrapper', 'currClubValue', clubList);
-                setupCustomSelect('newClub-wrapper', 'newClubValue', clubList);
+                globalClubList = await response.json(); 
+                
+                setupCustomSelect('currClub-wrapper', 'currClubValue', globalClubList);
+                setupCustomSelect('newClub-wrapper', 'newClubValue', globalClubList);
             } catch (error) {
-                console.warn("Clubs.json not found, using dummy data.");
-                // Dummy data for preview if JSON fails
-                const dummyData = [{menu: "Demo Club", code: "Demo FC", logo: ""}];
+                console.warn("Clubs.json not found.", error);
+                const dummyData = [{menu: "Demo Club", code: "Demo FC", nation: "Unknown", logo: ""}];
+                globalClubList = dummyData;
                 setupCustomSelect('currClub-wrapper', 'currClubValue', dummyData);
                 setupCustomSelect('newClub-wrapper', 'newClubValue', dummyData);
             }
@@ -506,14 +333,9 @@
                 `;
 
                 option.addEventListener('click', () => {
-                    // Set View
                     triggerText.textContent = club.menu;
                     triggerText.style.opacity = "1";
-                    
-                    // Set Value
                     hiddenInput.value = club.code;
-
-                    // UI Cleanup
                     trigger.classList.remove('input-error');
                     wrapper.classList.remove('open');
                 });
@@ -521,106 +343,71 @@
             });
 
             trigger.addEventListener('click', (e) => {
-                document.querySelectorAll('.custom-select-wrapper').forEach(w => {
-                    if (w !== wrapper) w.classList.remove('open');
-                });
+                document.querySelectorAll('.custom-select-wrapper').forEach(w => { if (w !== wrapper) w.classList.remove('open'); });
                 wrapper.classList.toggle('open');
                 e.stopPropagation();
             });
         }
-
         window.addEventListener('click', (e) => {
-            document.querySelectorAll('.custom-select-wrapper').forEach(w => {
-                if (!w.contains(e.target)) w.classList.remove('open');
-            });
+            document.querySelectorAll('.custom-select-wrapper').forEach(w => { if (!w.contains(e.target)) w.classList.remove('open'); });
         });
-
         initCustomDropdowns();
 
-        // --- Generator Logic ---
+        // --- Logic ---
         const quote = (str) => `"${str ? str.trim() : ''}"`;
         const validateMax = (val) => {
             if (!val) return ""; 
             const num = parseInt(val);
-            if(isNaN(num)) return val;
-            return num > 200 ? "200" : val;
+            return (isNaN(num) || num > 200) ? "200" : val;
         };
 
-        function validateRequired() {
+        generateBtn.addEventListener('click', () => {
             const fName = document.getElementById('currFName');
             const sName = document.getElementById('currSName');
-            const clubInput = document.getElementById('currClubValue'); 
+            const clubInput = document.getElementById('currClubValue');
             const clubTrigger = document.getElementById('currClub-wrapper').querySelector('.custom-select-trigger');
-
+            
             let isValid = true;
-
             [fName, sName].forEach(el => {
-                if (!el.value) {
-                    el.classList.add('input-error');
-                    isValid = false;
-                    el.addEventListener('input', () => el.classList.remove('input-error'), {once: true});
-                }
+                if (!el.value) { el.classList.add('input-error'); isValid = false; el.addEventListener('input', () => el.classList.remove('input-error'), {once: true}); }
             });
+            if (!clubInput.value) { clubTrigger.classList.add('input-error'); isValid = false; }
+            if(!isValid) return;
 
-            if (!clubInput.value) {
-                clubTrigger.classList.add('input-error');
-                isValid = false;
-            }
-
-            return isValid;
-        }
-
-        generateBtn.addEventListener('click', () => {
-            if(!validateRequired()) return;
-
-            let ca = document.getElementById('newCA').value;
-            let pa = document.getElementById('newPA').value;
-            ca = validateMax(ca);
-            pa = validateMax(pa);
+            let ca = validateMax(document.getElementById('newCA').value);
+            let pa = validateMax(document.getElementById('newPA').value);
 
             const data = {
-                cf: document.getElementById('currFName').value,
-                cs: document.getElementById('currSName').value,
-                cc: document.getElementById('currClubValue').value,
-                nf: document.getElementById('newFName').value,
-                ns: document.getElementById('newSName').value,
-                cn: document.getElementById('commonName').value,
-                birth: document.getElementById('birthYear').value,
-                ca: ca,
-                pa: pa,
-                nc: document.getElementById('newClubValue').value
+                cf: fName.value, cs: sName.value, cc: clubInput.value,
+                nf: document.getElementById('newFName').value, ns: document.getElementById('newSName').value,
+                cn: document.getElementById('commonName').value, birth: document.getElementById('birthYear').value,
+                ca: ca, pa: pa, nc: document.getElementById('newClubValue').value
             };
 
             const resultString = `${quote("PLAYER")} ${quote(data.cf)} ${quote(data.cs)} ${quote(data.cc)} ${quote(data.nf)} ${quote(data.ns)} ${quote(data.cn)} ${quote(data.birth)} ${quote(data.ca)} ${quote(data.pa)} ${quote(data.nc)}`;
-
             createListItem(resultString);
         });
 
         function createListItem(text) {
             if(emptyState) emptyState.style.display = 'none';
-
             const itemDiv = document.createElement('div');
             itemDiv.className = 'list-item';
-
+            
             const codeSpan = document.createElement('span');
             codeSpan.className = 'code-text';
             codeSpan.textContent = text;
-
+            
             const delBtn = document.createElement('button');
             delBtn.className = 'delete-btn';
             delBtn.innerHTML = '<i class="ph ph-trash"></i>';
-            delBtn.title = "Delete Line";
-            delBtn.addEventListener('click', () => {
-                itemDiv.remove();
-                if(listContainer.children.length === 0) emptyState.style.display = 'block';
-            });
+            delBtn.addEventListener('click', () => { itemDiv.remove(); if(listContainer.children.length === 0) emptyState.style.display = 'block'; });
 
             itemDiv.appendChild(codeSpan);
             itemDiv.appendChild(delBtn);
             listContainer.appendChild(itemDiv);
         }
 
-        // --- File Operations ---
+        // --- File Logic ---
         uploadBtn.addEventListener('click', () => fileInput.click());
         fileInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
@@ -629,37 +416,58 @@
             reader.onload = function(e) {
                 const lines = e.target.result.split(/\r?\n/);
                 let count = 0;
-                lines.forEach(line => {
-                    if (line.trim()) { createListItem(line.trim()); count++; }
-                });
+                lines.forEach(line => { if (line.trim() && !line.startsWith('//')) { createListItem(line.trim()); count++; } });
                 fileInput.value = '';
                 if(count > 0) alert(`Imported ${count} lines.`);
             };
             reader.readAsText(file);
         });
 
-        function getAllText() {
+        function getAllTextLines() {
             const items = document.querySelectorAll('.code-text');
-            if(items.length === 0) return null;
-            let allText = "";
-            items.forEach(span => { allText += span.textContent + "\n"; });
-            return allText;
+            if(items.length === 0) return [];
+            const lines = [];
+            items.forEach(span => lines.push(span.textContent));
+            return lines;
         }
 
-        copyAllBtn.addEventListener('click', () => {
-            const text = getAllText();
-            if(!text) return;
-            navigator.clipboard.writeText(text).then(() => {
-                const originalHtml = copyAllBtn.innerHTML;
-                copyAllBtn.innerHTML = '<i class="ph ph-check"></i> Copied';
-                setTimeout(() => { copyAllBtn.innerHTML = originalHtml; }, 2000);
-            });
-        });
-
+        // --- UPDATED DOWNLOAD LOGIC (Group by NEW CLUB NATION) ---
         downloadBtn.addEventListener('click', () => {
-            const text = getAllText();
-            if(!text) { alert("Generate some lines first!"); return; }
-            const blob = new Blob([text], { type: 'text/plain' });
+            const lines = getAllTextLines();
+            if(lines.length === 0) { alert("Generate some lines first!"); return; }
+
+            // Grouping Logic
+            const groups = {};
+
+            lines.forEach(line => {
+                // Find the content of the LAST quoted string (New Club)
+                const match = line.match(/"([^"]*)"$/);
+                const newClubCode = match ? match[1] : null;
+
+                let nation = "Other"; // Default
+                if (newClubCode) {
+                    // Find this code in our globalClubList
+                    const clubData = globalClubList.find(c => c.code === newClubCode);
+                    if (clubData && clubData.nation) {
+                        nation = clubData.nation;
+                    }
+                }
+
+                if (!groups[nation]) groups[nation] = [];
+                groups[nation].push(line);
+            });
+
+            // Construct Final String
+            let finalText = "";
+            const sortedNations = Object.keys(groups).sort();
+            
+            sortedNations.forEach(nation => {
+                finalText += `// ${nation}\n`;
+                finalText += groups[nation].join("\n");
+                finalText += "\n\n"; // Space between groups
+            });
+
+            const blob = new Blob([finalText], { type: 'text/plain' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
@@ -670,19 +478,25 @@
             URL.revokeObjectURL(url);
         });
 
+        copyAllBtn.addEventListener('click', () => {
+            const lines = getAllTextLines();
+            if(lines.length === 0) return;
+            navigator.clipboard.writeText(lines.join("\n")).then(() => {
+                const originalHtml = copyAllBtn.innerHTML;
+                copyAllBtn.innerHTML = '<i class="ph ph-check"></i> Copied';
+                setTimeout(() => { copyAllBtn.innerHTML = originalHtml; }, 2000);
+            });
+        });
+
         themeBtn.addEventListener('click', () => {
             document.body.classList.toggle('dark-mode');
-            if (document.body.classList.contains('dark-mode')) {
-                themeIcon.classList.replace('ph-moon', 'ph-sun');
-            } else {
-                themeIcon.classList.replace('ph-sun', 'ph-moon');
-            }
+            const icon = themeBtn.querySelector('i');
+            if (document.body.classList.contains('dark-mode')) icon.className = 'ph ph-sun';
+            else icon.className = 'ph ph-moon';
         });
 
         [document.getElementById('newCA'), document.getElementById('newPA')].forEach(input => {
-            input.addEventListener('input', (e) => {
-                if(parseInt(e.target.value) > 200) e.target.value = 200;
-            });
+            input.addEventListener('input', (e) => { if(parseInt(e.target.value) > 200) e.target.value = 200; });
         });
     </script>
 </body>
