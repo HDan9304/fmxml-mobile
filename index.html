@@ -51,7 +51,7 @@
             background-color: var(--bg-body);
             color: var(--text-main);
             margin: 0;
-            padding: 40px 20px;
+            padding: 20px;
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -65,8 +65,12 @@
             max-width: 960px;
             border-radius: 12px;
             box-shadow: var(--shadow);
-            padding: 40px;
+            padding: 30px; /* Reduced padding for mobile */
             border: 1px solid var(--border-color);
+        }
+
+        @media (min-width: 768px) {
+            .app-container { padding: 40px; }
         }
 
         /* --- Header --- */
@@ -78,24 +82,70 @@
             padding-bottom: 20px;
             border-bottom: 1px solid var(--border-color);
         }
-        
-        h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.025em; }
-        .subtitle { font-size: 0.875rem; color: var(--text-muted); margin-top: 4px; }
 
+        .brand {
+            display: flex; 
+            align-items: center; 
+            gap: 12px;
+        }
+        
+        h1 { margin: 0; font-size: 1.2rem; font-weight: 700; letter-spacing: -0.025em; }
+        .subtitle { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; display: none; }
+        
+        @media (min-width: 640px) {
+            h1 { font-size: 1.5rem; }
+            .subtitle { display: block; }
+        }
+
+        /* Header Actions (Upload + Theme) */
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        /* --- Buttons --- */
         .icon-btn {
             background: transparent;
             border: 1px solid var(--border-color);
             color: var(--text-main);
-            width: 36px;
-            height: 36px;
-            border-radius: 6px;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             transition: 0.2s;
+            flex-shrink: 0;
         }
-        .icon-btn:hover { border-color: var(--primary); color: var(--primary); }
+        .icon-btn:hover { border-color: var(--primary); color: var(--primary); background-color: var(--bg-item); }
+
+        /* Upload Button (Header Style) */
+        .btn-upload-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 16px;
+            height: 40px;
+            border: 1px solid var(--primary); /* Highlighted */
+            color: var(--primary);
+            border-radius: 8px;
+            background: rgba(106, 0, 216, 0.05);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-upload-header:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Hide text label on very small screens for upload */
+        .upload-label { display: none; }
+        @media(min-width: 480px) { .upload-label { display: inline; } }
+
 
         /* --- Section Separators --- */
         .section-title {
@@ -113,11 +163,11 @@
         .form-grid {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 24px;
+            gap: 20px;
         }
 
         @media (min-width: 768px) {
-            .form-grid { grid-template-columns: repeat(3, 1fr); }
+            .form-grid { grid-template-columns: repeat(3, 1fr); gap: 24px; }
             .col-span-3 { grid-column: span 3; }
         }
 
@@ -136,12 +186,12 @@
         input, select {
             width: 100%;
             padding: 12px 16px;
-            border-radius: 6px;
+            border-radius: 8px;
             border: 1px solid var(--border-color);
             background-color: var(--input-bg);
             color: var(--text-main);
             font-family: 'Inter', sans-serif;
-            font-size: 0.95rem;
+            font-size: 16px; /* Prevents iOS zoom */
             transition: border-color 0.2s, box-shadow 0.2s;
             appearance: none; -webkit-appearance: none;
         }
@@ -175,7 +225,7 @@
             padding: 16px;
             border-radius: 8px;
             font-weight: 600;
-            font-size: 0.95rem;
+            font-size: 1rem;
             cursor: pointer;
             width: 100%;
             margin-top: 30px;
@@ -184,8 +234,9 @@
             align-items: center;
             gap: 8px;
             transition: transform 0.1s, background-color 0.2s;
+            box-shadow: 0 4px 6px -1px rgba(106, 0, 216, 0.2);
         }
-        .btn-primary:active { transform: scale(0.99); }
+        .btn-primary:active { transform: scale(0.98); }
         .btn-primary:hover { background-color: var(--primary-hover); }
 
         /* --- Output Section --- */
@@ -195,52 +246,54 @@
             border-top: 1px dashed var(--border-color);
         }
 
-        /* --- NEW: Professional Toolbar Header --- */
+        /* --- BOTTOM ACTION BAR --- */
         .output-header {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap; /* Allows wrapping on small screens */
+            flex-direction: column; /* Stack on mobile */
             gap: 15px;
             margin-bottom: 20px;
+        }
+        
+        @media (min-width: 600px) {
+            .output-header {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
         }
 
         .action-group {
             display: flex;
-            gap: 12px;
+            gap: 10px;
+            width: 100%;
         }
 
-        /* --- NEW: Button Action Style --- */
+        @media (min-width: 600px) {
+            .action-group { width: auto; }
+        }
+
+        /* --- Bottom Buttons Style --- */
         .btn-action {
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
-            padding: 10px 16px;
-            background-color: transparent;
+            padding: 12px 16px;
+            background-color: var(--bg-body);
             border: 1px solid var(--border-color);
             border-radius: 8px;
             color: var(--text-main);
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-        }
-
-        .btn-action i {
-            font-size: 1.1rem;
-            color: var(--primary); /* Icon color pops */
+            transition: all 0.2s;
+            flex: 1; /* Makes them share width equally on mobile */
         }
 
         .btn-action:hover {
             border-color: var(--primary);
             background-color: var(--bg-card);
-            transform: translateY(-2px); /* Subtle lift effect */
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
-
-        .btn-action:active {
-            transform: translateY(0);
+            color: var(--primary);
         }
 
         /* --- List Styles --- */
@@ -271,10 +324,10 @@
             background: transparent;
             border: 1px solid var(--border-color);
             color: var(--text-muted);
-            width: 32px;
-            height: 32px;
+            width: 36px;
+            height: 36px;
             display: flex; align-items: center; justify-content: center;
-            border-radius: 6px;
+            border-radius: 8px; /* Softer radius for touch */
             cursor: pointer;
             flex-shrink: 0;
             transition: 0.2s;
@@ -289,18 +342,28 @@
 
     <div class="app-container">
         <header>
-            <div style="display: flex; align-items: center; gap: 12px;">
-                <div style="background: var(--primary-light); padding: 8px; border-radius: 8px;">
-                    <i class="ph-fill ph-database" style="font-size: 1.5rem; color: var(--primary);"></i>
+            <div class="brand">
+                <div style="background: var(--primary-light); padding: 6px; border-radius: 6px; display: flex;">
+                    <i class="ph-fill ph-database" style="font-size: 1.4rem; color: var(--primary);"></i>
                 </div>
                 <div>
-                    <h1>Code Generator</h1>
-                    <p class="subtitle">Streamlined Player Entry System</p>
+                    <h1>Generator</h1>
+                    <p class="subtitle">Player Entry System</p>
                 </div>
             </div>
-            <button id="theme-toggle" class="icon-btn" title="Toggle Dark Mode">
-                <i class="ph ph-moon"></i>
-            </button>
+            
+            <div class="header-actions">
+                <input type="file" id="fileInput" accept=".txt" style="display: none;">
+                
+                <button id="upload-btn" class="btn-upload-header" title="Import File">
+                    <i class="ph-bold ph-upload-simple"></i>
+                    <span class="upload-label">Import</span>
+                </button>
+                
+                <button id="theme-toggle" class="icon-btn" title="Toggle Dark Mode">
+                    <i class="ph ph-moon"></i>
+                </button>
+            </div>
         </header>
 
         <main>
@@ -317,7 +380,7 @@
                 <div class="input-group">
                     <label class="required-label">Current Club</label>
                     <select id="currClub" required>
-                        <option value="" disabled selected>Loading Clubs...</option>
+                        <option value="" disabled selected>Loading...</option>
                     </select>
                 </div>
             </div>
@@ -360,7 +423,7 @@
                 <div class="input-group col-span-3">
                     <label>New Club Destination</label>
                     <select id="newClub">
-                        <option value="" disabled selected>Loading Clubs...</option>
+                        <option value="" disabled selected>Loading...</option>
                     </select>
                 </div>
             </div>
@@ -371,19 +434,14 @@
 
             <div class="output-section">
                 <div class="output-header">
-                    <label style="margin:0; font-size: 0.8rem; opacity: 0.8;">GENERATED ENTRIES</label>
+                    <label style="margin:0; font-size: 0.8rem; opacity: 0.8;">GENERATED LIST</label>
                     
                     <div class="action-group">
-                        <input type="file" id="fileInput" accept=".txt" style="display: none;">
-                        
-                        <button id="upload-btn" class="btn-action" title="Import from file">
-                            <i class="ph ph-upload-simple"></i> Upload
-                        </button>
                         <button id="copy-all-btn" class="btn-action" title="Copy to clipboard">
                             <i class="ph ph-copy"></i> Copy
                         </button>
                         <button id="download-btn" class="btn-action" title="Save as .txt">
-                            <i class="ph ph-download-simple"></i> Download
+                            <i class="ph ph-download-simple"></i> Save
                         </button>
                     </div>
                 </div>
@@ -391,7 +449,7 @@
                 <div id="list-container" class="list-container">
                     <div class="empty-state" id="empty-state">
                         <i class="ph ph-list-dashes" style="font-size: 2rem; margin-bottom: 10px; display: block;"></i>
-                        No entries generated yet.<br>Fill form or Upload .txt
+                        No entries yet.
                     </div>
                 </div>
             </div>
