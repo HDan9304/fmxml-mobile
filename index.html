@@ -138,6 +138,12 @@
             color: var(--text-muted);
         }
 
+        /* Add Asterisk to Required Labels */
+        .required-label::after {
+            content: " *";
+            color: var(--danger);
+        }
+
         input, select {
             width: 100%;
             padding: 12px 16px;
@@ -164,6 +170,19 @@
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 4px var(--primary-light);
+        }
+
+        /* NEW: Error State Class */
+        .input-error {
+            border-color: var(--danger) !important;
+            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1) !important;
+            animation: shake 0.3s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
         }
 
         input::placeholder { color: var(--text-muted); opacity: 0.5; }
@@ -293,16 +312,16 @@
             <span class="section-title">Current Details</span>
             <div class="form-grid">
                 <div class="input-group">
-                    <label>First Name</label>
-                    <input type="text" id="currFName" placeholder="John">
+                    <label class="required-label">First Name</label>
+                    <input type="text" id="currFName" placeholder="John" required>
                 </div>
                 <div class="input-group">
-                    <label>Surname</label>
-                    <input type="text" id="currSName" placeholder="Doe">
+                    <label class="required-label">Surname</label>
+                    <input type="text" id="currSName" placeholder="Doe" required>
                 </div>
                 <div class="input-group">
-                    <label>Current Club</label>
-                    <select id="currClub">
+                    <label class="required-label">Current Club</label>
+                    <select id="currClub" required>
                         <option value="" disabled selected>Loading Clubs...</option>
                     </select>
                 </div>
@@ -392,50 +411,39 @@
         const newClubSelect = document.getElementById('newClub');
 
         // ============================================
-        // 1. FETCH DATA FROM EXTERNAL FILE
+        // 1. FETCH DATA
         // ============================================
         async function loadClubs() {
             try {
-                // Fetch the JSON file
                 const response = await fetch('clubs.json');
-                if (!response.ok) {
-                    throw new Error("HTTP error " + response.status);
-                }
+                if (!response.ok) throw new Error("HTTP error " + response.status);
                 const clubList = await response.json();
-                
-                // Populate the dropdowns
                 populateDropdown(currClubSelect, clubList);
                 populateDropdown(newClubSelect, clubList);
             } catch (error) {
                 console.error("Could not load clubs.json:", error);
-                // Fallback / Error handling
                 currClubSelect.innerHTML = '<option disabled>Error loading clubs</option>';
                 newClubSelect.innerHTML = '<option disabled>Error loading clubs</option>';
             }
         }
 
         function populateDropdown(selectElement, data) {
-            // Clear loading text
             selectElement.innerHTML = '<option value="" disabled selected>Select Club</option>';
-            
             data.forEach(club => {
                 const opt = document.createElement('option');
-                opt.value = club.code; // Full Name
-                opt.textContent = club.menu; // Short Name
+                opt.value = club.code;
+                opt.textContent = club.menu;
                 selectElement.appendChild(opt);
             });
         }
 
-        // Run this when the page loads
         loadClubs();
 
-
         // ============================================
-        // 2. MAIN LOGIC (Same as before)
+        // 2. MAIN LOGIC
         // ============================================
         
         const quote = (str) => `"${str ? str.trim() : ''}"`;
-
         const validateMax = (val) => {
             if (!val) return ""; 
             const num = parseInt(val);
@@ -443,7 +451,37 @@
             return num > 200 ? "200" : val;
         };
 
+        // --- NEW: Input Validation Function ---
+        function validateRequired() {
+            const fName = document.getElementById('currFName');
+            const sName = document.getElementById('currSName');
+            const club = document.getElementById('currClub');
+            
+            const required = [fName, sName, club];
+            let isValid = true;
+
+            required.forEach(el => {
+                // Check if value is empty
+                if (!el.value || el.value === "") {
+                    el.classList.add('input-error');
+                    isValid = false;
+
+                    // Remove error when user types/changes
+                    el.addEventListener('input', () => el.classList.remove('input-error'), {once: true});
+                    el.addEventListener('change', () => el.classList.remove('input-error'), {once: true});
+                }
+            });
+
+            return isValid;
+        }
+
         generateBtn.addEventListener('click', () => {
+            // 1. Check Validation first
+            if(!validateRequired()) {
+                // Optional: alert("Please fill in required fields.");
+                return; // Stop if invalid
+            }
+
             let ca = document.getElementById('newCA').value;
             let pa = document.getElementById('newPA').value;
             ca = validateMax(ca);
