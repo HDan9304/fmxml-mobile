@@ -2,634 +2,277 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FaceMap Pro | Smart Import</title>
-    <script src="https://unpkg.com/@phosphor-icons/web"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player Code Generator</title>
     <style>
-        /* --- CSS Variables --- */
+        /* --- CSS Variables Definitions based on Image Palette --- */
         :root {
-            --color-darkest: #0a0e1a;
-            --color-vibrant: #6a00d7;
-            --color-accent: #a870ff;
-            --color-soft: #d1c4f0;
-            --color-bg-light: #f4f1fa;
-            --color-white: #ffffff;
-            --glass-border: rgba(255, 255, 255, 0.6);
-            --glass-bg: rgba(255, 255, 255, 0.65);
-            --border-radius: 16px;
+            /* Light Mode Palette (Default) - Pulling from the lighter side of the image */
+            --bg-gradient-start: #E8E0F8; /* Very light purple */
+            --bg-gradient-end: #CFC0F0;   /* Light purple */
+            --container-bg: #FFFFFF;
+            --text-color: #2A1035;        /* Deep dark purple for text */
+            --input-bg: #F8F5FF;
+            --input-border: #A870FF;      /* Medium purple */
+            --primary-btn-bg: #6A00D8;    /* Deep vibrant purple */
+            --primary-btn-hover: #5000A6;
+            --toggle-btn-bg: #CFC0F0;
+            --toggle-btn-text: #2A1035;
         }
 
-        /* --- Global Reset & Body --- */
+        /* Dark Mode Palette - Pulling from the darker side of the image */
+        body.dark-mode {
+            --bg-gradient-start: #101020; /* Almost black purple */
+            --bg-gradient-end: #251535;   /* Dark purple */
+            --container-bg: #2A1B3D;      /* Dark container background */
+            --text-color: #E8E0F8;        /* Light text */
+            --input-bg: #3B2855;
+            --input-border: #6A00D8;      /* Vibrant purple border */
+            --primary-btn-bg: #A870FF;    /* Lighter purple for contrast on dark */
+            --primary-btn-hover: #CFC0F0;
+            --toggle-btn-bg: #3B2855;
+            --toggle-btn-text: #E8E0F8;
+        }
+
+        /* --- Base Styles --- */
         body {
-            font-family: 'Montserrat', Helvetica, Arial, sans-serif;
-            background-color: var(--color-bg-light);
-            color: var(--color-darkest);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+            color: var(--text-color);
             margin: 0;
-            padding: 0;
+            padding: 20px;
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
-            /* Bold ']' Pattern */
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Ctext x='50%25' y='50%25' font-family='Montserrat' font-weight='900' font-size='80' fill='%236a00d7' opacity='0.06' text-anchor='middle' dominant-baseline='middle'%3E%5D%3C/text%3E%3C/svg%3E");
-            background-attachment: fixed;
-        }
-
-        /* --- HEADER --- */
-        header {
-            position: sticky;
-            top: 10px;
-            z-index: 1000;
-            margin: 10px auto 15px auto;
-            width: 92%;
-            max-width: 1180px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(16px) saturate(180%);
-            -webkit-backdrop-filter: blur(16px) saturate(180%);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(106, 0, 215, 0.1);
-            padding: 12px 20px;
-            display: flex;
+            justify-content: center;
             align-items: center;
-            gap: 12px;
-            transition: all 0.3s ease;
+            transition: background 0.3s ease, color 0.3s ease;
         }
 
-        .logo-icon {
-            font-size: 24px;
-            color: var(--color-white);
-            background: linear-gradient(135deg, var(--color-vibrant), var(--color-accent));
-            padding: 8px;
-            border-radius: 10px;
+        .container {
+            background-color: var(--container-bg);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            width: 100%;
+            max-width: 800px;
+            transition: background-color 0.3s ease;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--input-border);
+            padding-bottom: 15px;
         }
 
         h1 {
             margin: 0;
-            font-size: 18px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-            color: #222;
+            font-size: 1.8rem;
+            color: var(--primary-btn-bg);
         }
 
-        /* --- Main Layout --- */
-        main.container {
-            flex: 1;
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            box-sizing: border-box;
-            display: flex;
-            gap: 20px;
-            padding: 0 20px 40px 20px;
+        /* --- Form Grid Layout --- */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
         }
 
-        /* --- Cards --- */
-        .input-section, .output-section {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(5px);
-            border-radius: var(--border-radius);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+        @media (min-width: 600px) {
+            .form-grid {
+                grid-template-columns: 1fr 1fr; /* Two columns on larger screens */
+            }
+        }
+
+        .input-group {
             display: flex;
             flex-direction: column;
-            overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.8);
         }
 
-        /* Desktop Layout */
-        @media (min-width: 901px) {
-            main.container { height: 85vh; }
-            .input-section { flex: 1; }
-            .output-section { flex: 1; }
-        }
-
-        /* Mobile Layout */
-        @media (max-width: 900px) {
-            header { top: 5px; width: calc(100% - 20px); margin-bottom: 10px; }
-            main.container {
-                flex-direction: column;
-                height: auto;
-                padding: 0 10px 40px 10px;
-            }
-            .input-section, .output-section {
-                width: 100%;
-                flex: none;
-            }
-            .output-section { order: 2; }
-        }
-
-        /* --- Card Components --- */
-        .card-header {
-            padding: 12px 16px;
-            border-bottom: 1px solid rgba(0,0,0,0.06);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(255,255,255,0.6);
-        }
-
-        .output-section .card-header {
-            background: var(--color-darkest);
-            color: var(--color-white);
-            border: none;
-        }
-
-        .card-header h2 {
-            margin: 0;
-            font-size: 14px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .btn-action {
-            border: 1px solid rgba(0,0,0,0.1);
-            background: white;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 11px;
+        label {
+            margin-bottom: 6px;
             font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-family: inherit;
-            color: var(--color-darkest);
-            transition: 0.2s;
+            font-size: 0.9rem;
         }
 
-        .btn-action:hover {
-            background: var(--color-bg-light);
-            border-color: var(--color-vibrant);
-            color: var(--color-vibrant);
-        }
-
-        .btn-action.dark {
-            background: rgba(255,255,255,0.1);
-            border-color: rgba(255,255,255,0.2);
-            color: var(--color-white);
-        }
-        
-        .btn-action.dark:hover {
-            background: var(--color-vibrant);
-            border-color: var(--color-vibrant);
-        }
-
-        /* --- Input Area --- */
-        .drop-area {
-            padding: 15px;
-            background: rgba(250, 248, 255, 0.5);
-            flex-shrink: 0;
-        }
-
-        .drop-zone {
-            border: 2px dashed #ccc;
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-            background: rgba(255,255,255,0.7);
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        
-        .drop-zone:active { background: #f0f0f0; }
-        .drop-zone i { font-size: 32px; color: var(--color-vibrant); margin-bottom: 6px; }
-        .drop-zone p { margin: 0; font-weight: 600; font-size: 14px; color: #555; }
-        
-        #fileElem, #importElem { display: none; }
-
-        .image-list {
-            flex: 1;
-            overflow-y: auto;
-            background: rgba(255,255,255,0.4);
-            max-height: 350px; 
-            min-height: 150px;
-        }
-
-        .image-item {
-            display: flex;
-            align-items: center;
-            padding: 10px 15px;
-            border-bottom: 1px solid rgba(0,0,0,0.05);
-            gap: 12px;
-            background: #fff;
-        }
-
-        .thumb-preview {
-            width: 40px;
-            height: 40px;
-            object-fit: cover;
+        input[type="text"],
+        input[type="number"] {
+            padding: 10px;
+            border: 2px solid var(--input-border);
             border-radius: 8px;
-            background: #eee;
-            border: 1px solid #ddd;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            font-size: 1rem;
+            transition: all 0.3s ease;
         }
-        
-        .thumb-placeholder {
-            width: 40px;
-            height: 40px;
+
+        input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(168, 112, 255, 0.3);
+        }
+
+        /* --- Buttons --- */
+        button {
+            cursor: pointer;
+            border: none;
+            padding: 10px 20px;
             border-radius: 8px;
-            background: #f0f0f0;
-            border: 1px solid #ddd;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #ccc;
-            font-size: 20px;
+            font-weight: bold;
+            transition: background-color 0.2s ease;
         }
 
-        .item-details { flex: 1; }
-
-        .input-label-small {
-            font-size: 9px;
-            font-weight: 700;
-            color: #aaa;
-            text-transform: uppercase;
-            margin-bottom: 2px;
+        #theme-toggle {
+            background-color: var(--toggle-btn-bg);
+            color: var(--toggle-btn-text);
         }
 
-        .id-input {
-            border: 1px solid #ddd;
-            padding: 8px;
-            border-radius: 6px;
-            font-size: 14px;
+        #generate-btn {
+            background-color: var(--primary-btn-bg);
+            color: white;
+            font-size: 1.1rem;
             width: 100%;
-            max-width: 140px;
-            font-family: 'Montserrat', sans-serif;
-            color: var(--color-vibrant);
-            font-weight: 600;
-            background: #f9f9f9;
+            padding: 12px;
+            margin-top: 25px;
         }
 
-        .file-name-display {
-            font-size: 10px;
-            color: #666;
-            margin-top: 4px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            max-width: 140px;
-            background: rgba(0,0,0,0.03);
-            padding: 2px 4px;
-            border-radius: 4px;
-            display: inline-block;
-        }
-
-        .btn-remove {
-            color: #ff6b6b;
-            background: none;
-            border: none;
-            padding: 8px;
-            font-size: 18px;
-            cursor: pointer;
+        #generate-btn:hover {
+            background-color: var(--primary-btn-hover);
         }
 
         /* --- Output Section --- */
         .output-section {
-            background: var(--color-darkest);
-            color: var(--color-soft);
+            margin-top: 30px;
         }
 
-        .xml-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        textarea.xml-preview {
-            flex: 1;
+        textarea {
             width: 100%;
-            background: transparent;
-            border: none;
-            color: #d1c4f0;
-            font-family: "SF Mono", "Monaco", "Inconsolata", monospace;
-            padding: 20px;
-            box-sizing: border-box;
-            resize: none;
-            white-space: pre;
-            line-height: 1.5;
+            height: 100px;
+            padding: 10px;
+            border: 2px solid var(--input-border);
+            border-radius: 8px;
+            background-color: var(--input-bg);
+            color: var(--text-color);
+            font-family: 'Courier New', Courier, monospace;
+            resize: vertical;
+            box-sizing: border-box; /* Important for padding to not affect width */
         }
-
-        @media (min-width: 901px) { textarea.xml-preview { font-size: 13px; } }
-
-        @media (max-width: 900px) {
-            textarea.xml-preview {
-                min-height: 400px; 
-                font-size: 11px; 
-            }
-        }
-
-        textarea.xml-preview:focus { outline: none; }
-
-        .empty-state {
-            padding: 30px 10px;
-            text-align: center;
-            color: #999;
-            font-size: 13px;
-        }
-
     </style>
 </head>
 <body>
 
+<div class="container">
     <header>
-        <i class="ph ph-images-square logo-icon"></i>
-        <h1>FaceMap Pro</h1>
+        <h1>Player Database Code Gen</h1>
+        <button id="theme-toggle">🌙 Dark Mode</button>
     </header>
 
-    <main class="container">
-        
-        <section class="input-section">
-            <div class="card-header">
-                <h2>List (<span id="countDisplay">0</span>)</h2>
-                <div class="header-actions">
-                    <button class="btn-action" onclick="document.getElementById('importElem').value=null; document.getElementById('importElem').click()">
-                        <i class="ph ph-file-arrow-up"></i> Import XML
-                    </button>
-                    <input type="file" id="importElem" accept=".xml">
-                </div>
+    <main>
+        <div class="form-grid">
+            <div class="input-group">
+                <label for="currFName">Current First Name</label>
+                <input type="text" id="currFName" placeholder="e.g. John">
+            </div>
+            <div class="input-group">
+                <label for="currSName">Current SurName</label>
+                <input type="text" id="currSName" placeholder="e.g. Doe">
+            </div>
+            <div class="input-group" style="grid-column: 1 / -1;">
+                <label for="currClub">Current Club</label>
+                <input type="text" id="currClub" placeholder="e.g. Old Town FC">
             </div>
 
-            <div class="drop-area">
-                <div class="drop-zone" id="dropZone">
-                    <i class="ph ph-plus-circle"></i>
-                    <p>Tap or Drop Faces</p>
-                    <input type="file" id="fileElem" multiple accept="image/*">
-                </div>
+            <div class="input-group">
+                <label for="newFName">New First Name</label>
+                <input type="text" id="newFName">
+            </div>
+            <div class="input-group">
+                <label for="newSName">New SurName</label>
+                <input type="text" id="newSName">
             </div>
 
-            <div class="image-list" id="imageList">
-                <div class="empty-state">
-                    List is empty
-                </div>
+            <div class="input-group">
+                <label for="commonName">Common Name</label>
+                <input type="text" id="commonName" placeholder="e.g. JD">
             </div>
-        </section>
+             <div class="input-group">
+                <label for="stat1">Stat 1 (e.g. 2000)</label>
+                <input type="number" id="stat1" placeholder="2000">
+            </div>
+             <div class="input-group">
+                <label for="stat2">Stat 2 (e.g. 200)</label>
+                <input type="number" id="stat2" placeholder="200">
+            </div>
+             <div class="input-group">
+                <label for="stat3">Stat 3 (e.g. 200)</label>
+                <input type="number" id="stat3" placeholder="200">
+            </div>
 
-        <section class="output-section">
-            <div class="card-header">
-                <h2>config.xml</h2>
-                <div class="header-actions">
-                    <button class="btn-action dark" id="downloadBtn">
-                        <i class="ph ph-download-simple"></i> Save
-                    </button>
-                    <button class="btn-action dark" id="copyBtn">
-                        <i class="ph ph-copy"></i> Copy
-                    </button>
-                </div>
+            <div class="input-group" style="grid-column: 1 / -1;">
+                <label for="newClub">New Club</label>
+                <input type="text" id="newClub" placeholder="e.g. New City United">
             </div>
-            <div class="xml-container">
-                <textarea class="xml-preview" id="xmlOutput" readonly spellcheck="false"></textarea>
-            </div>
-        </section>
+        </div>
 
+        <button id="generate-btn">Generate Code Snippet</button>
+
+        <div class="output-section">
+            <label for="outputResult">Generated Result:</label>
+            <textarea id="outputResult" readonly placeholder="Your code will appear here..."></textarea>
+        </div>
     </main>
+</div>
 
-    <script>
-        let filesData = [];
+<script>
+    // Define elements needed for interaction
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    const generateBtn = document.getElementById('generate-btn');
+    const outputTextarea = document.getElementById('outputResult');
+    const bodyElement = document.body;
 
-        const dropZone = document.getElementById('dropZone');
-        const fileElem = document.getElementById('fileElem');
-        const importElem = document.getElementById('importElem');
-        const imageList = document.getElementById('imageList');
-        const xmlOutput = document.getElementById('xmlOutput');
-        const countDisplay = document.getElementById('countDisplay');
-        const copyBtn = document.getElementById('copyBtn');
-        const downloadBtn = document.getElementById('downloadBtn');
+    // Helper function to wrap a value in double quotes.
+    // If the input is empty, it returns empty quotes "".
+    const quote = (str) => `"${str || ''}"`;
 
-        // --- Drag & Drop ---
-        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-            dropZone.addEventListener(eventName, preventDefaults, false);
-            document.body.addEventListener(eventName, preventDefaults, false);
-        });
+    // --- Event Listener 1: Generate Button Click ---
+    generateBtn.addEventListener('click', () => {
+        // 1. Get values from inputs
+        // Using .trim() to remove accidentally added leading/trailing spaces from user input
+        const currFName = document.getElementById('currFName').value.trim();
+        const currSName = document.getElementById('currSName').value.trim();
+        const currClub = document.getElementById('currClub').value.trim();
+        const newFName = document.getElementById('newFName').value.trim();
+        const newSName = document.getElementById('newSName').value.trim();
+        const commonName = document.getElementById('commonName').value.trim();
+        const stat1 = document.getElementById('stat1').value.trim();
+        const stat2 = document.getElementById('stat2').value.trim();
+        const stat3 = document.getElementById('stat3').value.trim();
+        const newClub = document.getElementById('newClub').value.trim();
 
-        function preventDefaults (e) { e.preventDefault(); e.stopPropagation(); }
+        // 2. Construct the final string using template literals
+        // The requirement starts with the fixed string "PLAYER"
+        const finalString = `${quote("PLAYER")} ${quote(currFName)} ${quote(currSName)} ${quote(currClub)} ${quote(newFName)} ${quote(newSName)} ${quote(commonName)} ${quote(stat1)} ${quote(stat2)} ${quote(stat3)} ${quote(newClub)}`;
 
-        ['dragenter', 'dragover'].forEach(eventName => {
-            dropZone.addEventListener(eventName, () => dropZone.style.borderColor = '#6a00d7', false);
-        });
+        // 3. Place result in textarea
+        outputTextarea.value = finalString;
+    });
 
-        ['dragleave', 'drop'].forEach(eventName => {
-            dropZone.addEventListener(eventName, () => dropZone.style.borderColor = '', false);
-        });
 
-        dropZone.addEventListener('drop', handleDrop, false);
-        dropZone.addEventListener('click', () => fileElem.click());
-        fileElem.addEventListener('change', function() { handleFiles(this.files); });
+    // --- Event Listener 2: Dark Mode Toggle ---
+    themeToggleBtn.addEventListener('click', () => {
+        // Toggle the 'dark-mode' CSS class on the body tag
+        bodyElement.classList.toggle('dark-mode');
 
-        // --- Import Handler ---
-        importElem.addEventListener('change', function() { handleImport(this.files[0]); });
-
-        function handleDrop(e) {
-            const dt = e.dataTransfer;
-            const files = dt.files;
-            handleFiles(files);
+        // Update button text based on current mode
+        if (bodyElement.classList.contains('dark-mode')) {
+            themeToggleBtn.textContent = '☀️ Light Mode';
+        } else {
+            themeToggleBtn.textContent = '🌙 Dark Mode';
         }
+    });
 
-        function handleFiles(files) {
-            ([...files]).forEach(uploadFile);
-        }
+</script>
 
-        // --- Logic: Add Image Entry ---
-        function uploadFile(file) {
-            if (!file.type.startsWith('image/')) return;
-
-            const fileName = file.name;
-            const fileNameNoExt = fileName.substring(0, fileName.lastIndexOf('.')) || fileName;
-            const entryId = Date.now() + Math.random();
-
-            const entry = {
-                uid: entryId,
-                fileObj: file,
-                originalName: fileName, 
-                cleanName: fileNameNoExt, 
-                playerId: fileNameNoExt 
-            };
-
-            filesData.push(entry);
-            addListItem(entry);
-            updateUI();
-        }
-
-        // --- Logic: Import XML (FIXED) ---
-        function handleImport(file) {
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const text = e.target.result;
-                
-                // NEW FLEXIBLE REGEX:
-                // Allows single/double quotes, spaces around =, and lax whitespace
-                // Captures: 1=Filename, 2=PlayerID
-                const regex = /from=["'](.*?)["'].*?to=["']graphics\/pictures\/person\/(.*?)\/portrait["']/g;
-                
-                let match;
-                let count = 0;
-
-                while ((match = regex.exec(text)) !== null) {
-                    const cleanName = match[1];
-                    const playerId = match[2];
-                    const entryId = Date.now() + Math.random() + count;
-
-                    // Avoid duplicate UIDs
-                    
-                    const entry = {
-                        uid: entryId,
-                        fileObj: null,
-                        originalName: cleanName + " (Imported)", 
-                        cleanName: cleanName, 
-                        playerId: playerId
-                    };
-                    
-                    filesData.push(entry);
-                    addListItem(entry);
-                    count++;
-                }
-
-                if (count > 0) {
-                    updateUI();
-                } else {
-                    alert("No player records found in this XML file. Make sure it follows the standard Football Manager config format.");
-                }
-            };
-            reader.readAsText(file);
-        }
-
-        function addListItem(entry) {
-            if (imageList.querySelector('.empty-state')) {
-                imageList.innerHTML = '';
-            }
-
-            const item = document.createElement('div');
-            item.className = 'image-item';
-            item.id = `item-${entry.uid}`;
-
-            // Handle Preview
-            let thumbnailHTML;
-            if (entry.fileObj) {
-                thumbnailHTML = `<img class="thumb-preview" id="thumb-${entry.uid}">`;
-            } else {
-                thumbnailHTML = `<div class="thumb-placeholder"><i class="ph ph-user"></i></div>`;
-            }
-
-            item.innerHTML = `
-                <div class="thumb-wrapper">${thumbnailHTML}</div>
-                <div class="item-details">
-                    <div class="input-label-small">Set Player ID</div>
-                    <input type="text" class="id-input" value="${entry.playerId}" placeholder="Enter ID" oninput="updateId(${entry.uid}, this.value)">
-                    <div class="file-name-display" title="Mapped Name"><i class="ph ph-link"></i> ${entry.cleanName}</div>
-                </div>
-                <button class="btn-remove" onclick="removeEntry(${entry.uid})">
-                    <i class="ph ph-x"></i>
-                </button>
-            `;
-            
-            imageList.prepend(item);
-
-            if (entry.fileObj) {
-                const img = document.getElementById(`thumb-${entry.uid}`);
-                const reader = new FileReader();
-                reader.onload = (e) => { img.src = e.target.result; };
-                reader.readAsDataURL(entry.fileObj);
-            }
-        }
-
-        window.updateId = function(uid, newId) {
-            const index = filesData.findIndex(f => f.uid === uid);
-            if (index > -1) {
-                filesData[index].playerId = newId;
-                generateXML();
-            }
-        }
-
-        window.removeEntry = function(uid) {
-            filesData = filesData.filter(f => f.uid !== uid);
-            const el = document.getElementById(`item-${uid}`);
-            if(el) el.remove();
-            
-            if (filesData.length === 0) {
-                imageList.innerHTML = `<div class="empty-state">List is empty</div>`;
-            }
-            updateUI();
-        }
-
-        function updateUI() {
-            countDisplay.innerText = filesData.length;
-            generateXML();
-        }
-
-        function generateXML() {
-            const header = `<record>\n\t\n\t<boolean id="preload" value="false"/>\n\t<boolean id="amap" value="false"/>\n\n\t\n\t<list id="maps">\n`;
-            
-            let body = '';
-            filesData.forEach(entry => {
-                body += `\t\t<record from="${entry.cleanName}" to="graphics/pictures/person/${entry.playerId}/portrait"/>\n`;
-            });
-
-            const footer = `\t</list>\n</record>`;
-
-            if (filesData.length === 0) {
-                xmlOutput.value = "";
-            } else {
-                xmlOutput.value = header + body + footer;
-            }
-        }
-
-        generateXML();
-
-        // --- Copy Logic ---
-        copyBtn.addEventListener('click', () => {
-            if (filesData.length === 0) return;
-            
-            xmlOutput.select();
-            xmlOutput.setSelectionRange(0, 99999);
-            navigator.clipboard.writeText(xmlOutput.value).then(() => {
-                const originalHTML = copyBtn.innerHTML;
-                copyBtn.innerHTML = 'COPIED';
-                copyBtn.style.background = '#2ecc71';
-                copyBtn.style.borderColor = '#2ecc71';
-                setTimeout(() => {
-                    copyBtn.innerHTML = originalHTML;
-                    copyBtn.style.background = '';
-                    copyBtn.style.borderColor = '';
-                }, 2000);
-            });
-        });
-
-        // --- Download Logic ---
-        downloadBtn.addEventListener('click', () => {
-            if (filesData.length === 0) return;
-            
-            const textToSave = xmlOutput.value;
-            const blob = new Blob([textToSave], { type: "text/xml" });
-            const url = URL.createObjectURL(blob);
-            
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = "config.xml";
-            document.body.appendChild(a);
-            a.click();
-            
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            
-            const originalHTML = downloadBtn.innerHTML;
-            downloadBtn.innerHTML = 'SAVED';
-            downloadBtn.style.background = '#2ecc71';
-            downloadBtn.style.borderColor = '#2ecc71';
-            setTimeout(() => {
-                downloadBtn.innerHTML = originalHTML;
-                downloadBtn.style.background = '';
-                downloadBtn.style.borderColor = '';
-            }, 2000);
-        });
-    </script>
 </body>
 </html>
