@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FaceMap Pro | Liquid Glass</title>
+    <title>FaceMap Pro | Name to ID Mapper</title>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
 
@@ -173,7 +173,6 @@
             flex: 1;
             overflow-y: auto;
             background: rgba(255,255,255,0.4);
-            /* Mobile: Restrict list height so page isn't endless */
             max-height: 350px; 
             min-height: 150px;
         }
@@ -197,6 +196,14 @@
 
         .item-details { flex: 1; }
 
+        .input-label-small {
+            font-size: 9px;
+            font-weight: 700;
+            color: #aaa;
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+
         .id-input {
             border: 1px solid #ddd;
             padding: 8px;
@@ -211,13 +218,17 @@
         }
 
         .file-name-display {
-            font-size: 11px;
-            color: #999;
-            margin-top: 2px;
+            font-size: 10px;
+            color: #666;
+            margin-top: 4px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
             max-width: 140px;
+            background: rgba(0,0,0,0.03);
+            padding: 2px 4px;
+            border-radius: 4px;
+            display: inline-block;
         }
 
         .btn-remove {
@@ -229,7 +240,7 @@
             cursor: pointer;
         }
 
-        /* --- Output Section (Restored Box Size) --- */
+        /* --- Output Section --- */
         .output-section {
             background: var(--color-darkest);
             color: var(--color-soft);
@@ -255,16 +266,13 @@
             line-height: 1.5;
         }
 
-        /* Font Sizes & Responsive Box Heights */
         @media (min-width: 901px) {
             textarea.xml-preview { font-size: 13px; }
         }
 
         @media (max-width: 900px) {
             textarea.xml-preview {
-                /* Restored to a larger box size as requested */
                 min-height: 400px; 
-                /* Font size kept small as requested */
                 font-size: 11px; 
             }
         }
@@ -386,14 +394,16 @@
             if (!file.type.startsWith('image/')) return;
 
             const fileName = file.name;
-            const guessedId = fileName.substring(0, fileName.lastIndexOf('.')) || fileName;
+            // Get clean filename without extension for the 'from' attribute
+            const fileNameNoExt = fileName.substring(0, fileName.lastIndexOf('.')) || fileName;
             const entryId = Date.now() + Math.random();
 
             const entry = {
                 uid: entryId,
                 fileObj: file,
-                fileName: fileName,
-                playerId: guessedId
+                originalName: fileName, // Full name with extension
+                cleanName: fileNameNoExt, // Clean name for logic
+                playerId: fileNameNoExt // Initial ID assumption
             };
 
             filesData.push(entry);
@@ -417,11 +427,13 @@
             reader.onload = (e) => { img.src = e.target.result; };
             reader.readAsDataURL(entry.fileObj);
 
+            // Added labels to make it clear what is being edited
             item.innerHTML = `
                 <div class="thumb-wrapper"></div>
                 <div class="item-details">
-                    <input type="text" class="id-input" value="${entry.playerId}" oninput="updateId(${entry.uid}, this.value)">
-                    <div class="file-name-display">${entry.fileName}</div>
+                    <div class="input-label-small">Set Player ID</div>
+                    <input type="text" class="id-input" value="${entry.playerId}" placeholder="Enter ID" oninput="updateId(${entry.uid}, this.value)">
+                    <div class="file-name-display" title="Original Filename"><i class="ph ph-file-image"></i> ${entry.originalName}</div>
                 </div>
                 <button class="btn-remove" onclick="removeEntry(${entry.uid})">
                     <i class="ph ph-x"></i>
@@ -461,7 +473,8 @@
             
             let body = '';
             filesData.forEach(entry => {
-                body += `\t\t<record from="${entry.playerId}" to="graphics/pictures/person/${entry.playerId}/portrait"/>\n`;
+                // LOGIC: from="OriginalFileName" to=".../PlayerID/..."
+                body += `\t\t<record from="${entry.cleanName}" to="graphics/pictures/person/${entry.playerId}/portrait"/>\n`;
             });
 
             const footer = `\t</list>\n</record>`;
