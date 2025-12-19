@@ -16,34 +16,34 @@
         :root {
             --primary: #6A00D8;
             --primary-hover: #5000A6;
-            --primary-light: #F0E6FF; 
-            --danger: #DC2626;
+            --primary-light: #F3E8FF; 
+            --danger: #EF4444;
             
-            --bg-body: #F3F4F6;
+            --bg-body: #F9FAFB;
             --bg-card: #FFFFFF;
-            --bg-item: #F9FAFB;
+            --bg-input: #FFFFFF;
+            --border-color: #E5E7EB;
             --text-main: #111827;
             --text-muted: #6B7280;
-            --border-color: #E5E7EB;
-            --input-bg: #FFFFFF;
-            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --focus-ring: 0 0 0 3px rgba(106, 0, 216, 0.15);
         }
 
         body.dark-mode {
             --bg-body: #0F172A; 
             --bg-card: #1E293B;
-            --bg-item: #334155;
+            --bg-input: #0F172A;
+            --border-color: #334155;
             --text-main: #F8FAFC;
             --text-muted: #94A3B8;
-            --border-color: #334155;
-            --input-bg: #0F172A;
-            --primary: #A870FF; 
+            --primary: #A870FF;
             --primary-hover: #C099FF;
-            --primary-light: #2A1B3D;
-            --danger: #F87171;
+            --primary-light: #312E81;
         }
 
-        /* --- Base Layout --- */
+        /* --- Global Reset --- */
         * { box-sizing: border-box; }
         
         body {
@@ -55,22 +55,18 @@
             min-height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
-            transition: all 0.3s ease;
+            align-items: flex-start; /* Better for long forms */
+            transition: background-color 0.3s, color 0.3s;
         }
 
         .app-container {
             background-color: var(--bg-card);
             width: 100%;
-            max-width: 960px;
+            max-width: 900px;
             border-radius: 12px;
-            box-shadow: var(--shadow);
-            padding: 30px;
+            box-shadow: var(--shadow-md);
+            padding: 32px;
             border: 1px solid var(--border-color);
-        }
-
-        @media (min-width: 768px) {
-            .app-container { padding: 40px; }
         }
 
         /* --- Header --- */
@@ -78,68 +74,49 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
+            margin-bottom: 32px;
             padding-bottom: 20px;
             border-bottom: 1px solid var(--border-color);
         }
 
         .brand {
-            display: flex; 
-            align-items: center; 
-            gap: 12px;
+            display: flex; align-items: center; gap: 12px;
         }
         
-        h1 { margin: 0; font-size: 1.2rem; font-weight: 700; letter-spacing: -0.025em; }
-        .subtitle { font-size: 0.8rem; color: var(--text-muted); margin-top: 2px; display: none; }
-        
-        @media (min-width: 640px) {
-            h1 { font-size: 1.5rem; }
-            .subtitle { display: block; }
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        /* --- Buttons --- */
-        .icon-btn {
-            background: transparent;
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: 0.2s;
-            flex-shrink: 0;
-        }
-        .icon-btn:hover { border-color: var(--primary); color: var(--primary); background-color: var(--bg-item); }
-
-        .btn-upload-header {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 0 16px;
-            height: 40px;
-            border: 1px solid var(--primary);
+        .brand-icon {
+            background: var(--primary-light);
             color: var(--primary);
+            width: 40px; height: 40px;
             border-radius: 8px;
-            background: rgba(106, 0, 216, 0.05);
-            font-size: 0.85rem;
-            font-weight: 600;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        h1 { margin: 0; font-size: 1.25rem; font-weight: 700; letter-spacing: -0.01em; }
+        .subtitle { font-size: 0.85rem; color: var(--text-muted); margin: 0; display: none; }
+        @media(min-width: 600px) { .subtitle { display: block; } }
+
+        /* Header Buttons */
+        .header-actions { display: flex; gap: 10px; }
+
+        .btn-icon {
+            width: 40px; height: 40px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: transparent;
+            color: var(--text-muted);
             cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem;
             transition: all 0.2s;
         }
-        .btn-upload-header:hover { background: var(--primary); color: white; }
-        .upload-label { display: none; }
-        @media(min-width: 480px) { .upload-label { display: inline; } }
+        .btn-icon:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background-color: var(--bg-body);
+        }
 
-        /* --- Inputs --- */
+        /* --- Layout Grid --- */
         .form-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -150,160 +127,210 @@
             .col-span-3 { grid-column: span 3; }
         }
 
-        .input-group { display: flex; flex-direction: column; gap: 8px; }
+        .section-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 24px 0 12px 0;
+            display: block;
+        }
+        .section-title:first-child { margin-top: 0; }
+
+        /* --- Inputs & Labels --- */
+        .input-group { display: flex; flex-direction: column; gap: 6px; }
 
         label {
-            font-size: 0.7rem; 
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            font-weight: 700; 
+            font-size: 0.75rem;
+            font-weight: 600;
             color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.02em;
         }
-        .required-label::after { content: " *"; color: var(--danger); }
+        .required-label::after { content: "*"; color: var(--danger); margin-left: 2px; }
 
-        input {
+        /* --- CRITICAL: Unified Input Height --- */
+        input[type="text"], 
+        input[type="number"], 
+        .custom-select-trigger {
             width: 100%;
-            padding: 12px 16px;
+            height: 48px; /* Fixed Height for Alignment */
+            padding: 0 12px;
             border-radius: 8px;
             border: 1px solid var(--border-color);
-            background-color: var(--input-bg);
+            background-color: var(--bg-input);
             color: var(--text-main);
             font-family: 'Inter', sans-serif;
-            font-size: 16px; 
-            transition: border-color 0.2s, box-shadow 0.2s;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            display: flex; /* Flex needed for dropdown trigger content */
+            align-items: center; 
         }
-        input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px var(--primary-light); }
-        .input-error { border-color: var(--danger) !important; box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1) !important; animation: shake 0.3s ease-in-out; }
 
-        /* =========================================
-           CUSTOM IMAGE DROPDOWN STYLES 
-           ========================================= */
+        input:focus, .custom-select-trigger:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: var(--focus-ring);
+        }
+
+        input::placeholder { color: var(--text-muted); opacity: 0.5; }
+
+        .input-error {
+            border-color: var(--danger) !important;
+            animation: shake 0.3s ease-in-out;
+        }
+
+        /* --- CUSTOM DROPDOWN STYLING --- */
         .custom-select-wrapper {
             position: relative;
-            user-select: none;
             width: 100%;
         }
 
         .custom-select-trigger {
-            position: relative;
-            display: flex;
-            align-items: center;
             justify-content: space-between;
-            padding: 12px 16px;
-            background-color: var(--input-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
             cursor: pointer;
-            transition: all 0.2s;
-            min-height: 48px; /* Match input height */
         }
+        
+        .custom-select-trigger:hover { border-color: #9CA3AF; }
 
-        .custom-select-trigger:hover { border-color: #b0b0b0; }
-
-        /* Open state */
         .custom-select-wrapper.open .custom-select-trigger {
             border-color: var(--primary);
-            box-shadow: 0 0 0 4px var(--primary-light);
-            border-bottom-left-radius: 0;
-            border-bottom-right-radius: 0;
+            box-shadow: var(--focus-ring);
         }
 
         .custom-options {
             position: absolute;
-            display: block;
-            top: 100%;
-            left: 0;
-            right: 0;
-            border: 1px solid var(--primary);
-            border-top: 0;
-            background-color: var(--input-bg);
-            transition: all 0.2s;
+            top: 54px; /* Push down slightly */
+            left: 0; right: 0;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.15);
+            max-height: 240px;
+            overflow-y: auto;
+            z-index: 100; /* Float above everything */
             opacity: 0;
             visibility: hidden;
-            pointer-events: none;
-            z-index: 50;
-            max-height: 250px;
-            overflow-y: auto;
-            border-bottom-left-radius: 8px;
-            border-bottom-right-radius: 8px;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            transform: translateY(-10px);
+            transition: all 0.2s ease;
         }
 
         .custom-select-wrapper.open .custom-options {
             opacity: 1;
             visibility: visible;
-            pointer-events: all;
+            transform: translateY(0);
         }
 
         .custom-option {
-            position: relative;
             display: flex;
             align-items: center;
-            padding: 10px 16px;
+            padding: 10px 12px;
             cursor: pointer;
-            transition: all 0.2s;
             border-bottom: 1px solid var(--border-color);
+            transition: background 0.1s;
         }
-        
         .custom-option:last-child { border-bottom: none; }
-        .custom-option:hover { background-color: var(--primary-light); color: var(--primary); }
+        .custom-option:hover { background-color: var(--bg-body); }
         
         .option-img {
-            width: 24px;
-            height: 24px;
+            width: 24px; height: 24px;
             object-fit: contain;
             margin-right: 12px;
         }
+        .option-text { font-size: 0.9rem; color: var(--text-main); }
+        .caret { transition: transform 0.2s; color: var(--text-muted); }
+        .custom-select-wrapper.open .caret { transform: rotate(180deg); color: var(--primary); }
 
-        .option-text {
-            font-size: 0.95rem;
-            color: var(--text-main);
-            font-weight: 500;
-        }
-
-        /* --- Buttons & Output --- */
+        /* --- Main CTA Button --- */
         .btn-primary {
             background-color: var(--primary);
             color: white;
             border: none;
-            padding: 16px;
+            padding: 14px;
             border-radius: 8px;
             font-weight: 600;
             font-size: 1rem;
-            cursor: pointer;
             width: 100%;
-            margin-top: 30px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-            transition: transform 0.1s, background-color 0.2s;
-            box-shadow: 0 4px 6px -1px rgba(106, 0, 216, 0.2);
+            margin-top: 32px;
+            cursor: pointer;
+            display: flex; justify-content: center; align-items: center; gap: 8px;
+            transition: background 0.2s, transform 0.1s;
+            box-shadow: 0 4px 6px -1px rgba(106, 0, 216, 0.25);
         }
-        .btn-primary:active { transform: scale(0.98); }
-        .btn-primary:hover { background-color: var(--primary-hover); }
+        .btn-primary:hover { background-color: var(--primary-hover); transform: translateY(-1px); }
+        .btn-primary:active { transform: translateY(0); }
 
-        .output-section { margin-top: 40px; padding-top: 20px; border-top: 1px dashed var(--border-color); }
-        .output-header { display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px; }
-        @media (min-width: 600px) { .output-header { flex-direction: row; justify-content: space-between; align-items: center; } }
+        /* --- Output Section --- */
+        .output-section { margin-top: 40px; padding-top: 24px; border-top: 1px dashed var(--border-color); }
         
-        .action-group { display: flex; gap: 10px; width: 100%; }
+        .toolbar {
+            display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;
+        }
+        @media (min-width: 600px) {
+            .toolbar { flex-direction: row; justify-content: space-between; align-items: center; }
+        }
+
+        .action-group { display: flex; gap: 12px; width: 100%; }
         @media (min-width: 600px) { .action-group { width: auto; } }
 
         .btn-action {
-            display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 16px;
-            background-color: var(--bg-body); border: 1px solid var(--border-color); border-radius: 8px;
-            color: var(--text-main); font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s; flex: 1;
+            flex: 1;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            padding: 10px 16px;
+            background-color: var(--bg-body);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-main);
+            font-size: 0.85rem; font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
         }
-        .btn-action:hover { border-color: var(--primary); background-color: var(--bg-card); color: var(--primary); }
+        .btn-action:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background-color: var(--bg-card);
+            box-shadow: var(--shadow-sm);
+        }
 
+        /* --- List --- */
         .list-container { display: flex; flex-direction: column; gap: 12px; }
-        .list-item { background-color: var(--bg-item); border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; display: flex; align-items: center; justify-content: space-between; gap: 15px; }
-        .code-text { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--text-main); word-break: break-all; line-height: 1.5; }
-        .delete-btn { background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 8px; cursor: pointer; flex-shrink: 0; transition: 0.2s; }
-        .delete-btn:hover { background-color: var(--danger); color: white; border-color: var(--danger); }
-        .empty-state { text-align: center; padding: 40px; color: var(--text-muted); font-size: 0.9rem; border: 1px dashed var(--border-color); border-radius: 8px; }
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+        
+        .list-item {
+            background-color: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px 16px;
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 12px;
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        .code-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-main);
+            word-break: break-all;
+        }
+
+        .delete-btn {
+            background: transparent; border: none; color: var(--text-muted);
+            width: 32px; height: 32px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 6px; cursor: pointer; transition: 0.2s;
+        }
+        .delete-btn:hover { background: #FEF2F2; color: var(--danger); }
+        
+        .empty-state {
+            text-align: center; padding: 40px; color: var(--text-muted);
+            font-size: 0.9rem;
+            border: 2px dashed var(--border-color);
+            border-radius: 12px;
+            background: var(--bg-body);
+        }
+
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
 
     </style>
 </head>
@@ -312,8 +339,8 @@
     <div class="app-container">
         <header>
             <div class="brand">
-                <div style="background: var(--primary-light); padding: 6px; border-radius: 6px; display: flex;">
-                    <i class="ph-fill ph-database" style="font-size: 1.4rem; color: var(--primary);"></i>
+                <div class="brand-icon">
+                    <i class="ph-fill ph-database"></i>
                 </div>
                 <div>
                     <h1>Generator</h1>
@@ -323,11 +350,11 @@
             
             <div class="header-actions">
                 <input type="file" id="fileInput" accept=".txt" style="display: none;">
-                <button id="upload-btn" class="btn-upload-header" title="Import File">
+                
+                <button id="upload-btn" class="btn-icon" title="Import File">
                     <i class="ph-bold ph-upload-simple"></i>
-                    <span class="upload-label">Import</span>
                 </button>
-                <button id="theme-toggle" class="icon-btn" title="Toggle Dark Mode">
+                <button id="theme-toggle" class="btn-icon" title="Toggle Dark Mode">
                     <i class="ph ph-moon"></i>
                 </button>
             </div>
@@ -349,17 +376,15 @@
                     <label class="required-label">Current Club</label>
                     <input type="hidden" id="currClubValue">
                     <div id="currClub-wrapper" class="custom-select-wrapper">
-                        <div class="custom-select-trigger">
-                            <span class="option-text">Select Club...</span>
-                            <i class="ph-bold ph-caret-down"></i>
+                        <div class="custom-select-trigger" tabindex="0">
+                            <span class="option-text" style="opacity: 0.5;">Select Club...</span>
+                            <i class="ph-bold ph-caret-down caret"></i>
                         </div>
                         <div class="custom-options">
                             </div>
                     </div>
                 </div>
             </div>
-
-            <div style="height: 30px;"></div>
 
             <span class="section-title">New Identity</span>
             <div class="form-grid">
@@ -377,8 +402,6 @@
                 </div>
             </div>
 
-            <div style="height: 30px;"></div>
-
             <span class="section-title">Statistics</span>
             <div class="form-grid">
                 <div class="input-group">
@@ -386,11 +409,11 @@
                     <input type="number" id="birthYear" placeholder="2000">
                 </div>
                 <div class="input-group">
-                    <label>New CA <span style="font-weight: 400; opacity: 0.6;">(Max 200)</span></label>
+                    <label>New CA <span style="font-weight: 400; opacity: 0.6; font-size: 0.7em;">(Max 200)</span></label>
                     <input type="number" id="newCA" placeholder="150" max="200">
                 </div>
                 <div class="input-group">
-                    <label>New PA <span style="font-weight: 400; opacity: 0.6;">(Max 200)</span></label>
+                    <label>New PA <span style="font-weight: 400; opacity: 0.6; font-size: 0.7em;">(Max 200)</span></label>
                     <input type="number" id="newPA" placeholder="180" max="200">
                 </div>
                 
@@ -398,9 +421,9 @@
                     <label>New Club Destination</label>
                     <input type="hidden" id="newClubValue">
                     <div id="newClub-wrapper" class="custom-select-wrapper">
-                        <div class="custom-select-trigger">
-                            <span class="option-text">Select Club...</span>
-                            <i class="ph-bold ph-caret-down"></i>
+                        <div class="custom-select-trigger" tabindex="0">
+                            <span class="option-text" style="opacity: 0.5;">Select Club...</span>
+                            <i class="ph-bold ph-caret-down caret"></i>
                         </div>
                         <div class="custom-options">
                             </div>
@@ -409,18 +432,17 @@
             </div>
 
             <button id="generate-btn" class="btn-primary">
-                <i class="ph-bold ph-plus"></i> Add Entry
+                <i class="ph-bold ph-plus"></i> Add Entry to List
             </button>
 
             <div class="output-section">
-                <div class="output-header">
-                    <label style="margin:0; font-size: 0.8rem; opacity: 0.8;">GENERATED LIST</label>
-                    
+                <div class="toolbar">
+                    <label style="margin:0; font-size: 0.75rem; font-weight: 700; color: var(--text-muted);">GENERATED ENTRIES</label>
                     <div class="action-group">
-                        <button id="copy-all-btn" class="btn-action" title="Copy to clipboard">
+                        <button id="copy-all-btn" class="btn-action">
                             <i class="ph ph-copy"></i> Copy
                         </button>
-                        <button id="download-btn" class="btn-action" title="Save as .txt">
+                        <button id="download-btn" class="btn-action">
                             <i class="ph ph-download-simple"></i> Save
                         </button>
                     </div>
@@ -428,8 +450,8 @@
                 
                 <div id="list-container" class="list-container">
                     <div class="empty-state" id="empty-state">
-                        <i class="ph ph-list-dashes" style="font-size: 2rem; margin-bottom: 10px; display: block;"></i>
-                        No entries yet.
+                        <i class="ph ph-list-dashes" style="font-size: 2rem; margin-bottom: 12px; display: block; opacity: 0.3;"></i>
+                        No entries generated yet.
                     </div>
                 </div>
             </div>
@@ -452,15 +474,17 @@
         async function initCustomDropdowns() {
             try {
                 const response = await fetch('clubs.json');
+                if(!response.ok) throw new Error("JSON not found");
                 const clubList = await response.json();
 
-                // Initialize both dropdowns
                 setupCustomSelect('currClub-wrapper', 'currClubValue', clubList);
                 setupCustomSelect('newClub-wrapper', 'newClubValue', clubList);
-
             } catch (error) {
-                console.error("Error loading clubs:", error);
-                document.querySelector('.custom-select-trigger span').textContent = "Error loading list";
+                console.warn("Clubs.json not found, using dummy data.");
+                // Dummy data for preview if JSON fails
+                const dummyData = [{menu: "Demo Club", code: "Demo FC", logo: ""}];
+                setupCustomSelect('currClub-wrapper', 'currClubValue', dummyData);
+                setupCustomSelect('newClub-wrapper', 'newClubValue', dummyData);
             }
         }
 
@@ -471,12 +495,9 @@
             const hiddenInput = document.getElementById(inputId);
             const triggerText = trigger.querySelector('.option-text');
 
-            // 1. Build Options
             data.forEach(club => {
                 const option = document.createElement('div');
                 option.className = 'custom-option';
-                
-                // Use a default shield icon if no logo is provided
                 const logoSrc = club.logo ? club.logo : 'https://raw.githubusercontent.com/phosphor-icons/core/main/assets/regular/shield.svg';
                 
                 option.innerHTML = `
@@ -484,48 +505,37 @@
                     <span class="option-text">${club.menu}</span>
                 `;
 
-                // 2. Handle Click on Option
                 option.addEventListener('click', () => {
-                    // Update Trigger View
+                    // Set View
                     triggerText.textContent = club.menu;
+                    triggerText.style.opacity = "1";
                     
-                    // Update Hidden Input (Important for logic!)
+                    // Set Value
                     hiddenInput.value = club.code;
 
-                    // Remove Error Style if it exists
-                    wrapper.querySelector('.custom-select-trigger').classList.remove('input-error');
-
-                    // Close Dropdown
+                    // UI Cleanup
+                    trigger.classList.remove('input-error');
                     wrapper.classList.remove('open');
                 });
-
                 optionsContainer.appendChild(option);
             });
 
-            // 3. Handle Click on Trigger (Open/Close)
             trigger.addEventListener('click', (e) => {
-                // Close other open dropdowns first
                 document.querySelectorAll('.custom-select-wrapper').forEach(w => {
                     if (w !== wrapper) w.classList.remove('open');
                 });
-                
                 wrapper.classList.toggle('open');
                 e.stopPropagation();
             });
         }
 
-        // Close dropdowns when clicking outside
-        window.addEventListener('click', function(e) {
-            document.querySelectorAll('.custom-select-wrapper').forEach(wrapper => {
-                if (!wrapper.contains(e.target)) {
-                    wrapper.classList.remove('open');
-                }
+        window.addEventListener('click', (e) => {
+            document.querySelectorAll('.custom-select-wrapper').forEach(w => {
+                if (!w.contains(e.target)) w.classList.remove('open');
             });
         });
 
-        // Run Initialization
         initCustomDropdowns();
-
 
         // --- Generator Logic ---
         const quote = (str) => `"${str ? str.trim() : ''}"`;
@@ -539,12 +549,11 @@
         function validateRequired() {
             const fName = document.getElementById('currFName');
             const sName = document.getElementById('currSName');
-            const clubInput = document.getElementById('currClubValue'); // The hidden input
-            const clubWrapper = document.getElementById('currClub-wrapper').querySelector('.custom-select-trigger');
+            const clubInput = document.getElementById('currClubValue'); 
+            const clubTrigger = document.getElementById('currClub-wrapper').querySelector('.custom-select-trigger');
 
             let isValid = true;
 
-            // Text Inputs
             [fName, sName].forEach(el => {
                 if (!el.value) {
                     el.classList.add('input-error');
@@ -553,9 +562,8 @@
                 }
             });
 
-            // Custom Dropdown Validation
             if (!clubInput.value) {
-                clubWrapper.classList.add('input-error'); // Add red border to the fake dropdown
+                clubTrigger.classList.add('input-error');
                 isValid = false;
             }
 
@@ -573,14 +581,14 @@
             const data = {
                 cf: document.getElementById('currFName').value,
                 cs: document.getElementById('currSName').value,
-                cc: document.getElementById('currClubValue').value, // Get from hidden input
+                cc: document.getElementById('currClubValue').value,
                 nf: document.getElementById('newFName').value,
                 ns: document.getElementById('newSName').value,
                 cn: document.getElementById('commonName').value,
                 birth: document.getElementById('birthYear').value,
                 ca: ca,
                 pa: pa,
-                nc: document.getElementById('newClubValue').value // Get from hidden input
+                nc: document.getElementById('newClubValue').value
             };
 
             const resultString = `${quote("PLAYER")} ${quote(data.cf)} ${quote(data.cs)} ${quote(data.cc)} ${quote(data.nf)} ${quote(data.ns)} ${quote(data.cn)} ${quote(data.birth)} ${quote(data.ca)} ${quote(data.pa)} ${quote(data.nc)}`;
@@ -630,7 +638,6 @@
             reader.readAsText(file);
         });
 
-        // --- Utils ---
         function getAllText() {
             const items = document.querySelectorAll('.code-text');
             if(items.length === 0) return null;
@@ -672,13 +679,11 @@
             }
         });
 
-        // Input Limits
         [document.getElementById('newCA'), document.getElementById('newPA')].forEach(input => {
             input.addEventListener('input', (e) => {
                 if(parseInt(e.target.value) > 200) e.target.value = 200;
             });
         });
-
     </script>
 </body>
 </html>
