@@ -123,7 +123,7 @@
             .col-span-3 { grid-column: span 3; }
         }
 
-        /* --- Professional Input Styling --- */
+        /* --- Professional Input & Select Styling --- */
         .input-group {
             display: flex;
             flex-direction: column;
@@ -138,7 +138,8 @@
             color: var(--text-muted);
         }
 
-        input {
+        /* Styling both Input and Select exactly the same */
+        input, select {
             width: 100%;
             padding: 12px 16px;
             border-radius: 6px;
@@ -148,9 +149,21 @@
             font-family: 'Inter', sans-serif;
             font-size: 0.95rem;
             transition: border-color 0.2s, box-shadow 0.2s;
+            appearance: none; /* Removes default OS styling for dropdowns */
+            -webkit-appearance: none;
+            -moz-appearance: none;
         }
 
-        input:focus {
+        /* Add a custom arrow for the Select box */
+        select {
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
+            cursor: pointer;
+        }
+
+        input:focus, select:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 4px var(--primary-light);
@@ -193,12 +206,8 @@
             margin-bottom: 20px;
         }
 
-        .action-group {
-            display: flex;
-            gap: 10px;
-        }
+        .action-group { display: flex; gap: 10px; }
 
-        /* Action Buttons (Copy/Download) */
         .btn-action {
             font-size: 0.8rem;
             font-weight: 600;
@@ -220,11 +229,7 @@
             background-color: var(--bg-card);
         }
 
-        .list-container {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
+        .list-container { display: flex; flex-direction: column; gap: 12px; }
 
         .list-item {
             background-color: var(--bg-item);
@@ -300,7 +305,9 @@
                 </div>
                 <div class="input-group">
                     <label>Current Club</label>
-                    <input type="text" id="currClub" placeholder="Old Team FC">
+                    <select id="currClub">
+                        <option value="" disabled selected>Select Club</option>
+                        </select>
                 </div>
             </div>
 
@@ -341,7 +348,9 @@
                 
                 <div class="input-group col-span-3">
                     <label>New Club Destination</label>
-                    <input type="text" id="newClub" placeholder="New City United">
+                    <select id="newClub">
+                        <option value="" disabled selected>Select Club</option>
+                        </select>
                 </div>
             </div>
 
@@ -374,6 +383,35 @@
     </div>
 
     <script>
+        // ============================================
+        // 1. CLUB DATABASE CONFIGURATION
+        // ============================================
+        // EDIT THIS LIST to add more clubs.
+        // 'menu': What you see in the dropdown.
+        // 'code': The value that gets generated in the code.
+        const clubList = [
+            { menu: "Arsenal", code: "Arsenal FC" },
+            { menu: "Aston Villa", code: "Aston Villa" },
+            { menu: "Chelsea", code: "Chelsea FC" },
+            { menu: "Everton", code: "Everton FC" },
+            { menu: "Liverpool", code: "Liverpool FC" },
+            { menu: "Man City", code: "Manchester City" },
+            { menu: "Man Utd", code: "Manchester United" },
+            { menu: "Newcastle", code: "Newcastle United" },
+            { menu: "Spurs", code: "Tottenham Hotspur" },
+            { menu: "West Ham", code: "West Ham United" },
+            { menu: "Real Madrid", code: "Real Madrid" },
+            { menu: "Barcelona", code: "FC Barcelona" },
+            { menu: "Bayern", code: "Bayern Munich" },
+            { menu: "PSG", code: "Paris Saint-Germain" },
+            { menu: "Juventus", code: "Juventus FC" },
+            { menu: "Free Agent", code: "Free Agent" }
+        ];
+        
+        // ============================================
+        // 2. APP LOGIC
+        // ============================================
+        
         // --- DOM Elements ---
         const themeBtn = document.getElementById('theme-toggle');
         const themeIcon = themeBtn.querySelector('i');
@@ -382,6 +420,30 @@
         const emptyState = document.getElementById('empty-state');
         const copyAllBtn = document.getElementById('copy-all-btn');
         const downloadBtn = document.getElementById('download-btn');
+        
+        // Select Dropdowns
+        const currClubSelect = document.getElementById('currClub');
+        const newClubSelect = document.getElementById('newClub');
+
+        // --- Helper: Populate Dropdowns ---
+        function populateDropdowns() {
+            clubList.forEach(club => {
+                // Create option for Current Club
+                const opt1 = document.createElement('option');
+                opt1.value = club.code; // The full name goes into value
+                opt1.textContent = club.menu; // The short name shows in menu
+                currClubSelect.appendChild(opt1);
+
+                // Create option for New Club
+                const opt2 = document.createElement('option');
+                opt2.value = club.code;
+                opt2.textContent = club.menu;
+                newClubSelect.appendChild(opt2);
+            });
+        }
+        
+        // Run population on load
+        populateDropdowns();
 
         // --- Helper: Quote Wrapper ---
         const quote = (str) => `"${str ? str.trim() : ''}"`;
@@ -404,14 +466,14 @@
             const data = {
                 cf: document.getElementById('currFName').value,
                 cs: document.getElementById('currSName').value,
-                cc: document.getElementById('currClub').value,
+                cc: currClubSelect.value, // Gets the full name from value
                 nf: document.getElementById('newFName').value,
                 ns: document.getElementById('newSName').value,
                 cn: document.getElementById('commonName').value,
                 birth: document.getElementById('birthYear').value,
                 ca: ca,
                 pa: pa,
-                nc: document.getElementById('newClub').value
+                nc: newClubSelect.value // Gets the full name from value
             };
 
             const resultString = `${quote("PLAYER")} ${quote(data.cf)} ${quote(data.cs)} ${quote(data.cc)} ${quote(data.nf)} ${quote(data.ns)} ${quote(data.cn)} ${quote(data.birth)} ${quote(data.ca)} ${quote(data.pa)} ${quote(data.nc)}`;
@@ -488,11 +550,9 @@
             
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'changes.txt'; // Specific file name request
+            a.download = 'changes.txt';
             document.body.appendChild(a);
             a.click();
-            
-            // Cleanup
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
         });
