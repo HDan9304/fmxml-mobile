@@ -1,329 +1,414 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FMXML Interface</title>
-<style>
-    :root {
-        /* Color Palette */
-        --c-bg-main: #f5f4f9;       /* Very light lavender-gray */
-        --c-bg-surface: #ffffff;    /* White */
-        --c-bg-panel: #e9e6f3;      /* Light lavender */
-        
-        --c-text-primary: #1a1e36;  /* Deep navy */
-        --c-text-muted: #848799;    /* Muted gray-purple */
-        
-        --c-accent-primary: #4f28a6; /* Deep royal purple */
-        --c-accent-soft: #8666d6;    /* Soft violet */
-        --c-accent-light: #bcaae6;   /* Pale violet */
-        
-        /* Spacing & Layout */
-        --radius-lg: 16px;
-        --radius-md: 8px;
-        --shadow-soft: 0 20px 40px -10px rgba(79, 40, 166, 0.15), 0 0 1px rgba(0,0,0,0.05);
-        
-        /* Typography */
-        --font-ui: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        --font-code: "SF Mono", "Menlo", "Monaco", "Courier New", monospace;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VisageConfig | FMXML Face Generator</title>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
-    * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-    }
+    <style>
+        /* --- CSS Variables based on your palette --- */
+        :root {
+            --color-darkest: #0a0e1a;      /* Deep black/blue */
+            --color-vibrant: #6a00d7;      /* Main vibrant purple */
+            --color-accent: #a870ff;       /* Medium purple accent */
+            --color-soft: #d1c4f0;         /* Soft purple for subtler elements */
+            --color-bg-light: #e9e4fa;     /* Very light purple background tint */
+            --color-white: #ffffff;        /* Pure white for cards/inputs */
+            --shadow-soft: 0 10px 30px -10px rgba(106, 0, 215, 0.2);
+            --border-radius: 16px;
+        }
 
-    body {
-        background-color: var(--c-bg-main);
-        font-family: var(--font-ui);
-        color: var(--c-text-primary);
-        height: 100vh;
-        width: 100vw;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-        position: relative;
-        -webkit-font-smoothing: antialiased;
-    }
+        /* --- Typography: San Francisco / Apple Font Stack --- */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            background-color: var(--color-bg-light);
+            color: var(--color-darkest);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            /* --- Background Pattern: Bold ']' pattern --- */
+            /* Using an SVG data URI for a crisp, scalable pattern */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Ctext x='50%25' y='50%25' font-family='sans-serif' font-weight='900' font-size='60' fill='%23d1c4f0' opacity='0.25' text-anchor='middle' dominant-baseline='middle'%3E%5D%3C/text%3E%3C/svg%3E");
+        }
 
-    /* Background Pattern: Repeating ']' Bracket */
-    body::before {
-        content: "";
-        position: absolute;
-        top: 0; left: 0; right: 0; bottom: 0;
-        z-index: -1;
-        /* Inline SVG Data URI for the bracket pattern */
-        background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Ctext x='50%25' y='50%25' font-family='-apple-system, sans-serif' font-weight='400' font-size='20' fill='%234f28a6' text-anchor='middle' dy='.35em' opacity='0.03'%3E%5D%3C/text%3E%3C/svg%3E");
-    }
+        /* --- Layout & Structure --- */
+        header {
+            padding: 20px 40px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--color-soft);
+        }
 
-    /* Main Window Shell */
-    .interface-shell {
-        width: 90%;
-        max-width: 1100px;
-        height: 85vh;
-        background-color: var(--c-bg-surface);
-        border-radius: var(--radius-lg);
-        box-shadow: var(--shadow-soft);
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-        border: 1px solid rgba(255,255,255,0.6);
-    }
+        .logo-icon {
+            font-size: 32px;
+            color: var(--color-vibrant);
+        }
 
-    /* Header Bar */
-    .ui-header {
-        height: 52px;
-        background-color: var(--c-bg-panel);
-        border-bottom: 1px solid rgba(79, 40, 166, 0.08);
-        display: flex;
-        align-items: center;
-        padding: 0 24px;
-        justify-content: space-between;
-        flex-shrink: 0;
-    }
+        h1 {
+            margin: 0;
+            font-weight: 700;
+            font-size: 24px;
+            background: linear-gradient(to right, var(--color-vibrant), var(--color-accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-    .window-controls {
-        display: flex;
-        gap: 8px;
-    }
+        main.container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
 
-    .control-dot {
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-        background-color: #dcdbe6;
-    }
-    
-    .control-dot:nth-child(1) { background-color: #ff5f57; opacity: 0.6; }
-    .control-dot:nth-child(2) { background-color: #febc2e; opacity: 0.6; }
-    .control-dot:nth-child(3) { background-color: #28c840; opacity: 0.6; }
+        /* --- The Main Generator Card --- */
+        .generator-card {
+            background: var(--color-white);
+            width: 100%;
+            max-width: 1000px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-soft);
+            display: flex;
+            overflow: hidden;
+            border: 1px solid var(--color-soft);
+        }
 
-    .file-meta {
-        font-size: 13px;
-        font-weight: 500;
-        color: var(--c-text-muted);
-        letter-spacing: -0.01em;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-    
-    .file-badge {
-        background-color: rgba(79, 40, 166, 0.08);
-        color: var(--c-accent-primary);
-        padding: 2px 6px;
-        border-radius: 4px;
-        font-size: 11px;
-        font-weight: 600;
-        text-transform: uppercase;
-    }
+        /* --- Left Panel: Inputs --- */
+        .input-panel {
+            flex: 1;
+            padding: 40px;
+            border-right: 1px solid var(--color-bg-light);
+        }
 
-    .ui-actions {
-        width: 60px; /* Balances the flex layout */
-    }
+        h2 {
+            font-weight: 600;
+            margin-top: 0;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--color-vibrant);
+        }
 
-    /* Main Content Area */
-    .ui-body {
-        flex: 1;
-        display: flex;
-        overflow: hidden;
-    }
+        .form-group {
+            margin-bottom: 20px;
+        }
 
-    /* Sidebar (Visual only) */
-    .sidebar {
-        width: 220px;
-        background-color: #fbfbfd;
-        border-right: 1px solid rgba(0,0,0,0.04);
-        padding: 24px 0;
-        display: flex;
-        flex-direction: column;
-        gap: 4px;
-        flex-shrink: 0;
-    }
+        .form-label {
+            display: block;
+            font-weight: 500;
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: var(--color-darkest);
+        }
 
-    .sidebar-item {
-        padding: 8px 24px;
-        font-size: 13px;
-        color: var(--c-text-muted);
-        font-weight: 500;
-        display: flex;
-        align-items: center;
-        border-left: 3px solid transparent;
-        cursor: default;
-    }
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
 
-    .sidebar-item.active {
-        color: var(--c-accent-primary);
-        background-color: rgba(79, 40, 166, 0.04);
-        border-left-color: var(--c-accent-primary);
-    }
-    
-    .sidebar-label {
-        margin-top: 24px;
-        padding: 0 24px;
-        font-size: 11px;
-        text-transform: uppercase;
-        color: #b0b3c7;
-        font-weight: 700;
-        letter-spacing: 0.05em;
-        margin-bottom: 8px;
-    }
+        .input-icon {
+            position: absolute;
+            left: 12px;
+            color: var(--color-accent);
+            font-size: 20px;
+        }
 
-    /* Code Editor Area */
-    .editor-container {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        position: relative;
-        background-color: var(--c-bg-surface);
-    }
-    
-    .editor-tabs {
-        display: flex;
-        height: 40px;
-        border-bottom: 1px solid rgba(0,0,0,0.04);
-        padding: 0 20px;
-        align-items: flex-end;
-    }
-    
-    .tab {
-        padding: 10px 16px;
-        font-size: 12px;
-        font-weight: 500;
-        color: var(--c-text-muted);
-        border-bottom: 2px solid transparent;
-        margin-right: 8px;
-    }
-    
-    .tab.active {
-        color: var(--c-accent-primary);
-        border-bottom-color: var(--c-accent-primary);
-    }
+        input, select {
+            width: 100%;
+            padding: 12px 12px 12px 44px; /* Padding left for the icon */
+            border: 2px solid var(--color-bg-light);
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: all 0.2s ease;
+            background: var(--color-white);
+            color: var(--color-darkest);
+            box-sizing: border-box;
+        }
 
-    .code-view {
-        flex: 1;
-        overflow-y: hidden; /* Static visual */
-        padding: 30px;
-        font-family: var(--font-code);
-        font-size: 14px;
-        line-height: 1.6;
-        display: flex;
-    }
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--color-vibrant);
+            box-shadow: 0 0 0 3px var(--color-soft);
+        }
 
-    .gutter {
-        width: 40px;
-        text-align: right;
-        color: #d1d1db;
-        user-select: none;
-        margin-right: 24px;
-        font-size: 13px;
-    }
+        .btn-generate {
+            width: 100%;
+            padding: 14px;
+            margin-top: 20px;
+            background: linear-gradient(135deg, var(--color-vibrant), var(--color-accent));
+            color: var(--color-white);
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
 
-    .source-code {
-        flex: 1;
-        color: var(--c-text-primary);
-    }
+        .btn-generate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px -6px var(--color-vibrant);
+        }
 
-    /* Syntax Highlighting Classes */
-    .tag { color: var(--c-accent-primary); }
-    .attr { color: var(--c-accent-soft); }
-    .val  { color: var(--c-text-primary); font-weight: 500; }
-    .punc { color: #dcdbe6; }
-    .comment { color: var(--c-text-muted); font-style: italic; }
-    
-    /* Indentation helpers */
-    .indent-1 { padding-left: 20px; }
-    .indent-2 { padding-left: 40px; }
-    .indent-3 { padding-left: 60px; }
+        .btn-generate:active {
+            transform: translateY(0);
+        }
 
-</style>
+        /* --- Right Panel: Output --- */
+        .output-panel {
+            flex: 1;
+            background-color: var(--color-darkest);
+            padding: 40px;
+            color: var(--color-soft);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .output-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .output-header h2 {
+            color: var(--color-white);
+            margin-bottom: 0;
+        }
+
+        .output-container {
+            flex: 1;
+            position: relative;
+            border: 1px solid var(--color-vibrant);
+            border-radius: 8px;
+            background: rgba(0,0,0,0.3);
+        }
+
+        textarea.xml-output {
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            border: none;
+            resize: none;
+            color: var(--color-soft);
+            font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Mono', monospace;
+            font-size: 14px;
+            padding: 20px;
+            box-sizing: border-box;
+            white-space: pre;
+        }
+
+        textarea.xml-output:focus {
+            outline: none;
+        }
+
+        .btn-copy {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid var(--color-vibrant);
+            color: var(--color-soft);
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .btn-copy:hover {
+            background: var(--color-vibrant);
+            color: var(--color-white);
+        }
+
+        /* --- Responsiveness --- */
+        @media (max-width: 850px) {
+            .generator-card {
+                flex-direction: column;
+                max-width: 500px;
+            }
+            .input-panel {
+                border-right: none;
+                border-bottom: 1px solid var(--color-bg-light);
+            }
+            .output-panel {
+                min-height: 400px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                padding: 15px 20px;
+            }
+            main.container {
+                padding: 20px 10px;
+            }
+            .input-panel, .output-panel {
+                padding: 25px;
+            }
+        }
+    </style>
 </head>
 <body>
 
-    <div class="interface-shell">
-        <header class="ui-header">
-            <div class="window-controls">
-                <div class="control-dot"></div>
-                <div class="control-dot"></div>
-                <div class="control-dot"></div>
-            </div>
-            <div class="file-meta">
-                <span class="file-badge">XML</span>
-                config_manifest_v2.fmxml
-            </div>
-            <div class="ui-actions"></div>
-        </header>
+    <header>
+        <i class="ph ph-code-block logo-icon"></i>
+        <h1>VisageConfig</h1>
+    </header>
 
-        <div class="ui-body">
+    <main class="container">
+        <section class="generator-card">
             
-            <aside class="sidebar">
-                <div class="sidebar-label">Project Structure</div>
-                <div class="sidebar-item active">core_definitions</div>
-                <div class="sidebar-item">layout_schema</div>
-                <div class="sidebar-item">scripts_batch</div>
+            <div class="input-panel">
+                <h2><i class="ph ph-user-focus"></i> Face Parameters</h2>
                 
-                <div class="sidebar-label">Resources</div>
-                <div class="sidebar-item">global_variables</div>
-                <div class="sidebar-item">relationships</div>
-            </aside>
-
-            <main class="editor-container">
-                <div class="editor-tabs">
-                    <div class="tab active">Source</div>
-                    <div class="tab">Visual Tree</div>
-                    <div class="tab">Validation</div>
-                </div>
-
-                <div class="code-view">
-                    <div class="gutter">
-                        1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15
+                <form id="fmxmlForm">
+                    <div class="form-group">
+                        <label class="form-label" for="faceId">Face ID (Unique ID)</label>
+                        <div class="input-wrapper">
+                            <i class="ph ph-identification-card input-icon"></i>
+                            <input type="number" id="faceId" placeholder="e.g., 2001" required>
+                        </div>
                     </div>
 
-                    <div class="source-code">
-                        <span class="punc">&lt;?</span><span class="tag">xml</span> <span class="attr">version</span>=<span class="val">"1.0"</span> <span class="attr">encoding</span>=<span class="val">"UTF-8"</span><span class="punc">?&gt;</span><br>
-                        <span class="punc">&lt;</span><span class="tag">FMXMLRESULT</span> <span class="attr">xmlns</span>=<span class="val">"http://www.filemaker.com/fmxmlresult"</span><span class="punc">&gt;</span><br>
-                        
-                        <div class="indent-1">
-                            <span class="comment">&lt;!-- Database Definition Header --&gt;</span><br>
-                            <span class="punc">&lt;</span><span class="tag">ERRORCODE</span><span class="punc">&gt;</span>0<span class="punc">&lt;/</span><span class="tag">ERRORCODE</span><span class="punc">&gt;</span><br>
-                            <span class="punc">&lt;</span><span class="tag">PRODUCT</span> <span class="attr">BUILD</span>=<span class="val">"19.4.2"</span> <span class="attr">NAME</span>=<span class="val">"FileMaker"</span> <span class="attr">VERSION</span>=<span class="val">"Pro 19"</span><span class="punc">/&gt;</span>
+                    <div class="form-group">
+                        <label class="form-label" for="skinTone">Skin Tone</label>
+                        <div class="input-wrapper">
+                            <i class="ph ph-palette input-icon"></i>
+                            <select id="skinTone">
+                                <option value="1">Light</option>
+                                <option value="2" selected>Medium Light</option>
+                                <option value="3">Medium</option>
+                                <option value="4">Medium Dark</option>
+                                <option value="5">Dark</option>
+                            </select>
                         </div>
-                        
-                        <div class="indent-1">
-                            <span class="punc">&lt;</span><span class="tag">DATABASE</span> <span class="attr">DATEFORMAT</span>=<span class="val">"MM/dd/yyyy"</span> <span class="attr">LAYOUT</span>=<span class="val">"Main_Dashboard"</span><span class="punc">&gt;</span>
-                        </div>
-
-                        <div class="indent-2">
-                            <span class="punc">&lt;</span><span class="tag">METADATA</span><span class="punc">&gt;</span><br>
-                            <div class="indent-3">
-                                <span class="punc">&lt;</span><span class="tag">FIELD</span> <span class="attr">EMPTYOK</span>=<span class="val">"YES"</span> <span class="attr">MAXREPEAT</span>=<span class="val">"1"</span> <span class="attr">NAME</span>=<span class="val">"PrimaryKey"</span> <span class="attr">TYPE</span>=<span class="val">"TEXT"</span><span class="punc">/&gt;</span><br>
-                                <span class="punc">&lt;</span><span class="tag">FIELD</span> <span class="attr">EMPTYOK</span>=<span class="val">"NO"</span> <span class="attr">MAXREPEAT</span>=<span class="val">"1"</span> <span class="attr">NAME</span>=<span class="val">"CreationTimestamp"</span> <span class="attr">TYPE</span>=<span class="val">"TIMESTAMP"</span><span class="punc">/&gt;</span><br>
-                                <span class="punc">&lt;</span><span class="tag">FIELD</span> <span class="attr">EMPTYOK</span>=<span class="val">"YES"</span> <span class="attr">MAXREPEAT</span>=<span class="val">"5"</span> <span class="attr">NAME</span>=<span class="val">"ActiveStatus"</span> <span class="attr">TYPE</span>=<span class="val">"NUMBER"</span><span class="punc">/&gt;</span>
-                            </div>
-                            <span class="punc">&lt;/</span><span class="tag">METADATA</span><span class="punc">&gt;</span>
-                        </div>
-                        
-                        <div class="indent-2">
-                            <span class="punc">&lt;</span><span class="tag">RESULTSET</span> <span class="attr">FOUND</span>=<span class="val">"1"</span><span class="punc">&gt;</span><br>
-                            <div class="indent-3">
-                                <span class="punc">&lt;</span><span class="tag">ROW</span> <span class="attr">MODID</span>=<span class="val">"4"</span> <span class="attr">RECORDID</span>=<span class="val">"201"</span><span class="punc">&gt;</span><br>
-                                <div class="indent-1">
-                                    <span class="punc">&lt;</span><span class="tag">COL</span><span class="punc">&gt;</span><span class="punc">&lt;</span><span class="tag">DATA</span><span class="punc">&gt;</span>UUID-8942-XJ29<span class="punc">&lt;/</span><span class="tag">DATA</span><span class="punc">&gt;</span><span class="punc">&lt;/</span><span class="tag">COL</span><span class="punc">&gt;</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="indent-1">
-                           <span class="punc">&lt;/</span><span class="tag">DATABASE</span><span class="punc">&gt;</span> 
-                        </div>
-                        <span class="punc">&lt;/</span><span class="tag">FMXMLRESULT</span><span class="punc">&gt;</span>
                     </div>
-                </div>
-            </main>
-        </div>
-    </div>
 
+                    <div class="form-group">
+                        <label class="form-label" for="hairStyle">Hair Style ID</label>
+                        <div class="input-wrapper">
+                            <i class="ph ph-scissors input-icon"></i>
+                            <input type="number" id="hairStyle" placeholder="e.g., 45">
+                        </div>
+                    </div>
+
+                     <div class="form-group">
+                        <label class="form-label" for="eyeColor">Eye Color ID</label>
+                        <div class="input-wrapper">
+                            <i class="ph ph-eye input-icon"></i>
+                             <select id="eyeColor">
+                                <option value="1">Blue</option>
+                                <option value="2" selected>Green</option>
+                                <option value="3">Brown</option>
+                                <option value="4">Dark Brown</option>
+                                <option value="5">Hazel</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-generate">
+                        <i class="ph ph-lightning"></i> Generate FMXML
+                    </button>
+                </form>
+            </div>
+
+            <div class="output-panel">
+                <div class="output-header">
+                    <h2><i class="ph ph-file-xml"></i> XML Output</h2>
+                </div>
+                <div class="output-container">
+                    <button id="copyBtn" class="btn-copy">
+                        <i class="ph ph-copy"></i> Copy
+                    </button>
+                    <textarea id="xmlOutput" class="xml-output" readonly spellcheck="false"></textarea>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('fmxmlForm');
+            const outputArea = document.getElementById('xmlOutput');
+            const copyBtn = document.getElementById('copyBtn');
+            const copyBtnOriginalHTML = copyBtn.innerHTML;
+
+            // Standard FMXML Header/Footer for context
+            const xmlHeader = `<?xml version="1.0" encoding="UTF-8"?>\n<fmxml>\n  <faceData>\n`;
+            const xmlFooter = `  </faceData>\n</fmxml>`;
+
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+
+                // 1. Gather Data
+                const data = {
+                    id: document.getElementById('faceId').value || '0',
+                    skin: document.getElementById('skinTone').value,
+                    hair: document.getElementById('hairStyle').value || '1',
+                    eyes: document.getElementById('eyeColor').value
+                };
+
+                // 2. Generate XML String (Template Literal)
+                // Note: This is a hypothetical FMXML structure for face data. 
+                // Adjust the tag names according to the actual game engine requirements.
+                let xmlBody = `    <face id="${data.id}">\n`;
+                xmlBody += `      <params>\n`;
+                xmlBody += `        <param name="SkinToneID" value="${data.skin}" />\n`;
+                xmlBody += `        <param name="HairStyleID" value="${data.hair}" />\n`;
+                xmlBody += `        <param name="EyeColorID" value="${data.eyes}" />\n`;
+                // Add more hypothetical parameters here for a fuller look
+                xmlBody += `        <param name="FacialHairID" value="0" />\n`;
+                xmlBody += `        <param name="EyebrowStyleID" value="3" />\n`;
+                xmlBody += `      </params>\n`;
+                xmlBody += `    </face>\n`;
+
+                // 3. Display Output
+                outputArea.value = xmlHeader + xmlBody + xmlFooter;
+            });
+
+            // Copy Functionality
+            copyBtn.addEventListener('click', () => {
+                if (!outputArea.value) return;
+
+                outputArea.select();
+                outputArea.setSelectionRange(0, 99999); /* For mobile devices */
+                
+                navigator.clipboard.writeText(outputArea.value).then(() => {
+                    // Success feedback
+                    copyBtn.innerHTML = '<i class="ph ph-check"></i> Copied!';
+                    copyBtn.style.borderColor = '#2ecc71';
+                    copyBtn.style.color = '#2ecc71';
+                    
+                    setTimeout(() => {
+                        // Revert button state
+                        copyBtn.innerHTML = copyBtnOriginalHTML;
+                        copyBtn.style.borderColor = '';
+                        copyBtn.style.color = '';
+                    }, 2000);
+                });
+            });
+            
+            // trigger initial empty state
+            outputArea.value = 'Fill the parameters on the left and click generate.';
+        });
+    </script>
 </body>
 </html>
