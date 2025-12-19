@@ -130,19 +130,40 @@
             position: absolute; top: 54px; left: 0; right: 0;
             background-color: var(--bg-card); border: 1px solid var(--border-color);
             border-radius: 8px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.15);
-            max-height: 240px; overflow-y: auto; z-index: 100;
+            max-height: 280px; overflow-y: auto; z-index: 100;
             opacity: 0; visibility: hidden; transform: translateY(-10px); transition: all 0.2s ease;
         }
         .custom-select-wrapper.open .custom-options { opacity: 1; visibility: visible; transform: translateY(0); }
         
+        /* SEARCH BAR STYLES */
+        .dropdown-search {
+            position: sticky; top: 0; z-index: 10;
+            background-color: var(--bg-card);
+            padding: 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .search-input {
+            width: 100%; height: 36px !important; /* Override standard input height */
+            font-size: 0.85rem !important;
+            border-radius: 6px;
+            background-color: var(--bg-body);
+        }
+
         .custom-option { display: flex; align-items: center; padding: 10px 12px; cursor: pointer; border-bottom: 1px solid var(--border-color); transition: background 0.1s; }
         .custom-option:last-child { border-bottom: none; }
         .custom-option:hover { background-color: var(--bg-body); }
         
+        /* When hidden by search */
+        .custom-option.hidden { display: none; }
+
         .option-img { width: 24px; height: 24px; object-fit: contain; margin-right: 12px; }
         .option-text { font-size: 0.9rem; color: var(--text-main); }
         .caret { transition: transform 0.2s; color: var(--text-muted); }
         .custom-select-wrapper.open .caret { transform: rotate(180deg); color: var(--primary); }
+
+        .no-results {
+            padding: 12px; text-align: center; font-size: 0.8rem; color: var(--text-muted); display: none;
+        }
 
         /* --- Buttons --- */
         .btn-primary {
@@ -284,7 +305,7 @@
     </div>
 
     <script>
-        // --- GLOBAL STORAGE FOR CLUBS ---
+        // --- GLOBAL STORAGE ---
         let globalClubList = [];
 
         // --- DOM Elements ---
@@ -322,11 +343,32 @@
             const hiddenInput = document.getElementById(inputId);
             const triggerText = trigger.querySelector('.option-text');
 
+            // 1. ADD SEARCH BAR TO DROPDOWN
+            const searchContainer = document.createElement('div');
+            searchContainer.className = 'dropdown-search';
+            const searchInput = document.createElement('input');
+            searchInput.type = 'text';
+            searchInput.className = 'search-input';
+            searchInput.placeholder = 'Search...';
+            // Stop click propagation so searching doesn't close dropdown
+            searchInput.addEventListener('click', (e) => e.stopPropagation());
+            searchContainer.appendChild(searchInput);
+            optionsContainer.appendChild(searchContainer);
+
+            // 2. ADD NO RESULTS MESSAGE
+            const noResults = document.createElement('div');
+            noResults.className = 'no-results';
+            noResults.textContent = 'No clubs found.';
+            optionsContainer.appendChild(noResults);
+
+            // 3. BUILD OPTIONS
+            const optionElements = []; // Store references for filtering
             data.forEach(club => {
                 const option = document.createElement('div');
                 option.className = 'custom-option';
-                const logoSrc = club.logo ? club.logo : 'https://raw.githubusercontent.com/phosphor-icons/core/main/assets/regular/shield.svg';
+                option.setAttribute('data-label', club.menu.toLowerCase()); // For searching
                 
+                const logoSrc = club.logo ? club.logo : 'https://raw.githubusercontent.com/phosphor-icons/core/main/assets/regular/shield.svg';
                 option.innerHTML = `
                     <img src="${logoSrc}" class="option-img" onerror="this.src='https://raw.githubusercontent.com/phosphor-icons/core/main/assets/regular/shield-warning.svg'">
                     <span class="option-text">${club.menu}</span>
@@ -340,14 +382,44 @@
                     wrapper.classList.remove('open');
                 });
                 optionsContainer.appendChild(option);
+                optionElements.push(option);
             });
 
+            // 4. FILTER LOGIC
+            searchInput.addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                let visibleCount = 0;
+                
+                optionElements.forEach(opt => {
+                    const label = opt.getAttribute('data-label');
+                    if (label.includes(term)) {
+                        opt.classList.remove('hidden');
+                        visibleCount++;
+                    } else {
+                        opt.classList.add('hidden');
+                    }
+                });
+
+                noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+            });
+
+            // 5. TRIGGER LOGIC
             trigger.addEventListener('click', (e) => {
                 document.querySelectorAll('.custom-select-wrapper').forEach(w => { if (w !== wrapper) w.classList.remove('open'); });
                 wrapper.classList.toggle('open');
+                
+                // If opening, focus search and reset list
+                if (wrapper.classList.contains('open')) {
+                    searchInput.value = '';
+                    optionElements.forEach(opt => opt.classList.remove('hidden'));
+                    noResults.style.display = 'none';
+                    setTimeout(() => searchInput.focus(), 100); // Small delay to ensure render
+                }
+                
                 e.stopPropagation();
             });
         }
+
         window.addEventListener('click', (e) => {
             document.querySelectorAll('.custom-select-wrapper').forEach(w => { if (!w.contains(e.target)) w.classList.remove('open'); });
         });
@@ -431,40 +503,32 @@
             return lines;
         }
 
-        // --- UPDATED DOWNLOAD LOGIC (Group by NEW CLUB NATION) ---
+        // --- DOWNLOAD LOGIC (Group by NEW CLUB NATION) ---
         downloadBtn.addEventListener('click', () => {
             const lines = getAllTextLines();
             if(lines.length === 0) { alert("Generate some lines first!"); return; }
 
-            // Grouping Logic
             const groups = {};
-
             lines.forEach(line => {
-                // Find the content of the LAST quoted string (New Club)
                 const match = line.match(/"([^"]*)"$/);
                 const newClubCode = match ? match[1] : null;
 
-                let nation = "Other"; // Default
+                let nation = "Other";
                 if (newClubCode) {
-                    // Find this code in our globalClubList
                     const clubData = globalClubList.find(c => c.code === newClubCode);
-                    if (clubData && clubData.nation) {
-                        nation = clubData.nation;
-                    }
+                    if (clubData && clubData.nation) nation = clubData.nation;
                 }
 
                 if (!groups[nation]) groups[nation] = [];
                 groups[nation].push(line);
             });
 
-            // Construct Final String
             let finalText = "";
             const sortedNations = Object.keys(groups).sort();
-            
             sortedNations.forEach(nation => {
                 finalText += `// ${nation}\n`;
                 finalText += groups[nation].join("\n");
-                finalText += "\n\n"; // Space between groups
+                finalText += "\n\n";
             });
 
             const blob = new Blob([finalText], { type: 'text/plain' });
