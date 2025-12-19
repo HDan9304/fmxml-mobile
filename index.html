@@ -138,7 +138,6 @@
             color: var(--text-muted);
         }
 
-        /* Add Asterisk to Required Labels */
         .required-label::after {
             content: " *";
             color: var(--danger);
@@ -172,7 +171,6 @@
             box-shadow: 0 0 0 4px var(--primary-light);
         }
 
-        /* NEW: Error State Class */
         .input-error {
             border-color: var(--danger) !important;
             box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1) !important;
@@ -379,11 +377,16 @@
                     <label style="margin:0;">Generated Database Lines</label>
                     
                     <div class="action-group">
+                        <input type="file" id="fileInput" accept=".txt" style="display: none;">
+                        
+                        <button id="upload-btn" class="btn-action">
+                            <i class="ph ph-upload-simple"></i> Upload
+                        </button>
                         <button id="copy-all-btn" class="btn-action">
                             <i class="ph ph-copy"></i> Copy
                         </button>
                         <button id="download-btn" class="btn-action">
-                            <i class="ph ph-download-simple"></i> Download .txt
+                            <i class="ph ph-download-simple"></i> Download
                         </button>
                     </div>
                 </div>
@@ -391,7 +394,7 @@
                 <div id="list-container" class="list-container">
                     <div class="empty-state" id="empty-state">
                         <i class="ph ph-list-dashes" style="font-size: 2rem; margin-bottom: 10px; display: block;"></i>
-                        No entries generated yet.<br>Fill the form above and click "Add Entry".
+                        No entries generated yet.<br>Fill form or Upload .txt
                     </div>
                 </div>
             </div>
@@ -409,6 +412,10 @@
         const downloadBtn = document.getElementById('download-btn');
         const currClubSelect = document.getElementById('currClub');
         const newClubSelect = document.getElementById('newClub');
+        
+        // Upload Elements
+        const uploadBtn = document.getElementById('upload-btn');
+        const fileInput = document.getElementById('fileInput');
 
         // ============================================
         // 1. FETCH DATA
@@ -451,7 +458,7 @@
             return num > 200 ? "200" : val;
         };
 
-        // --- NEW: Input Validation Function ---
+        // --- Validation ---
         function validateRequired() {
             const fName = document.getElementById('currFName');
             const sName = document.getElementById('currSName');
@@ -461,26 +468,19 @@
             let isValid = true;
 
             required.forEach(el => {
-                // Check if value is empty
                 if (!el.value || el.value === "") {
                     el.classList.add('input-error');
                     isValid = false;
-
-                    // Remove error when user types/changes
                     el.addEventListener('input', () => el.classList.remove('input-error'), {once: true});
                     el.addEventListener('change', () => el.classList.remove('input-error'), {once: true});
                 }
             });
-
             return isValid;
         }
 
+        // --- Generate Button Click ---
         generateBtn.addEventListener('click', () => {
-            // 1. Check Validation first
-            if(!validateRequired()) {
-                // Optional: alert("Please fill in required fields.");
-                return; // Stop if invalid
-            }
+            if(!validateRequired()) return;
 
             let ca = document.getElementById('newCA').value;
             let pa = document.getElementById('newPA').value;
@@ -505,6 +505,7 @@
             createListItem(resultString);
         });
 
+        // --- Create List Item (UI) ---
         function createListItem(text) {
             if(emptyState) emptyState.style.display = 'none';
 
@@ -536,6 +537,43 @@
             listContainer.appendChild(itemDiv);
         }
 
+        // ============================================
+        // 3. FILE OPERATIONS
+        // ============================================
+
+        // --- Upload Logic ---
+        uploadBtn.addEventListener('click', () => {
+            fileInput.click(); // Trigger hidden input
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const text = e.target.result;
+                const lines = text.split(/\r?\n/); // Split by new line
+
+                let addedCount = 0;
+                lines.forEach(line => {
+                    if (line.trim() !== "") {
+                        createListItem(line.trim());
+                        addedCount++;
+                    }
+                });
+
+                // Reset input so same file can be selected again if needed
+                fileInput.value = '';
+                
+                if(addedCount > 0) {
+                   alert(`Imported ${addedCount} lines.`);
+                }
+            };
+            reader.readAsText(file);
+        });
+
+        // --- Helper: Get All Text ---
         function getAllText() {
             const items = document.querySelectorAll('.code-text');
             if(items.length === 0) return null;
@@ -546,6 +584,7 @@
             return allText;
         }
 
+        // --- Copy ---
         copyAllBtn.addEventListener('click', () => {
             const text = getAllText();
             if(!text) return;
@@ -559,6 +598,7 @@
             });
         });
 
+        // --- Download ---
         downloadBtn.addEventListener('click', () => {
             const text = getAllText();
             if(!text) {
@@ -578,6 +618,7 @@
             URL.revokeObjectURL(url);
         });
 
+        // --- Theme & Input Limits ---
         themeBtn.addEventListener('click', () => {
             document.body.classList.toggle('dark-mode');
             if (document.body.classList.contains('dark-mode')) {
