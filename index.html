@@ -1,401 +1,329 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>fmXML | Kit Master</title>
-    <style>
-        /* --- VARIABLES --- */
-        :root {
-            --brand-primary: #6E0FD7;
-            --brand-hover: #832DF0;
-            --bg-deep: #05080f;
-            --bg-card: #0f131f;
-            --bg-input: #080b12;
-            --text-main: #ffffff;
-            --text-muted: #8b9bb4;
-            --text-accent: #bca0eb;
-            --radius-lg: 16px;
-            --radius-md: 12px;
-            --border-subtle: rgba(255, 255, 255, 0.08);
-            --font-stack: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        }
-
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FMXML Interface</title>
+<style>
+    :root {
+        /* Color Palette */
+        --c-bg-main: #f5f4f9;       /* Very light lavender-gray */
+        --c-bg-surface: #ffffff;    /* White */
+        --c-bg-panel: #e9e6f3;      /* Light lavender */
         
-        body {
-            font-family: var(--font-stack);
-            background-color: var(--bg-deep);
-            color: var(--text-main);
-            margin: 0; min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden;
-        }
-
-        .bg-pattern {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cpath d='M 35 15 L 45 15 L 45 45 L 35 45' fill='none' stroke='%236E0FD7' stroke-width='2' opacity='0.07' stroke-linecap='square'/%3E%3C/svg%3E");
-            background-size: 60px 60px;
-            mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
-            -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
-        }
-
-        .app-container { width: 100%; max-width: 1000px; margin: 0 auto; padding: 24px; flex-grow: 1; display: flex; flex-direction: column; }
-        header { margin-bottom: 20px; text-align: center; }
-        .logo { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 8px; display: inline-flex; align-items: center; }
-        .logo span { color: var(--brand-primary); }
-        .logo::after { content: ']'; color: var(--brand-primary); margin-left: 4px; opacity: 0.8; font-weight: 300; }
-        .subtitle { color: var(--text-muted); font-size: 0.9rem; }
-
-        .dashboard { display: grid; grid-template-columns: 1fr; gap: 24px; }
-        .card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 24px; display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.3); backdrop-filter: blur(10px); }
-        .card-header { margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
-        .card-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-accent); font-weight: 600; }
-
-        .controls-row { display: flex; gap: 10px; margin-bottom: 15px; }
+        --c-text-primary: #1a1e36;  /* Deep navy */
+        --c-text-muted: #848799;    /* Muted gray-purple */
         
-        .settings-select {
-            flex-grow: 1; padding: 12px; background: var(--bg-input); color: var(--text-main);
-            border: 1px solid var(--border-subtle); border-radius: var(--radius-md);
-            font-family: var(--font-stack); font-size: 0.9rem; font-weight: 500;
-            appearance: none; cursor: pointer;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat; background-position: right 15px center; background-size: 16px;
-        }
-
-        .btn-import {
-            background: rgba(255,255,255,0.05); color: var(--text-accent); 
-            border: 1px solid var(--border-subtle); border-radius: var(--radius-md);
-            padding: 0 15px; font-weight: 600; font-size: 0.85rem; cursor: pointer;
-            display: flex; align-items: center; gap: 6px; white-space: nowrap;
-        }
-
-        /* --- SINGLE UPLOAD ZONE --- */
-        .upload-zone {
-            flex-grow: 0; border: 2px dashed var(--border-subtle); border-radius: var(--radius-md);
-            background: rgba(255,255,255,0.01); position: relative; min-height: 120px;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            cursor: pointer; transition: all 0.2s ease; margin-bottom: 20px;
-        }
-        .upload-zone:active { transform: scale(0.98); }
+        --c-accent-primary: #4f28a6; /* Deep royal purple */
+        --c-accent-soft: #8666d6;    /* Soft violet */
+        --c-accent-light: #bcaae6;   /* Pale violet */
         
-        /* CLICK FIX: Make input cover everything with high Z-Index */
-        .upload-input { 
-            position: absolute; width: 100%; height: 100%; top: 0; left: 0;
-            opacity: 0; z-index: 99; cursor: pointer; 
-        }
+        /* Spacing & Layout */
+        --radius-lg: 16px;
+        --radius-md: 8px;
+        --shadow-soft: 0 20px 40px -10px rgba(79, 40, 166, 0.15), 0 0 1px rgba(0,0,0,0.05);
         
-        .icon-large { margin-bottom: 8px; color: var(--brand-primary); pointer-events: none; }
-        .upload-text { font-weight: 600; color: var(--text-main); pointer-events: none; }
-        .upload-sub { font-size: 0.8rem; color: var(--text-muted); margin-top: 4px; pointer-events: none; }
+        /* Typography */
+        --font-ui: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        --font-code: "SF Mono", "Menlo", "Monaco", "Courier New", monospace;
+    }
 
-        /* --- MULTI-KIT GRID (Hidden Default) --- */
-        #multi-kit-container {
-            display: none; 
-            grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px;
-        }
-        .mini-zone {
-            border: 1px dashed var(--border-subtle); border-radius: var(--radius-md);
-            background: rgba(255,255,255,0.01); position: relative; height: 110px;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            cursor: pointer; text-align: center;
-        }
-        .mini-zone:active { background: rgba(110, 15, 215, 0.1); }
-        .mini-label { font-size: 0.75rem; color: var(--text-accent); font-weight: 700; margin-bottom: 5px; pointer-events: none;}
-        .mini-count { font-size: 0.7rem; color: var(--text-muted); pointer-events: none; }
-        .mini-icon { font-size: 1.2rem; margin-bottom: 5px; opacity: 0.8; pointer-events: none; }
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
 
-        /* --- PREVIEW GRID --- */
-        #preview-container {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(50px, 1fr)); gap: 6px;
-            max-height: 150px; overflow-y: auto; margin-bottom: 20px;
-            padding: 5px; border: 1px solid var(--border-subtle); border-radius: var(--radius-md);
-            background: rgba(0,0,0,0.2);
-        }
+    body {
+        background-color: var(--c-bg-main);
+        font-family: var(--font-ui);
+        color: var(--c-text-primary);
+        height: 100vh;
+        width: 100vw;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        position: relative;
+        -webkit-font-smoothing: antialiased;
+    }
 
-        .preview-item {
-            background: var(--bg-input); border-radius: 6px; padding: 4px;
-            text-align: center; border: 1px solid var(--border-subtle);
-            font-size: 0.7rem; color: var(--text-muted); position: relative;
-        }
-        .preview-item.imported { border-color: var(--brand-primary); opacity: 0.7; }
-        .preview-img { width: 100%; height: 35px; object-fit: contain; margin-bottom: 2px; display: block; }
-        .preview-icon { font-size: 1.2rem; line-height: 35px; display: block; opacity: 0.5; }
-        .preview-id { font-family: 'SF Mono', monospace; color: var(--text-accent); display: block; overflow: hidden; text-overflow: ellipsis; font-size: 0.6rem;}
-        
-        .type-tag { font-size: 0.5rem; padding: 2px 4px; border-radius: 3px; position: absolute; top: 2px; right: 2px; color: white; font-weight: bold; pointer-events: none;}
-        .tag-home { background: #6E0FD7; }
-        .tag-away { background: #FF4164; }
-        .tag-third { background: #2196F3; }
+    /* Background Pattern: Repeating ']' Bracket */
+    body::before {
+        content: "";
+        position: absolute;
+        top: 0; left: 0; right: 0; bottom: 0;
+        z-index: -1;
+        /* Inline SVG Data URI for the bracket pattern */
+        background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Ctext x='50%25' y='50%25' font-family='-apple-system, sans-serif' font-weight='400' font-size='20' fill='%234f28a6' text-anchor='middle' dy='.35em' opacity='0.03'%3E%5D%3C/text%3E%3C/svg%3E");
+    }
 
-        .code-block { background: var(--bg-input); border-radius: var(--radius-md); border: 1px solid var(--border-subtle); flex-grow: 1; position: relative; overflow: hidden; min-height: 250px; }
-        textarea { width: 100%; height: 100%; background: transparent; border: none; color: #a0aabf; font-family: 'SF Mono', 'Menlo', 'Courier New', monospace; font-size: 0.8rem; line-height: 1.6; padding: 20px; resize: none; outline: none; }
+    /* Main Window Shell */
+    .interface-shell {
+        width: 90%;
+        max-width: 1100px;
+        height: 85vh;
+        background-color: var(--c-bg-surface);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-soft);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        border: 1px solid rgba(255,255,255,0.6);
+    }
 
-        .btn-group { display: flex; gap: 10px; margin-top: auto; }
-        .btn { border: none; padding: 14px; border-radius: var(--radius-md); font-family: var(--font-stack); font-weight: 600; font-size: 0.95rem; cursor: pointer; transition: transform 0.1s, opacity 0.2s; flex: 1; text-align: center; }
-        .btn:active { transform: scale(0.96); }
-        
-        .btn-primary { background: var(--brand-primary); color: white; box-shadow: 0 4px 15px rgba(110, 15, 215, 0.3); }
-        .btn-secondary { background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--border-subtle); }
-        .btn-clear { background: rgba(255, 50, 50, 0.1); color: #ff6b6b; border: 1px solid rgba(255, 50, 50, 0.2); max-width: 50px; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; }
+    /* Header Bar */
+    .ui-header {
+        height: 52px;
+        background-color: var(--c-bg-panel);
+        border-bottom: 1px solid rgba(79, 40, 166, 0.08);
+        display: flex;
+        align-items: center;
+        padding: 0 24px;
+        justify-content: space-between;
+        flex-shrink: 0;
+    }
 
-        #status-msg { text-align: center; margin-top: 12px; font-size: 0.85rem; color: var(--text-accent); min-height: 20px; }
+    .window-controls {
+        display: flex;
+        gap: 8px;
+    }
 
-        @media (min-width: 800px) {
-            .dashboard { grid-template-columns: 350px 1fr; align-items: stretch; height: 600px; }
-            .card { height: 100%; }
-            .app-container { justify-content: center; }
-            header { text-align: left; margin-bottom: 40px; }
-            .logo { font-size: 2rem; }
-        }
-    </style>
+    .control-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background-color: #dcdbe6;
+    }
+    
+    .control-dot:nth-child(1) { background-color: #ff5f57; opacity: 0.6; }
+    .control-dot:nth-child(2) { background-color: #febc2e; opacity: 0.6; }
+    .control-dot:nth-child(3) { background-color: #28c840; opacity: 0.6; }
+
+    .file-meta {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--c-text-muted);
+        letter-spacing: -0.01em;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .file-badge {
+        background-color: rgba(79, 40, 166, 0.08);
+        color: var(--c-accent-primary);
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .ui-actions {
+        width: 60px; /* Balances the flex layout */
+    }
+
+    /* Main Content Area */
+    .ui-body {
+        flex: 1;
+        display: flex;
+        overflow: hidden;
+    }
+
+    /* Sidebar (Visual only) */
+    .sidebar {
+        width: 220px;
+        background-color: #fbfbfd;
+        border-right: 1px solid rgba(0,0,0,0.04);
+        padding: 24px 0;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        flex-shrink: 0;
+    }
+
+    .sidebar-item {
+        padding: 8px 24px;
+        font-size: 13px;
+        color: var(--c-text-muted);
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        border-left: 3px solid transparent;
+        cursor: default;
+    }
+
+    .sidebar-item.active {
+        color: var(--c-accent-primary);
+        background-color: rgba(79, 40, 166, 0.04);
+        border-left-color: var(--c-accent-primary);
+    }
+    
+    .sidebar-label {
+        margin-top: 24px;
+        padding: 0 24px;
+        font-size: 11px;
+        text-transform: uppercase;
+        color: #b0b3c7;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        margin-bottom: 8px;
+    }
+
+    /* Code Editor Area */
+    .editor-container {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        background-color: var(--c-bg-surface);
+    }
+    
+    .editor-tabs {
+        display: flex;
+        height: 40px;
+        border-bottom: 1px solid rgba(0,0,0,0.04);
+        padding: 0 20px;
+        align-items: flex-end;
+    }
+    
+    .tab {
+        padding: 10px 16px;
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--c-text-muted);
+        border-bottom: 2px solid transparent;
+        margin-right: 8px;
+    }
+    
+    .tab.active {
+        color: var(--c-accent-primary);
+        border-bottom-color: var(--c-accent-primary);
+    }
+
+    .code-view {
+        flex: 1;
+        overflow-y: hidden; /* Static visual */
+        padding: 30px;
+        font-family: var(--font-code);
+        font-size: 14px;
+        line-height: 1.6;
+        display: flex;
+    }
+
+    .gutter {
+        width: 40px;
+        text-align: right;
+        color: #d1d1db;
+        user-select: none;
+        margin-right: 24px;
+        font-size: 13px;
+    }
+
+    .source-code {
+        flex: 1;
+        color: var(--c-text-primary);
+    }
+
+    /* Syntax Highlighting Classes */
+    .tag { color: var(--c-accent-primary); }
+    .attr { color: var(--c-accent-soft); }
+    .val  { color: var(--c-text-primary); font-weight: 500; }
+    .punc { color: #dcdbe6; }
+    .comment { color: var(--c-text-muted); font-style: italic; }
+    
+    /* Indentation helpers */
+    .indent-1 { padding-left: 20px; }
+    .indent-2 { padding-left: 40px; }
+    .indent-3 { padding-left: 60px; }
+
+</style>
 </head>
 <body>
 
-    <div class="bg-pattern"></div>
-
-    <div class="app-container">
-        <header>
-            <div class="logo">fmXML<span>Editor</span></div>
-            <div class="subtitle">Import, Edit & Generate configs.</div>
+    <div class="interface-shell">
+        <header class="ui-header">
+            <div class="window-controls">
+                <div class="control-dot"></div>
+                <div class="control-dot"></div>
+                <div class="control-dot"></div>
+            </div>
+            <div class="file-meta">
+                <span class="file-badge">XML</span>
+                config_manifest_v2.fmxml
+            </div>
+            <div class="ui-actions"></div>
         </header>
 
-        <div class="dashboard">
+        <div class="ui-body">
             
-            <div class="card">
-                <div class="card-header">
-                    <span class="card-label">Tools</span>
-                    <span id="count-label" class="card-label" style="color:var(--text-main)">0 Items</span>
-                </div>
+            <aside class="sidebar">
+                <div class="sidebar-label">Project Structure</div>
+                <div class="sidebar-item active">core_definitions</div>
+                <div class="sidebar-item">layout_schema</div>
+                <div class="sidebar-item">scripts_batch</div>
                 
-                <div class="controls-row">
-                    <select id="config-type" class="settings-select" onchange="toggleInterface()">
-                        <option value="faces">Player Faces</option>
-                        <option value="logos">Club Logos</option>
-                        <option value="logos_small">Small Logos</option>
-                        <option value="kits">Kits (All-in-One)</option>
-                    </select>
-                    
-                    <input type="file" id="import-xml" accept=".xml" style="display:none" onchange="handleImport()">
-                    <button class="btn-import" onclick="document.getElementById('import-xml').click()">
-                        <span>📥 Load</span>
-                    </button>
-                </div>
-                
-                <div id="single-zone" class="upload-zone">
-                    <input type="file" id="file-upload-single" class="upload-input" multiple accept="image/*" onchange="handleSingleUpload()">
-                    <div class="icon-large">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
-                    </div>
-                    <div class="upload-text">Add Images</div>
+                <div class="sidebar-label">Resources</div>
+                <div class="sidebar-item">global_variables</div>
+                <div class="sidebar-item">relationships</div>
+            </aside>
+
+            <main class="editor-container">
+                <div class="editor-tabs">
+                    <div class="tab active">Source</div>
+                    <div class="tab">Visual Tree</div>
+                    <div class="tab">Validation</div>
                 </div>
 
-                <div id="multi-kit-container">
-                    <div class="mini-zone">
-                        <input type="file" class="upload-input" multiple accept="image/*" onchange="handleMultiUpload('home', this)">
-                        <div class="mini-icon">🏠</div>
-                        <div class="mini-label">HOME</div>
-                        <div class="mini-count" id="count-home">0 files</div>
+                <div class="code-view">
+                    <div class="gutter">
+                        1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9<br>10<br>11<br>12<br>13<br>14<br>15
                     </div>
-                    <div class="mini-zone">
-                        <input type="file" class="upload-input" multiple accept="image/*" onchange="handleMultiUpload('away', this)">
-                        <div class="mini-icon">✈️</div>
-                        <div class="mini-label">AWAY</div>
-                        <div class="mini-count" id="count-away">0 files</div>
+
+                    <div class="source-code">
+                        <span class="punc">&lt;?</span><span class="tag">xml</span> <span class="attr">version</span>=<span class="val">"1.0"</span> <span class="attr">encoding</span>=<span class="val">"UTF-8"</span><span class="punc">?&gt;</span><br>
+                        <span class="punc">&lt;</span><span class="tag">FMXMLRESULT</span> <span class="attr">xmlns</span>=<span class="val">"http://www.filemaker.com/fmxmlresult"</span><span class="punc">&gt;</span><br>
+                        
+                        <div class="indent-1">
+                            <span class="comment">&lt;!-- Database Definition Header --&gt;</span><br>
+                            <span class="punc">&lt;</span><span class="tag">ERRORCODE</span><span class="punc">&gt;</span>0<span class="punc">&lt;/</span><span class="tag">ERRORCODE</span><span class="punc">&gt;</span><br>
+                            <span class="punc">&lt;</span><span class="tag">PRODUCT</span> <span class="attr">BUILD</span>=<span class="val">"19.4.2"</span> <span class="attr">NAME</span>=<span class="val">"FileMaker"</span> <span class="attr">VERSION</span>=<span class="val">"Pro 19"</span><span class="punc">/&gt;</span>
+                        </div>
+                        
+                        <div class="indent-1">
+                            <span class="punc">&lt;</span><span class="tag">DATABASE</span> <span class="attr">DATEFORMAT</span>=<span class="val">"MM/dd/yyyy"</span> <span class="attr">LAYOUT</span>=<span class="val">"Main_Dashboard"</span><span class="punc">&gt;</span>
+                        </div>
+
+                        <div class="indent-2">
+                            <span class="punc">&lt;</span><span class="tag">METADATA</span><span class="punc">&gt;</span><br>
+                            <div class="indent-3">
+                                <span class="punc">&lt;</span><span class="tag">FIELD</span> <span class="attr">EMPTYOK</span>=<span class="val">"YES"</span> <span class="attr">MAXREPEAT</span>=<span class="val">"1"</span> <span class="attr">NAME</span>=<span class="val">"PrimaryKey"</span> <span class="attr">TYPE</span>=<span class="val">"TEXT"</span><span class="punc">/&gt;</span><br>
+                                <span class="punc">&lt;</span><span class="tag">FIELD</span> <span class="attr">EMPTYOK</span>=<span class="val">"NO"</span> <span class="attr">MAXREPEAT</span>=<span class="val">"1"</span> <span class="attr">NAME</span>=<span class="val">"CreationTimestamp"</span> <span class="attr">TYPE</span>=<span class="val">"TIMESTAMP"</span><span class="punc">/&gt;</span><br>
+                                <span class="punc">&lt;</span><span class="tag">FIELD</span> <span class="attr">EMPTYOK</span>=<span class="val">"YES"</span> <span class="attr">MAXREPEAT</span>=<span class="val">"5"</span> <span class="attr">NAME</span>=<span class="val">"ActiveStatus"</span> <span class="attr">TYPE</span>=<span class="val">"NUMBER"</span><span class="punc">/&gt;</span>
+                            </div>
+                            <span class="punc">&lt;/</span><span class="tag">METADATA</span><span class="punc">&gt;</span>
+                        </div>
+                        
+                        <div class="indent-2">
+                            <span class="punc">&lt;</span><span class="tag">RESULTSET</span> <span class="attr">FOUND</span>=<span class="val">"1"</span><span class="punc">&gt;</span><br>
+                            <div class="indent-3">
+                                <span class="punc">&lt;</span><span class="tag">ROW</span> <span class="attr">MODID</span>=<span class="val">"4"</span> <span class="attr">RECORDID</span>=<span class="val">"201"</span><span class="punc">&gt;</span><br>
+                                <div class="indent-1">
+                                    <span class="punc">&lt;</span><span class="tag">COL</span><span class="punc">&gt;</span><span class="punc">&lt;</span><span class="tag">DATA</span><span class="punc">&gt;</span>UUID-8942-XJ29<span class="punc">&lt;/</span><span class="tag">DATA</span><span class="punc">&gt;</span><span class="punc">&lt;/</span><span class="tag">COL</span><span class="punc">&gt;</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="indent-1">
+                           <span class="punc">&lt;/</span><span class="tag">DATABASE</span><span class="punc">&gt;</span> 
+                        </div>
+                        <span class="punc">&lt;/</span><span class="tag">FMXMLRESULT</span><span class="punc">&gt;</span>
                     </div>
-                    <div class="mini-zone">
-                        <input type="file" class="upload-input" multiple accept="image/*" onchange="handleMultiUpload('third', this)">
-                        <div class="mini-icon">👕</div>
-                        <div class="mini-label">THIRD</div>
-                        <div class="mini-count" id="count-third">0 files</div>
-                    </div>
                 </div>
-
-                <div id="preview-container">
-                    <div style="text-align:center; padding:10px; color:var(--text-muted); font-size:0.8rem;">
-                        No items yet.
-                    </div>
-                </div>
-
-                <div class="btn-group">
-                    <button class="btn btn-clear" onclick="clearAll()" title="Reset">✕</button>
-                    <button class="btn btn-secondary" onclick="downloadFile()">Download</button>
-                    <button class="btn btn-primary" onclick="copyText()">Copy XML</button>
-                </div>
-                
-                <div id="status-msg"></div>
-            </div>
-
-            <div class="card">
-                <div class="card-header">
-                    <span class="card-label">XML Output</span>
-                    <span class="card-label" style="opacity: 0.5">Read Only</span>
-                </div>
-                <div class="code-block">
-                    <textarea id="output" readonly placeholder="Import a config or upload images..."></textarea>
-                </div>
-            </div>
-
+            </main>
         </div>
     </div>
 
-    <script>
-        // --- STATE MANAGEMENT ---
-        let importedIDs = [];
-        let allFiles = []; // { file, type }
-
-        // --- INTERFACE LOGIC ---
-        function toggleInterface() {
-            const type = document.getElementById('config-type').value;
-            const singleZone = document.getElementById('single-zone');
-            const multiZone = document.getElementById('multi-kit-container');
-
-            if (type === 'kits') {
-                singleZone.style.display = 'none';
-                multiZone.style.display = 'grid';
-            } else {
-                singleZone.style.display = 'flex';
-                multiZone.style.display = 'none';
-            }
-            updateUI(); 
-        }
-
-        // --- PATH LOGIC ---
-        function getPath(type, id) {
-            switch(type) {
-                case 'faces': return `graphics/pictures/person/${id}/portrait`;
-                case 'logos': return `graphics/pictures/club/${id}/logo`;
-                case 'logos_small': return `graphics/pictures/club/${id}/icon`;
-                
-                // Kit Paths
-                case 'home': return `graphics/pictures/team/${id}/kit_textures/home`;
-                case 'away': return `graphics/pictures/team/${id}/kit_textures/away`;
-                case 'third': return `graphics/pictures/team/${id}/kit_textures/third`;
-                
-                default: return `graphics/pictures/person/${id}/portrait`;
-            }
-        }
-
-        // 1. IMPORT
-        function handleImport() {
-            const input = document.getElementById('import-xml');
-            if(input.files.length === 0) return;
-
-            const file = input.files[0];
-            const reader = new FileReader();
-
-            reader.onload = function(e) {
-                const text = e.target.result;
-                const regex = /from="([^"]+)"/g;
-                let match;
-                let count = 0;
-                while ((match = regex.exec(text)) !== null) {
-                    if(!importedIDs.includes(match[1])) {
-                        importedIDs.push(match[1]);
-                        count++;
-                    }
-                }
-                document.getElementById('status-msg').innerText = `Imported ${count} IDs.`;
-                updateUI();
-            };
-            reader.readAsText(file);
-            input.value = ""; 
-        }
-
-        // 2a. SINGLE UPLOAD
-        function handleSingleUpload() {
-            const input = document.getElementById('file-upload-single');
-            const files = Array.from(input.files);
-            files.forEach(f => {
-                allFiles.push({ file: f, type: 'generic' });
-            });
-            input.value = ""; 
-            updateUI();
-        }
-
-        // 2b. MULTI UPLOAD
-        function handleMultiUpload(kitType, inputElement) {
-            const files = Array.from(inputElement.files);
-            files.forEach(f => {
-                allFiles.push({ file: f, type: kitType });
-            });
-            
-            // Update Mini Counts
-            const count = allFiles.filter(i => i.type === kitType).length;
-            document.getElementById(`count-${kitType}`).innerText = `${count} files`;
-
-            inputElement.value = ""; 
-            updateUI();
-        }
-
-        function updateUI() {
-            renderPreviews();
-            generateXML();
-            const total = importedIDs.length + allFiles.length;
-            document.getElementById('count-label').innerText = `${total} Items`;
-        }
-
-        // 3. RENDER PREVIEWS
-        function renderPreviews() {
-            const container = document.getElementById('preview-container');
-            container.innerHTML = "";
-
-            importedIDs.forEach(id => {
-                let div = document.createElement('div');
-                div.className = 'preview-item imported';
-                div.innerHTML = `<span class="preview-icon">📜</span><span class="preview-id">${id}</span>`;
-                container.appendChild(div);
-            });
-
-            allFiles.forEach(item => {
-                let file = item.file;
-                let fileName = file.name;
-                let match = fileName.match(/\d+/);
-                let id = match ? match[0] : "???";
-
-                let div = document.createElement('div');
-                div.className = 'preview-item';
-                
-                let img = document.createElement('img');
-                img.className = 'preview-img';
-                img.src = URL.createObjectURL(file);
-                
-                let span = document.createElement('span');
-                span.className = 'preview-id';
-                span.innerText = id;
-
-                if (item.type !== 'generic') {
-                    let tag = document.createElement('span');
-                    tag.className = `type-tag tag-${item.type}`;
-                    tag.innerText = item.type.charAt(0).toUpperCase();
-                    div.appendChild(tag);
-                }
-
-                div.appendChild(img);
-                div.appendChild(span);
-                container.appendChild(div);
-            });
-        }
-
-        // 4. GENERATE XML
-        function generateXML() {
-            const dropdownType = document.getElementById('config-type').value; 
-            const outputArea = document.getElementById('output');
-
-            let xmlContent = `<record>\n\t<boolean id="preload" value="false"/>\n\t<boolean id="amap" value="false"/>\n\t<list id="maps">\n`;
-
-            // Process Imported
-            importedIDs.forEach(id => {
-                // If in kit mode, default import logic to 'home' fallback
-                let pathType = (dropdownType === 'kits') ? 'home' : dropdownType;
-                let path = getPath(pathType, id);
-                xmlContent += `\t\t<record from="${id}" to="${path}"/>\n`;
-            });
-
-            // Process New
-            allFiles.forEach(item => {
-                let file = item.file;
-                let fileName = file.name;
-                let match = fileName.match(/\d+/);
-                let id = match ? match[0] : fileName.substring(0, fileName.lastIndexOf('.'));
-                
-                let typeToUse;
-                if (item.type !== 'generic
+</body>
+</html>
