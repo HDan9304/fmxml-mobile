@@ -65,7 +65,7 @@
             max-width: 960px;
             border-radius: 12px;
             box-shadow: var(--shadow);
-            padding: 30px; /* Reduced padding for mobile */
+            padding: 30px;
             border: 1px solid var(--border-color);
         }
 
@@ -97,7 +97,6 @@
             .subtitle { display: block; }
         }
 
-        /* Header Actions (Upload + Theme) */
         .header-actions {
             display: flex;
             gap: 10px;
@@ -121,14 +120,13 @@
         }
         .icon-btn:hover { border-color: var(--primary); color: var(--primary); background-color: var(--bg-item); }
 
-        /* Upload Button (Header Style) */
         .btn-upload-header {
             display: flex;
             align-items: center;
             gap: 8px;
             padding: 0 16px;
             height: 40px;
-            border: 1px solid var(--primary); /* Highlighted */
+            border: 1px solid var(--primary);
             color: var(--primary);
             border-radius: 8px;
             background: rgba(106, 0, 216, 0.05);
@@ -137,35 +135,16 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-        .btn-upload-header:hover {
-            background: var(--primary);
-            color: white;
-        }
-
-        /* Hide text label on very small screens for upload */
+        .btn-upload-header:hover { background: var(--primary); color: white; }
         .upload-label { display: none; }
         @media(min-width: 480px) { .upload-label { display: inline; } }
 
-
-        /* --- Section Separators --- */
-        .section-title {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--primary);
-            font-weight: 700;
-            margin: 20px 0 10px 0;
-            display: block;
-        }
-        .section-title:first-child { margin-top: 0; }
-
-        /* --- Grid & Inputs --- */
+        /* --- Inputs --- */
         .form-grid {
             display: grid;
             grid-template-columns: 1fr;
             gap: 20px;
         }
-
         @media (min-width: 768px) {
             .form-grid { grid-template-columns: repeat(3, 1fr); gap: 24px; }
             .col-span-3 { grid-column: span 3; }
@@ -180,10 +159,9 @@
             font-weight: 700; 
             color: var(--text-muted);
         }
-
         .required-label::after { content: " *"; color: var(--danger); }
 
-        input, select {
+        input {
             width: 100%;
             padding: 12px 16px;
             border-radius: 8px;
@@ -191,33 +169,99 @@
             background-color: var(--input-bg);
             color: var(--text-main);
             font-family: 'Inter', sans-serif;
-            font-size: 16px; /* Prevents iOS zoom */
+            font-size: 16px; 
             transition: border-color 0.2s, box-shadow 0.2s;
-            appearance: none; -webkit-appearance: none;
+        }
+        input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px var(--primary-light); }
+        .input-error { border-color: var(--danger) !important; box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1) !important; animation: shake 0.3s ease-in-out; }
+
+        /* =========================================
+           CUSTOM IMAGE DROPDOWN STYLES 
+           ========================================= */
+        .custom-select-wrapper {
+            position: relative;
+            user-select: none;
+            width: 100%;
         }
 
-        select {
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 1rem center;
-            background-size: 1em;
+        .custom-select-trigger {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
             cursor: pointer;
+            transition: all 0.2s;
+            min-height: 48px; /* Match input height */
         }
 
-        input:focus, select:focus {
-            outline: none;
+        .custom-select-trigger:hover { border-color: #b0b0b0; }
+
+        /* Open state */
+        .custom-select-wrapper.open .custom-select-trigger {
             border-color: var(--primary);
             box-shadow: 0 0 0 4px var(--primary-light);
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
         }
 
-        .input-error {
-            border-color: var(--danger) !important;
-            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1) !important;
-            animation: shake 0.3s ease-in-out;
+        .custom-options {
+            position: absolute;
+            display: block;
+            top: 100%;
+            left: 0;
+            right: 0;
+            border: 1px solid var(--primary);
+            border-top: 0;
+            background-color: var(--input-bg);
+            transition: all 0.2s;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            z-index: 50;
+            max-height: 250px;
+            overflow-y: auto;
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         }
-        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
 
-        /* --- Primary Button --- */
+        .custom-select-wrapper.open .custom-options {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: all;
+        }
+
+        .custom-option {
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding: 10px 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .custom-option:last-child { border-bottom: none; }
+        .custom-option:hover { background-color: var(--primary-light); color: var(--primary); }
+        
+        .option-img {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+            margin-right: 12px;
+        }
+
+        .option-text {
+            font-size: 0.95rem;
+            color: var(--text-main);
+            font-weight: 500;
+        }
+
+        /* --- Buttons & Output --- */
         .btn-primary {
             background-color: var(--primary);
             color: white;
@@ -239,102 +283,27 @@
         .btn-primary:active { transform: scale(0.98); }
         .btn-primary:hover { background-color: var(--primary-hover); }
 
-        /* --- Output Section --- */
-        .output-section {
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px dashed var(--border-color);
-        }
-
-        /* --- BOTTOM ACTION BAR --- */
-        .output-header {
-            display: flex;
-            flex-direction: column; /* Stack on mobile */
-            gap: 15px;
-            margin-bottom: 20px;
-        }
+        .output-section { margin-top: 40px; padding-top: 20px; border-top: 1px dashed var(--border-color); }
+        .output-header { display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px; }
+        @media (min-width: 600px) { .output-header { flex-direction: row; justify-content: space-between; align-items: center; } }
         
-        @media (min-width: 600px) {
-            .output-header {
-                flex-direction: row;
-                justify-content: space-between;
-                align-items: center;
-            }
-        }
+        .action-group { display: flex; gap: 10px; width: 100%; }
+        @media (min-width: 600px) { .action-group { width: auto; } }
 
-        .action-group {
-            display: flex;
-            gap: 10px;
-            width: 100%;
-        }
-
-        @media (min-width: 600px) {
-            .action-group { width: auto; }
-        }
-
-        /* --- Bottom Buttons Style --- */
         .btn-action {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 12px 16px;
-            background-color: var(--bg-body);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            color: var(--text-main);
-            font-size: 0.9rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            flex: 1; /* Makes them share width equally on mobile */
+            display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 16px;
+            background-color: var(--bg-body); border: 1px solid var(--border-color); border-radius: 8px;
+            color: var(--text-main); font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s; flex: 1;
         }
+        .btn-action:hover { border-color: var(--primary); background-color: var(--bg-card); color: var(--primary); }
 
-        .btn-action:hover {
-            border-color: var(--primary);
-            background-color: var(--bg-card);
-            color: var(--primary);
-        }
-
-        /* --- List Styles --- */
         .list-container { display: flex; flex-direction: column; gap: 12px; }
-
-        .list-item {
-            background-color: var(--bg-item);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 15px;
-            animation: slideIn 0.3s ease;
-        }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        .code-text {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85rem;
-            color: var(--text-main);
-            word-break: break-all;
-            line-height: 1.5;
-        }
-
-        .delete-btn {
-            background: transparent;
-            border: 1px solid var(--border-color);
-            color: var(--text-muted);
-            width: 36px;
-            height: 36px;
-            display: flex; align-items: center; justify-content: center;
-            border-radius: 8px; /* Softer radius for touch */
-            cursor: pointer;
-            flex-shrink: 0;
-            transition: 0.2s;
-        }
+        .list-item { background-color: var(--bg-item); border: 1px solid var(--border-color); border-radius: 8px; padding: 16px; display: flex; align-items: center; justify-content: space-between; gap: 15px; }
+        .code-text { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--text-main); word-break: break-all; line-height: 1.5; }
+        .delete-btn { background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 8px; cursor: pointer; flex-shrink: 0; transition: 0.2s; }
         .delete-btn:hover { background-color: var(--danger); color: white; border-color: var(--danger); }
-
         .empty-state { text-align: center; padding: 40px; color: var(--text-muted); font-size: 0.9rem; border: 1px dashed var(--border-color); border-radius: 8px; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
 
     </style>
 </head>
@@ -354,12 +323,10 @@
             
             <div class="header-actions">
                 <input type="file" id="fileInput" accept=".txt" style="display: none;">
-                
                 <button id="upload-btn" class="btn-upload-header" title="Import File">
                     <i class="ph-bold ph-upload-simple"></i>
                     <span class="upload-label">Import</span>
                 </button>
-                
                 <button id="theme-toggle" class="icon-btn" title="Toggle Dark Mode">
                     <i class="ph ph-moon"></i>
                 </button>
@@ -377,11 +344,18 @@
                     <label class="required-label">Surname</label>
                     <input type="text" id="currSName" placeholder="Doe" required>
                 </div>
+                
                 <div class="input-group">
                     <label class="required-label">Current Club</label>
-                    <select id="currClub" required>
-                        <option value="" disabled selected>Loading...</option>
-                    </select>
+                    <input type="hidden" id="currClubValue">
+                    <div id="currClub-wrapper" class="custom-select-wrapper">
+                        <div class="custom-select-trigger">
+                            <span class="option-text">Select Club...</span>
+                            <i class="ph-bold ph-caret-down"></i>
+                        </div>
+                        <div class="custom-options">
+                            </div>
+                    </div>
                 </div>
             </div>
 
@@ -422,9 +396,15 @@
                 
                 <div class="input-group col-span-3">
                     <label>New Club Destination</label>
-                    <select id="newClub">
-                        <option value="" disabled selected>Loading...</option>
-                    </select>
+                    <input type="hidden" id="newClubValue">
+                    <div id="newClub-wrapper" class="custom-select-wrapper">
+                        <div class="custom-select-trigger">
+                            <span class="option-text">Select Club...</span>
+                            <i class="ph-bold ph-caret-down"></i>
+                        </div>
+                        <div class="custom-options">
+                            </div>
+                    </div>
                 </div>
             </div>
 
@@ -465,38 +445,89 @@
         const emptyState = document.getElementById('empty-state');
         const copyAllBtn = document.getElementById('copy-all-btn');
         const downloadBtn = document.getElementById('download-btn');
-        const currClubSelect = document.getElementById('currClub');
-        const newClubSelect = document.getElementById('newClub');
         const uploadBtn = document.getElementById('upload-btn');
         const fileInput = document.getElementById('fileInput');
 
-        // --- Fetch Data ---
-        async function loadClubs() {
+        // --- Custom Dropdown Logic ---
+        async function initCustomDropdowns() {
             try {
                 const response = await fetch('clubs.json');
-                if (!response.ok) throw new Error("HTTP error " + response.status);
                 const clubList = await response.json();
-                populateDropdown(currClubSelect, clubList);
-                populateDropdown(newClubSelect, clubList);
+
+                // Initialize both dropdowns
+                setupCustomSelect('currClub-wrapper', 'currClubValue', clubList);
+                setupCustomSelect('newClub-wrapper', 'newClubValue', clubList);
+
             } catch (error) {
-                console.error("Could not load clubs.json:", error);
-                currClubSelect.innerHTML = '<option disabled>Error loading clubs</option>';
-                newClubSelect.innerHTML = '<option disabled>Error loading clubs</option>';
+                console.error("Error loading clubs:", error);
+                document.querySelector('.custom-select-trigger span').textContent = "Error loading list";
             }
         }
 
-        function populateDropdown(selectElement, data) {
-            selectElement.innerHTML = '<option value="" disabled selected>Select Club</option>';
+        function setupCustomSelect(wrapperId, inputId, data) {
+            const wrapper = document.getElementById(wrapperId);
+            const trigger = wrapper.querySelector('.custom-select-trigger');
+            const optionsContainer = wrapper.querySelector('.custom-options');
+            const hiddenInput = document.getElementById(inputId);
+            const triggerText = trigger.querySelector('.option-text');
+
+            // 1. Build Options
             data.forEach(club => {
-                const opt = document.createElement('option');
-                opt.value = club.code;
-                opt.textContent = club.menu;
-                selectElement.appendChild(opt);
+                const option = document.createElement('div');
+                option.className = 'custom-option';
+                
+                // Use a default shield icon if no logo is provided
+                const logoSrc = club.logo ? club.logo : 'https://raw.githubusercontent.com/phosphor-icons/core/main/assets/regular/shield.svg';
+                
+                option.innerHTML = `
+                    <img src="${logoSrc}" class="option-img" onerror="this.src='https://raw.githubusercontent.com/phosphor-icons/core/main/assets/regular/shield-warning.svg'">
+                    <span class="option-text">${club.menu}</span>
+                `;
+
+                // 2. Handle Click on Option
+                option.addEventListener('click', () => {
+                    // Update Trigger View
+                    triggerText.textContent = club.menu;
+                    
+                    // Update Hidden Input (Important for logic!)
+                    hiddenInput.value = club.code;
+
+                    // Remove Error Style if it exists
+                    wrapper.querySelector('.custom-select-trigger').classList.remove('input-error');
+
+                    // Close Dropdown
+                    wrapper.classList.remove('open');
+                });
+
+                optionsContainer.appendChild(option);
+            });
+
+            // 3. Handle Click on Trigger (Open/Close)
+            trigger.addEventListener('click', (e) => {
+                // Close other open dropdowns first
+                document.querySelectorAll('.custom-select-wrapper').forEach(w => {
+                    if (w !== wrapper) w.classList.remove('open');
+                });
+                
+                wrapper.classList.toggle('open');
+                e.stopPropagation();
             });
         }
-        loadClubs();
 
-        // --- Logic ---
+        // Close dropdowns when clicking outside
+        window.addEventListener('click', function(e) {
+            document.querySelectorAll('.custom-select-wrapper').forEach(wrapper => {
+                if (!wrapper.contains(e.target)) {
+                    wrapper.classList.remove('open');
+                }
+            });
+        });
+
+        // Run Initialization
+        initCustomDropdowns();
+
+
+        // --- Generator Logic ---
         const quote = (str) => `"${str ? str.trim() : ''}"`;
         const validateMax = (val) => {
             if (!val) return ""; 
@@ -508,18 +539,26 @@
         function validateRequired() {
             const fName = document.getElementById('currFName');
             const sName = document.getElementById('currSName');
-            const club = document.getElementById('currClub');
-            const required = [fName, sName, club];
+            const clubInput = document.getElementById('currClubValue'); // The hidden input
+            const clubWrapper = document.getElementById('currClub-wrapper').querySelector('.custom-select-trigger');
+
             let isValid = true;
 
-            required.forEach(el => {
-                if (!el.value || el.value === "") {
+            // Text Inputs
+            [fName, sName].forEach(el => {
+                if (!el.value) {
                     el.classList.add('input-error');
                     isValid = false;
                     el.addEventListener('input', () => el.classList.remove('input-error'), {once: true});
-                    el.addEventListener('change', () => el.classList.remove('input-error'), {once: true});
                 }
             });
+
+            // Custom Dropdown Validation
+            if (!clubInput.value) {
+                clubWrapper.classList.add('input-error'); // Add red border to the fake dropdown
+                isValid = false;
+            }
+
             return isValid;
         }
 
@@ -534,14 +573,14 @@
             const data = {
                 cf: document.getElementById('currFName').value,
                 cs: document.getElementById('currSName').value,
-                cc: currClubSelect.value,
+                cc: document.getElementById('currClubValue').value, // Get from hidden input
                 nf: document.getElementById('newFName').value,
                 ns: document.getElementById('newSName').value,
                 cn: document.getElementById('commonName').value,
                 birth: document.getElementById('birthYear').value,
                 ca: ca,
                 pa: pa,
-                nc: newClubSelect.value
+                nc: document.getElementById('newClubValue').value // Get from hidden input
             };
 
             const resultString = `${quote("PLAYER")} ${quote(data.cf)} ${quote(data.cs)} ${quote(data.cc)} ${quote(data.nf)} ${quote(data.ns)} ${quote(data.cn)} ${quote(data.birth)} ${quote(data.ca)} ${quote(data.pa)} ${quote(data.nc)}`;
@@ -563,16 +602,9 @@
             delBtn.className = 'delete-btn';
             delBtn.innerHTML = '<i class="ph ph-trash"></i>';
             delBtn.title = "Delete Line";
-
             delBtn.addEventListener('click', () => {
-                itemDiv.style.opacity = '0';
-                itemDiv.style.transform = 'translateY(10px)';
-                setTimeout(() => {
-                    itemDiv.remove();
-                    if(listContainer.children.length === 0 || (listContainer.children.length === 1 && listContainer.children[0].id === 'empty-state')) {
-                        emptyState.style.display = 'block';
-                    }
-                }, 300);
+                itemDiv.remove();
+                if(listContainer.children.length === 0) emptyState.style.display = 'block';
             });
 
             itemDiv.appendChild(codeSpan);
@@ -582,28 +614,23 @@
 
         // --- File Operations ---
         uploadBtn.addEventListener('click', () => fileInput.click());
-
         fileInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (!file) return;
-
             const reader = new FileReader();
             reader.onload = function(e) {
-                const text = e.target.result;
-                const lines = text.split(/\r?\n/);
-                let addedCount = 0;
+                const lines = e.target.result.split(/\r?\n/);
+                let count = 0;
                 lines.forEach(line => {
-                    if (line.trim() !== "") {
-                        createListItem(line.trim());
-                        addedCount++;
-                    }
+                    if (line.trim()) { createListItem(line.trim()); count++; }
                 });
                 fileInput.value = '';
-                if(addedCount > 0) alert(`Imported ${addedCount} lines.`);
+                if(count > 0) alert(`Imported ${count} lines.`);
             };
             reader.readAsText(file);
         });
 
+        // --- Utils ---
         function getAllText() {
             const items = document.querySelectorAll('.code-text');
             if(items.length === 0) return null;
@@ -645,12 +672,13 @@
             }
         });
 
-        const limitInputs = [document.getElementById('newCA'), document.getElementById('newPA')];
-        limitInputs.forEach(input => {
+        // Input Limits
+        [document.getElementById('newCA'), document.getElementById('newPA')].forEach(input => {
             input.addEventListener('input', (e) => {
                 if(parseInt(e.target.value) > 200) e.target.value = 200;
             });
         });
+
     </script>
 </body>
 </html>

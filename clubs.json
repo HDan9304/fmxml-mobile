@@ -1,18 +1,32 @@
 [
-  { "menu": "Arsenal", "code": "Arsenal FC" },
-  { "menu": "Aston Villa", "code": "Aston Villa" },
-  { "menu": "Chelsea", "code": "Chelsea FC" },
-  { "menu": "Everton", "code": "Everton FC" },
-  { "menu": "Liverpool", "code": "Liverpool FC" },
-  { "menu": "Man City", "code": "Manchester City" },
-  { "menu": "Man Utd", "code": "Manchester United" },
-  { "menu": "Newcastle", "code": "Newcastle United" },
-  { "menu": "Spurs", "code": "Tottenham Hotspur" },
-  { "menu": "West Ham", "code": "West Ham United" },
-  { "menu": "Real Madrid", "code": "Real Madrid" },
-  { "menu": "Barcelona", "code": "FC Barcelona" },
-  { "menu": "Bayern", "code": "Bayern Munich" },
-  { "menu": "PSG", "code": "Paris Saint-Germain" },
-  { "menu": "Juventus", "code": "Juventus FC" },
-  { "menu": "Free Agent", "code": "Free Agent" }
+  { 
+    "menu": "Arsenal", 
+    "code": "Arsenal FC", 
+    "logo": "https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg" 
+  },
+  { 
+    "menu": "Aston Villa", 
+    "code": "Aston Villa", 
+    "logo": "https://upload.wikimedia.org/wikipedia/en/f/f9/Aston_Villa_FC_crest_%282016%29.svg" 
+  },
+  { 
+    "menu": "Chelsea", 
+    "code": "Chelsea FC", 
+    "logo": "https://upload.wikimedia.org/wikipedia/en/c/cc/Chelsea_FC.svg" 
+  },
+  { 
+    "menu": "Liverpool", 
+    "code": "Liverpool FC", 
+    "logo": "https://upload.wikimedia.org/wikipedia/en/0/0c/Liverpool_FC.svg" 
+  },
+  { 
+    "menu": "Man City", 
+    "code": "Manchester City", 
+    "logo": "https://upload.wikimedia.org/wikipedia/en/e/eb/Manchester_City_FC_badge.svg" 
+  },
+  { 
+    "menu": "Man Utd", 
+    "code": "Manchester United", 
+    "logo": "https://upload.wikimedia.org/wikipedia/en/7/7a/Manchester_United_FC_crest.svg" 
+  }
 ]
