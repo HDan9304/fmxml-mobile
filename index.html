@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FaceMap Pro v2 | Drag & Drop Generator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FaceMap Pro | Mobile Ready</title>
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
     <style>
-        /* --- CSS Variables (Purple Palette) --- */
+        /* --- CSS Variables --- */
         :root {
             --color-darkest: #0a0e1a;
             --color-vibrant: #6a00d7;
@@ -19,7 +19,7 @@
             --border-radius: 16px;
         }
 
-        /* --- Global Styles --- */
+        /* --- Global Reset & Body --- */
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--color-bg-light);
@@ -29,340 +29,336 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            /* Bold ']' Pattern Background */
+            /* Bold ']' Pattern */
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Ctext x='50%25' y='50%25' font-family='sans-serif' font-weight='900' font-size='80' fill='%236a00d7' opacity='0.08' text-anchor='middle' dominant-baseline='middle'%3E%5D%3C/text%3E%3C/svg%3E");
+            background-attachment: fixed; /* Keep pattern static while scrolling */
         }
 
+        /* --- Header --- */
         header {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(12px);
-            padding: 20px 40px;
+            padding: 16px 24px;
             border-bottom: 1px solid var(--color-soft);
             display: flex;
             align-items: center;
             gap: 12px;
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
         }
 
         .logo-icon {
-            font-size: 32px;
+            font-size: 28px;
             color: var(--color-vibrant);
             background: var(--color-bg-light);
-            padding: 8px;
+            padding: 6px;
             border-radius: 8px;
         }
 
         h1 {
             margin: 0;
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 700;
             background: linear-gradient(to right, var(--color-vibrant), var(--color-accent));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
+        /* --- Main Container --- */
         main.container {
             flex: 1;
-            padding: 40px 20px;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            gap: 30px;
-            max-width: 1400px;
-            margin: 0 auto;
+            padding: 20px;
             width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
             box-sizing: border-box;
+            display: flex;
+            gap: 20px;
+            align-items: stretch;
         }
 
-        /* --- Card Styles --- */
-        .card {
+        /* --- Cards Layout --- */
+        .input-section, .output-section {
             background: var(--color-white);
             border-radius: var(--border-radius);
             box-shadow: var(--shadow-soft);
-            border: 1px solid #fff;
-            overflow: hidden;
             display: flex;
             flex-direction: column;
-            height: 80vh; /* Fixed height for scrollability */
+            overflow: hidden;
+            border: 1px solid #fff;
         }
 
-        .input-section {
-            flex: 1;
+        /* Desktop: Fixed height wrapper to allow internal scrolling */
+        @media (min-width: 901px) {
+            main.container {
+                height: 85vh; /* Fixed height on desktop */
+            }
+            .input-section { flex: 1; }
+            .output-section { flex: 1; }
         }
 
-        .output-section {
-            flex: 1;
-            background: var(--color-darkest);
-            color: var(--color-soft);
+        /* Mobile: Stacked, Auto height */
+        @media (max-width: 900px) {
+            main.container {
+                flex-direction: column;
+                height: auto; /* Let it grow */
+                padding: 15px;
+            }
+            .input-section, .output-section {
+                width: 100%;
+                flex: none;
+                height: auto;
+                min-height: 0; /* Reset */
+            }
+            .output-section {
+                order: 2; /* Ensure output is below */
+            }
         }
 
+        /* --- Card Headers --- */
         .card-header {
-            padding: 20px 24px;
+            padding: 16px 20px;
             border-bottom: 1px solid var(--color-bg-light);
             display: flex;
             justify-content: space-between;
             align-items: center;
             background: #fff;
-            z-index: 10;
+            flex-shrink: 0;
         }
 
         .output-section .card-header {
             background: var(--color-darkest);
             border-bottom: 1px solid rgba(255,255,255,0.1);
+            color: var(--color-white);
         }
 
         .card-header h2 {
             margin: 0;
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 600;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         /* --- Drop Zone --- */
         .drop-area {
-            padding: 20px;
+            padding: 15px;
             background: #faf8ff;
             border-bottom: 1px solid var(--color-bg-light);
+            flex-shrink: 0;
         }
 
         .drop-zone {
             border: 2px dashed var(--color-soft);
             border-radius: 12px;
-            padding: 30px;
+            padding: 20px;
             text-align: center;
             transition: all 0.2s;
             background: white;
             cursor: pointer;
-            position: relative;
         }
 
-        .drop-zone:hover, .drop-zone.dragover {
-            border-color: var(--color-vibrant);
+        .drop-zone:active {
+            transform: scale(0.98);
             background: var(--color-bg-light);
-            transform: scale(0.99);
         }
 
         .drop-zone i {
-            font-size: 48px;
+            font-size: 32px;
             color: var(--color-accent);
-            margin-bottom: 10px;
+            margin-bottom: 8px;
         }
 
         .drop-zone p {
             margin: 0;
-            font-weight: 500;
+            font-weight: 600;
+            font-size: 14px;
             color: var(--color-darkest);
         }
-        
-        .drop-zone small {
-            color: #888;
-        }
 
-        /* Hidden file input */
-        #fileElem {
-            display: none;
-        }
+        #fileElem { display: none; }
 
-        /* --- Image List --- */
+        /* --- List Area --- */
         .image-list {
             flex: 1;
             overflow-y: auto;
-            padding: 0;
+            background: #fff;
+            min-height: 150px; /* Ensure space on mobile */
+        }
+        
+        /* On desktop, limit list height if needed, on mobile allow scroll */
+        @media (max-width: 900px) {
+            .image-list {
+                max-height: 300px; /* Limit list height on mobile so user can scroll past it to code */
+            }
         }
 
         .image-item {
             display: flex;
             align-items: center;
-            padding: 15px 24px;
+            padding: 12px 16px;
             border-bottom: 1px solid var(--color-bg-light);
-            gap: 15px;
-            animation: slideIn 0.3s ease-out;
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            gap: 12px;
         }
 
         .thumb-preview {
-            width: 50px;
-            height: 50px;
+            width: 44px;
+            height: 44px;
             object-fit: cover;
             border-radius: 6px;
+            background: #eee;
             border: 1px solid var(--color-bg-light);
-            background: #f0f0f0;
         }
 
-        .item-details {
-            flex: 1;
-        }
+        .item-details { flex: 1; }
 
-        .item-label {
-            font-size: 11px;
-            text-transform: uppercase;
-            font-weight: 700;
-            color: #aaa;
-            letter-spacing: 0.5px;
-            margin-bottom: 4px;
-        }
-        
-        /* Modern Input inside list */
         .id-input {
             border: 1px solid var(--color-soft);
-            padding: 6px 10px;
+            padding: 8px;
             border-radius: 6px;
-            font-size: 14px;
-            width: 140px;
+            font-size: 16px; /* 16px prevents iOS zoom */
+            width: 100%;
+            max-width: 150px;
             font-family: inherit;
             color: var(--color-vibrant);
             font-weight: 600;
-        }
-        
-        .id-input:focus {
-            outline: none;
-            border-color: var(--color-vibrant);
             background: #fbf9ff;
         }
 
         .file-name-display {
-            font-size: 12px;
+            font-size: 11px;
             color: #888;
             margin-top: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 150px;
         }
 
         .btn-remove {
             color: #ff6b6b;
             background: none;
             border: none;
-            cursor: pointer;
             padding: 8px;
-            border-radius: 50%;
-            transition: 0.2s;
-        }
-        
-        .btn-remove:hover {
-            background: #fff0f0;
+            font-size: 18px;
+            cursor: pointer;
         }
 
-        /* --- XML Output --- */
+        /* --- Output Section --- */
+        .output-section {
+            background: var(--color-darkest);
+            color: var(--color-soft);
+        }
+
         .xml-container {
-            height: 100%;
+            flex: 1;
             display: flex;
             flex-direction: column;
+            position: relative;
         }
 
         textarea.xml-preview {
             flex: 1;
+            width: 100%;
             background: transparent;
             border: none;
             color: #d1c4f0;
             font-family: "SF Mono", "Monaco", "Inconsolata", monospace;
-            font-size: 13px;
-            padding: 24px;
+            padding: 20px;
             box-sizing: border-box;
             resize: none;
             white-space: pre;
             line-height: 1.5;
         }
         
-        textarea.xml-preview:focus {
-            outline: none;
+        /* Mobile specific sizing for textarea */
+        @media (min-width: 901px) {
+             textarea.xml-preview { font-size: 13px; }
+        }
+        @media (max-width: 900px) {
+             textarea.xml-preview { 
+                 min-height: 400px; /* Big enough on mobile */
+                 font-size: 15px;   /* Readable on mobile */
+             }
         }
 
+        textarea.xml-preview:focus { outline: none; }
+
         .btn-copy {
-            background: rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.15);
             color: white;
-            border: 1px solid rgba(255,255,255,0.2);
-            padding: 8px 16px;
+            border: none;
+            padding: 8px 14px;
             border-radius: 6px;
             cursor: pointer;
             font-size: 13px;
             display: flex;
             align-items: center;
             gap: 6px;
-            transition: 0.2s;
+            font-weight: 500;
         }
         
-        .btn-copy:hover {
-            background: var(--color-vibrant);
-            border-color: var(--color-vibrant);
-        }
-
-        /* --- Empty States --- */
         .empty-state {
+            padding: 40px 20px;
             text-align: center;
-            padding: 60px 20px;
             color: #aaa;
+            font-size: 14px;
         }
 
-        /* --- Responsive --- */
-        @media (max-width: 900px) {
-            main.container {
-                flex-direction: column;
-                height: auto;
-            }
-            .card {
-                height: 500px;
-                width: 100%;
-            }
-        }
     </style>
 </head>
 <body>
 
     <header>
         <i class="ph ph-images-square logo-icon"></i>
-        <h1>FaceMap Pro <span style="font-weight:400; font-size: 0.8em; opacity: 0.6;">v2</span></h1>
+        <h1>FaceMap Pro</h1>
     </header>
 
     <main class="container">
         
-        <section class="card input-section">
+        <section class="input-section">
             <div class="card-header">
-                <h2><i class="ph ph-upload-simple"></i> Upload Faces</h2>
+                <h2><i class="ph ph-upload-simple"></i> Upload</h2>
                 <div style="font-size: 12px; color: #888;">
-                    <span id="countDisplay">0</span> files loaded
+                    <span id="countDisplay">0</span> files
                 </div>
             </div>
 
             <div class="drop-area">
                 <div class="drop-zone" id="dropZone">
                     <i class="ph ph-cloud-arrow-up"></i>
-                    <p>Drag & Drop images here</p>
-                    <small>or click to browse</small>
+                    <p>Tap to Upload</p>
                     <input type="file" id="fileElem" multiple accept="image/*">
                 </div>
             </div>
 
             <div class="image-list" id="imageList">
                 <div class="empty-state">
-                    No images added yet.<br>
-                    <small>Drag your player faces above.</small>
+                    No images yet
                 </div>
             </div>
         </section>
 
-        <section class="card output-section">
+        <section class="output-section">
             <div class="card-header">
                 <h2><i class="ph ph-file-xml"></i> config.xml</h2>
-                <button class="btn-copy" id="copyBtn"><i class="ph ph-copy"></i> Copy XML</button>
+                <button class="btn-copy" id="copyBtn">
+                    <i class="ph ph-copy"></i> Copy
+                </button>
             </div>
             <div class="xml-container">
-                <textarea class="xml-preview" id="xmlOutput" readonly></textarea>
+                <textarea class="xml-preview" id="xmlOutput" readonly spellcheck="false"></textarea>
             </div>
         </section>
 
     </main>
 
     <script>
-        // Data Store
         let filesData = [];
 
-        // DOM Elements
         const dropZone = document.getElementById('dropZone');
         const fileElem = document.getElementById('fileElem');
         const imageList = document.getElementById('imageList');
@@ -370,9 +366,7 @@
         const countDisplay = document.getElementById('countDisplay');
         const copyBtn = document.getElementById('copyBtn');
 
-        // --- Drag & Drop Handlers ---
-        
-        // Prevent default drag behaviors
+        // Drag & Drop Handlers
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
             dropZone.addEventListener(eventName, preventDefaults, false);
             document.body.addEventListener(eventName, preventDefaults, false);
@@ -383,29 +377,19 @@
             e.stopPropagation();
         }
 
-        // Highlight drop zone when item is dragged over it
+        // Visual feedback
         ['dragenter', 'dragover'].forEach(eventName => {
-            dropZone.addEventListener(eventName, highlight, false);
+            dropZone.addEventListener(eventName, () => dropZone.style.borderColor = '#6a00d7', false);
         });
 
         ['dragleave', 'drop'].forEach(eventName => {
-            dropZone.addEventListener(eventName, unhighlight, false);
+            dropZone.addEventListener(eventName, () => dropZone.style.borderColor = '', false);
         });
 
-        function highlight(e) {
-            dropZone.classList.add('dragover');
-        }
-
-        function unhighlight(e) {
-            dropZone.classList.remove('dragover');
-        }
-
-        // Handle Dropped Files
+        // Handle File Selection
         dropZone.addEventListener('drop', handleDrop, false);
         dropZone.addEventListener('click', () => fileElem.click());
-        fileElem.addEventListener('change', function() {
-            handleFiles(this.files);
-        });
+        fileElem.addEventListener('change', function() { handleFiles(this.files); });
 
         function handleDrop(e) {
             const dt = e.dataTransfer;
@@ -417,37 +401,26 @@
             ([...files]).forEach(uploadFile);
         }
 
-        // --- Core Logic ---
-
         function uploadFile(file) {
-            // Ensure it's an image
             if (!file.type.startsWith('image/')) return;
 
-            // Guess ID from filename (remove extension)
             const fileName = file.name;
             const guessedId = fileName.substring(0, fileName.lastIndexOf('.')) || fileName;
-
-            // Create unique reference for this entry
             const entryId = Date.now() + Math.random();
 
             const entry = {
                 uid: entryId,
                 fileObj: file,
                 fileName: fileName,
-                playerId: guessedId // Editable
+                playerId: guessedId
             };
 
             filesData.push(entry);
-            
-            // Add to UI
             addListItem(entry);
-            
-            // Update XML
             updateUI();
         }
 
         function addListItem(entry) {
-            // Clear empty state if needed
             if (imageList.querySelector('.empty-state')) {
                 imageList.innerHTML = '';
             }
@@ -456,37 +429,28 @@
             item.className = 'image-item';
             item.id = `item-${entry.uid}`;
 
-            // Create Thumbnail
             const img = document.createElement('img');
             img.className = 'thumb-preview';
-            img.file = entry.fileObj; // Attach file for reader
             
-            // Use FileReader to show preview
             const reader = new FileReader();
             reader.onload = (e) => { img.src = e.target.result; };
             reader.readAsDataURL(entry.fileObj);
 
-            // HTML Structure
             item.innerHTML = `
-                <div class="thumb-container"></div>
+                <div class="thumb-wrapper"></div>
                 <div class="item-details">
-                    <div class="item-label">Player ID</div>
                     <input type="text" class="id-input" value="${entry.playerId}" oninput="updateId(${entry.uid}, this.value)">
                     <div class="file-name-display">${entry.fileName}</div>
                 </div>
                 <button class="btn-remove" onclick="removeEntry(${entry.uid})">
-                    <i class="ph ph-trash"></i>
+                    <i class="ph ph-x-circle"></i>
                 </button>
             `;
             
-            // Append the image element we created earlier
-            item.querySelector('.thumb-container').appendChild(img);
-            
-            // Add to top of list
+            item.querySelector('.thumb-wrapper').appendChild(img);
             imageList.prepend(item);
         }
 
-        // Update ID in data store when user types
         window.updateId = function(uid, newId) {
             const index = filesData.findIndex(f => f.uid === uid);
             if (index > -1) {
@@ -495,14 +459,13 @@
             }
         }
 
-        // Remove entry
         window.removeEntry = function(uid) {
             filesData = filesData.filter(f => f.uid !== uid);
             const el = document.getElementById(`item-${uid}`);
             if(el) el.remove();
             
             if (filesData.length === 0) {
-                imageList.innerHTML = `<div class="empty-state">No images added yet.<br><small>Drag your player faces above.</small></div>`;
+                imageList.innerHTML = `<div class="empty-state">No images yet</div>`;
             }
             updateUI();
         }
@@ -516,9 +479,8 @@
             const header = `<record>\n\t\n\t<boolean id="preload" value="false"/>\n\t<boolean id="amap" value="false"/>\n\n\t\n\t<list id="maps">\n`;
             
             let body = '';
-            // Loop through data
             filesData.forEach(entry => {
-                // Determine mapped filename (use original filename)
+                // Ensure Mapping uses the ID for the target path
                 body += `\t\t<record from="${entry.playerId}" to="graphics/pictures/person/${entry.playerId}/portrait"/>\n`;
             });
 
@@ -531,10 +493,8 @@
             }
         }
 
-        // Initial State
         generateXML();
 
-        // Copy Button Logic
         copyBtn.addEventListener('click', () => {
             if (filesData.length === 0) return;
             
@@ -542,17 +502,14 @@
             xmlOutput.setSelectionRange(0, 99999);
             navigator.clipboard.writeText(xmlOutput.value).then(() => {
                 const originalHTML = copyBtn.innerHTML;
-                copyBtn.innerHTML = '<i class="ph ph-check"></i> Copied!';
-                copyBtn.style.borderColor = '#2ecc71';
-                copyBtn.style.color = '#2ecc71';
+                copyBtn.innerHTML = '<i class="ph ph-check"></i> Copied';
+                copyBtn.style.background = '#2ecc71';
                 setTimeout(() => {
                     copyBtn.innerHTML = originalHTML;
-                    copyBtn.style.borderColor = '';
-                    copyBtn.style.color = '';
+                    copyBtn.style.background = '';
                 }, 2000);
             });
         });
-
     </script>
 </body>
 </html>
