@@ -22,9 +22,10 @@ body {
 /* Main Title Styling */
 .main-title {
     font-family: 'Playfair Display', serif;
-    font-size: 48px;
+    font-size: 28px; /* Smaller, logo-like size */
     color: #333;
-    margin: 0 0 20px 0;
+    margin: 0 0 30px 0; /* More space between logo and card */
+    font-weight: 700;
 }
 
 /* The Card Container */
