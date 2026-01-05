@@ -1,40 +1,38 @@
-<style>
-    /* General Page Reset */
-    body {
-        background-color: #f4f4f9; /* Light grey background to make the white card pop */
-        font-family: 'Lato', sans-serif;
-        display: flex;
-        justify-content: center;
-        padding-top: 50px;
-        margin: 0;
-    }
+/* General Page Reset */
+body {
+    background-color: #f4f4f9;
+    font-family: 'Lato', sans-serif;
+    display: flex;
+    justify-content: center;
+    padding-top: 50px;
+    margin: 0;
+}
 
-    /* The Card Container */
-    .couple-card {
-        background-color: #ffffff;
-        width: 100%;
-        max-width: 400px; /* Prevents it from getting too wide on desktop */
-        border-radius: 12px; /* Smooth rounded corners */
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
-        padding: 24px;
-        text-align: center; /* Centers the text */
-        border-top: 5px solid #d4af37; /* A touch of gold for the wedding theme */
-    }
+/* The Card Container */
+.couple-card {
+    background-color: #ffffff;
+    width: 100%;
+    max-width: 400px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 24px;
+    text-align: center;
+    border-top: 5px solid #d4af37; /* Gold accent */
+}
 
-    /* Couple Names Styling */
-    .names {
-        font-family: 'Playfair Display', serif; /* Elegant heading font */
-        color: #333333;
-        font-size: 28px;
-        margin: 0 0 8px 0; /* Spacing below the name */
-    }
+/* Couple Names Styling */
+.names {
+    font-family: 'Playfair Display', serif;
+    color: #333333;
+    font-size: 28px;
+    margin: 0 0 8px 0;
+}
 
-    /* Subtitle Styling */
-    .subtitle {
-        color: #666666;
-        font-size: 14px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        margin: 0;
-    }
-</style>
+/* Subtitle Styling */
+.subtitle {
+    color: #666666;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0;
+}
