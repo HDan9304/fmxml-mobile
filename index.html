@@ -31,17 +31,39 @@
             }
         });
 
-        // 2. Updated function: Reads file as text (Base64) to save it
+        // 2. New function: Compresses image to ~50KB to fix storage crashes
         function loadPhoto(event) {
             const file = event.target.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    const result = e.target.result;
-                    // Update image
-                    document.getElementById('photo-preview').src = result;
-                    // Save to browser memory
-                    localStorage.setItem('couplePhoto', result);
+                    const img = new Image();
+                    img.onload = function() {
+                        // Create a temporary canvas to draw and compress the image
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+
+                        // Resize logic: Force image to fit within 300x300px
+                        const maxSize = 300;
+                        const scale = Math.min(maxSize / img.width, maxSize / img.height, 1);
+                        canvas.width = img.width * scale;
+                        canvas.height = img.height * scale;
+
+                        // Draw image to canvas
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                        // Export as compressed JPEG (0.7 quality)
+                        const compressedData = canvas.toDataURL('image/jpeg', 0.7);
+
+                        // Update screen and save safely
+                        document.getElementById('photo-preview').src = compressedData;
+                        try {
+                            localStorage.setItem('couplePhoto', compressedData);
+                        } catch (error) {
+                            alert("Photo issue: Storage full. Please try a different photo.");
+                        }
+                    };
+                    img.src = e.target.result;
                 };
                 reader.readAsDataURL(file);
             }
