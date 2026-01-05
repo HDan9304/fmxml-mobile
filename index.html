@@ -12,10 +12,22 @@
 
     <div class="couple-card">
         <div class="card-content">
+            <div class="photo-wrapper" onclick="document.getElementById('upload-input').click()">
+                <img id="photo-preview" src="https://placehold.co/100x100?text=+" alt="Tap to Add Photo">
+            </div>
+            <input type="file" id="upload-input" style="display: none;" accept="image/*" onchange="loadPhoto(event)">
+
             <h2 class="names">Alex & Jordan</h2>
             <p class="subtitle">Wedding Budget Tracker</p>
         </div>
     </div>
+
+    <script>
+        function loadPhoto(event) {
+            const preview = document.getElementById('photo-preview');
+            preview.src = URL.createObjectURL(event.target.files[0]);
+        }
+    </script>
 
 </body>
 </html>

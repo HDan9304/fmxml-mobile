@@ -11,6 +11,7 @@ body {
     /* Flexbox centers the card horizontally */
     display: flex;
     justify-content: center;
+    align-items: flex-start; /* FIX: Stops card from stretching to bottom */
     
     /* Spacing: 50px top, 20px on sides (Crucial for Mobile edges) */
     padding: 50px 20px; 
@@ -31,6 +32,22 @@ body {
     padding: 24px;
     text-align: center;
     border-top: 5px solid #d4af37;
+}
+
+/* Photo Circle Styling */
+.photo-wrapper {
+    width: 100px;
+    height: 100px;
+    background-color: #eee;
+    border-radius: 50%;
+    margin: 0 auto 15px; /* Center horizontally + bottom spacing */
+    overflow: hidden;
+    cursor: pointer;
+}
+.photo-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 /* Couple Names Styling */
