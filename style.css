@@ -1,23 +1,36 @@
-/* General Page Reset */
+/* 1. Global Reset: Makes sizing predictable on all devices */
+* {
+    box-sizing: border-box;
+}
+
+/* General Page Styling */
 body {
     background-color: #f4f4f9;
     font-family: 'Lato', sans-serif;
+    
+    /* Flexbox centers the card horizontally */
     display: flex;
     justify-content: center;
-    padding-top: 50px;
+    
+    /* Spacing: 50px top, 20px on sides (Crucial for Mobile edges) */
+    padding: 50px 20px; 
     margin: 0;
+    min-height: 100vh; /* Ensures background covers full height */
 }
 
 /* The Card Container */
 .couple-card {
     background-color: #ffffff;
-    width: 100%;
-    max-width: 400px;
+    
+    /* Responsive Logic: */
+    width: 100%;         /* Be as wide as possible... */
+    max-width: 400px;    /* ...but stop growing at 400px (Desktop view) */
+    
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     padding: 24px;
     text-align: center;
-    border-top: 5px solid #d4af37; /* Gold accent */
+    border-top: 5px solid #d4af37;
 }
 
 /* Couple Names Styling */
@@ -26,6 +39,7 @@ body {
     color: #333333;
     font-size: 28px;
     margin: 0 0 8px 0;
+    line-height: 1.2; /* Helps if names are long and wrap on mobile */
 }
 
 /* Subtitle Styling */
@@ -35,4 +49,11 @@ body {
     text-transform: uppercase;
     letter-spacing: 1px;
     margin: 0;
+}
+
+/* 3. Media Query: Specific tweaks for very small phones */
+@media (max-width: 350px) {
+    .names {
+        font-size: 24px; /* Slightly smaller text for tiny screens */
+    }
 }
