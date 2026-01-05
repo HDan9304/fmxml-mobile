@@ -23,9 +23,28 @@
     </div>
 
     <script>
+        // 1. Run immediately when page loads to restore saved data
+        window.addEventListener('load', () => {
+            const savedPhoto = localStorage.getItem('couplePhoto');
+            if (savedPhoto) {
+                document.getElementById('photo-preview').src = savedPhoto;
+            }
+        });
+
+        // 2. Updated function: Reads file as text (Base64) to save it
         function loadPhoto(event) {
-            const preview = document.getElementById('photo-preview');
-            preview.src = URL.createObjectURL(event.target.files[0]);
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const result = e.target.result;
+                    // Update image
+                    document.getElementById('photo-preview').src = result;
+                    // Save to browser memory
+                    localStorage.setItem('couplePhoto', result);
+                };
+                reader.readAsDataURL(file);
+            }
         }
     </script>
 
