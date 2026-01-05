@@ -15,7 +15,10 @@
     <div class="couple-card">
         <div class="card-content">
             <div class="photo-wrapper" onclick="document.getElementById('upload-input').click()">
-<input type="file" id="upload-input" style="display: none;" accept="image/*" onchange="loadPhoto(event)">
+                <img id="photo-preview" src="https://placehold.co/100x100?text=+" alt="Tap to Add Photo">
+            </div>
+            
+            <input type="file" id="upload-input" style="display: none;" accept="image/*" onchange="loadPhoto(event)">
 
             <h2 class="names" id="couple-name" contenteditable="true">Alex & Jordan</h2>
         </div>
