@@ -10,15 +10,14 @@
 </head>
 <body>
 
+    <h1 class="main-title">Weddy</h1>
+
     <div class="couple-card">
         <div class="card-content">
             <div class="photo-wrapper" onclick="document.getElementById('upload-input').click()">
-                <img id="photo-preview" src="https://placehold.co/100x100?text=+" alt="Tap to Add Photo">
-            </div>
-            <input type="file" id="upload-input" style="display: none;" accept="image/*" onchange="loadPhoto(event)">
+<input type="file" id="upload-input" style="display: none;" accept="image/*" onchange="loadPhoto(event)">
 
-            <h2 class="names">Alex & Jordan</h2>
-            <p class="subtitle">Wedding Budget Tracker</p>
+            <h2 class="names" id="couple-name" contenteditable="true">Alex & Jordan</h2>
         </div>
     </div>
 
@@ -26,10 +25,17 @@
         // 1. Run immediately when page loads to restore saved data
         window.addEventListener('load', () => {
             const savedPhoto = localStorage.getItem('couplePhoto');
-            if (savedPhoto) {
-                document.getElementById('photo-preview').src = savedPhoto;
-            }
+            if (savedPhoto) document.getElementById('photo-preview').src = savedPhoto;
+
+            const savedName = localStorage.getItem('coupleName');
+            if (savedName) document.getElementById('couple-name').innerText = savedName;
         });
+
+        // Save name changes automatically
+        document.getElementById('couple-name').addEventListener('input', (e) => {
+            localStorage.setItem('coupleName', e.target.innerText);
+        });
+
 
         // 2. New function: Compresses image to ~50KB to fix storage crashes
         function loadPhoto(event) {

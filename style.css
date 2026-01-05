@@ -10,13 +10,21 @@ body {
     
     /* Flexbox centers the card horizontally */
     display: flex;
-    justify-content: center;
-    align-items: flex-start; /* FIX: Stops card from stretching to bottom */
+    flex-direction: column; /* Stack Title and Card */
+    align-items: center;
     
     /* Spacing: 50px top, 20px on sides (Crucial for Mobile edges) */
     padding: 50px 20px; 
     margin: 0;
     min-height: 100vh; /* Ensures background covers full height */
+}
+
+/* Main Title Styling */
+.main-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px;
+    color: #333;
+    margin: 0 0 20px 0;
 }
 
 /* The Card Container */
