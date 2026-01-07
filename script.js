@@ -1,40 +1,115 @@
-// Functionality for the Mobile Menu Toggle
 document.addEventListener('DOMContentLoaded', () => {
-    const mobileToggle = document.getElementById('mobile-toggle');
-    const navMenu = document.getElementById('nav-menu');
+    
+    // --- DOM Elements ---
+    const loginView = document.getElementById('login-view');
+    const dashboardView = document.getElementById('dashboard-view');
+    
+    const teamIdInput = document.getElementById('team-id');
+    const loginBtn = document.getElementById('btn-login');
+    const logoutBtn = document.getElementById('btn-logout');
+    const errorMsg = document.getElementById('error-msg');
+    const displayTeamId = document.getElementById('display-team-id');
+    
+    // Modal Elements
+    const modal = document.getElementById('tutorial-modal');
+    const openTutorialBtn = document.getElementById('open-tutorial');
+    const closeModalBtn = document.querySelector('.close-modal');
+    const closeTutorialBtn = document.getElementById('btn-close-tutorial');
 
-    mobileToggle.addEventListener('click', () => {
-        // Toggle the 'open' class on the navigation
-        navMenu.classList.toggle('open');
-        
-        // Change the icon based on state
-        if (navMenu.classList.contains('open')) {
-            mobileToggle.innerHTML = '✕'; // Close icon
+    // --- State Management ---
+    
+    // Check if user is already logged in (localStorage)
+    checkSession();
+
+    function checkSession() {
+        const storedId = localStorage.getItem('fpl_team_id');
+        if (storedId) {
+            showDashboard(storedId);
         } else {
-            mobileToggle.innerHTML = '☰'; // Hamburger icon
+            showLogin();
+        }
+    }
+
+    // --- Actions ---
+
+    function handleLogin() {
+        const inputVal = teamIdInput.value.trim();
+
+        // Basic Validation: Check if not empty and is a number
+        if (inputVal && !isNaN(inputVal)) {
+            // Save to LocalStorage
+            localStorage.setItem('fpl_team_id', inputVal);
+            errorMsg.classList.add('hidden');
+            showDashboard(inputVal);
+        } else {
+            // Show Error
+            errorMsg.classList.remove('hidden');
+            // Shake animation effect
+            teamIdInput.style.borderColor = 'var(--fpl-pink)';
+            setTimeout(() => {
+                teamIdInput.style.borderColor = '#333';
+            }, 1000);
+        }
+    }
+
+    function handleLogout() {
+        // Remove from storage
+        localStorage.removeItem('fpl_team_id');
+        // Clear input
+        teamIdInput.value = '';
+        showLogin();
+    }
+
+    // --- View Switchers ---
+
+    function showDashboard(id) {
+        displayTeamId.textContent = id;
+        loginView.classList.remove('active');
+        loginView.classList.add('hidden');
+        
+        dashboardView.classList.remove('hidden');
+        dashboardView.classList.add('active');
+    }
+
+    function showLogin() {
+        dashboardView.classList.remove('active');
+        dashboardView.classList.add('hidden');
+        
+        loginView.classList.remove('hidden');
+        loginView.classList.add('active');
+    }
+
+    // --- Modal Logic ---
+
+    function openModal(e) {
+        if(e) e.preventDefault();
+        modal.classList.remove('hidden');
+    }
+
+    function closeModal() {
+        modal.classList.add('hidden');
+    }
+
+    // --- Event Listeners ---
+
+    loginBtn.addEventListener('click', handleLogin);
+    
+    // Allow pressing "Enter" key to login
+    teamIdInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') handleLogin();
+    });
+
+    logoutBtn.addEventListener('click', handleLogout);
+
+    // Modal listeners
+    openTutorialBtn.addEventListener('click', openModal);
+    closeModalBtn.addEventListener('click', closeModal);
+    closeTutorialBtn.addEventListener('click', closeModal);
+    
+    // Close modal if clicking outside content
+    window.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeModal();
         }
     });
-
-    // Login and Tutorial Logic
-    const loginTrigger = document.getElementById('login-trigger');
-    const tutorialTrigger = document.getElementById('tutorial-trigger');
-    const loginModal = document.getElementById('login-modal');
-    const tutorialCard = document.getElementById('tutorial-card');
-
-    loginTrigger?.addEventListener('click', (e) => {
-        e.preventDefault();
-        loginModal.style.display = 'flex';
-    });
-
-    tutorialTrigger?.addEventListener('click', (e) => {
-        e.preventDefault();
-        tutorialCard.style.display = 'block';
-    });
-
-    document.getElementById('close-login')?.addEventListener('click', () => loginModal.style.display = 'none');
-    document.getElementById('close-tutorial')?.addEventListener('click', () => tutorialCard.style.display = 'none');
-    document.getElementById('tutorial-next')?.addEventListener('click', () => tutorialCard.style.display = 'none');
 });
-
-// Future functionality like data fetching will go here
-console.log("FPL Sidekick loaded successfully!");

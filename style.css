@@ -1,277 +1,276 @@
-/* --- CSS VARIABLES & RESET --- */
+/* --- VARIABLES & RESET --- */
 :root {
-    --primary-purple: #37003c;
-    --fpl-green: #00ff85;
-    --fpl-pink: #ff005a;
-    --dark-bg: #1b001e;
+    --bg-black: #050505;
+    --bg-dark: #121212;
+    --card-bg: #1e1e1e;
+    --fpl-purple: #37003c;
+    --fpl-green: #00ff87;
+    --fpl-pink: #e90052;
     --text-white: #ffffff;
-    --text-gray: #b1a7b2;
-    --header-height: 80px;
-    --glass-bg: rgba(55, 0, 60, 0.85);
-    --transition-slick: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    --text-gray: #a0a0a0;
+    --font-main: 'Poppins', sans-serif;
 }
 
 * {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
 }
 
 body {
-    font-family: 'Inter', sans-serif;
-    background-color: #f4f4f4;
-    color: var(--primary-purple);
-    line-height: 1.6;
-}
-
-.news-ticker {
-    background-color: var(--fpl-pink);
-    color: white;
-    height: 35px;
+    background-color: var(--bg-black);
+    color: var(--text-white);
+    font-family: var(--font-main);
+    height: 100vh;
     display: flex;
+    justify-content: center;
     align-items: center;
-    overflow: hidden;
-    white-space: nowrap;
-    font-size: 0.85rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    /* Subtle background gradient based on FPL Purple */
+    background: radial-gradient(circle at top, #200025 0%, #000000 70%);
 }
 
-.ticker-content {
-    display: inline-block;
-    padding-left: 100%;
-    animation: ticker-scroll 25s linear infinite;
+/* --- LAYOUT --- */
+.app-container {
+    width: 100%;
+    max-width: 480px; /* Mobile app feel on desktop */
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 /* --- HEADER --- */
-header {
-    background-color: var(--glass-bg);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    padding: 0 5%;
-    height: var(--header-height);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+.main-header {
+    text-align: center;
+    margin-bottom: 2rem;
 }
 
-.logo-container {
+.logo-circle {
+    width: 60px;
+    height: 60px;
+    background-color: var(--fpl-purple);
+    border: 2px solid var(--fpl-green);
+    border-radius: 50%;
     display: flex;
-    align-items: center;
-    gap: 10px;
-    cursor: pointer;
-}
-
-.logo-icon {
-    width: 35px;
-    height: 35px;
-    background: var(--fpl-green);
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
     justify-content: center;
-    font-weight: 800;
-    color: var(--primary-purple);
-    transform: rotate(-10deg);
+    align-items: center;
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: var(--fpl-green);
+    margin: 0 auto 10px;
+    box-shadow: 0 0 15px rgba(0, 255, 135, 0.2);
 }
 
-.logo-text {
-    color: var(--text-white);
+h1 {
     font-size: 1.5rem;
-    font-weight: 800;
-    letter-spacing: -0.5px;
-}
-
-.logo-text span {
-    color: var(--fpl-green);
-}
-
-/* --- NAVIGATION --- */
-nav {
-    display: flex;
-    gap: 30px;
-}
-
-nav a {
-    color: var(--text-gray);
-    text-decoration: none;
     font-weight: 600;
-    font-size: 0.95rem;
-    transition: all 0.3s ease;
-    padding: 10px 0;
 }
 
-nav a:hover {
+/* --- CARDS & FORMS --- */
+.login-card, .dashboard-card {
+    background-color: var(--card-bg);
+    padding: 2rem;
+    border-radius: 16px;
+    width: 100%;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    border-top: 4px solid var(--fpl-pink);
+    text-align: center;
+}
+
+.subtitle {
+    color: var(--text-gray);
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+}
+
+.input-group {
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 0.85rem;
     color: var(--fpl-green);
+    font-weight: 600;
 }
 
-nav a.active {
-    color: var(--text-white);
-    border-bottom: 2px solid var(--fpl-green);
+input {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--bg-black);
+    border: 1px solid #333;
+    border-radius: 8px;
+    color: white;
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+input:focus {
+    border-color: var(--fpl-green);
+}
+
+.error {
+    color: var(--fpl-pink);
+    font-size: 0.8rem;
+    margin-top: 5px;
+    display: block;
 }
 
 /* --- BUTTONS --- */
-.header-actions {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-
-.btn-login {
-    color: var(--text-white);
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 0.9rem;
-}
-
-.btn-signup {
-    background-color: var(--fpl-green);
-    color: var(--primary-purple);
-    padding: 10px 22px;
-    border-radius: 6px;
-    text-decoration: none;
-    font-weight: 700;
-    font-size: 0.9rem;
-    transition: transform 0.2s ease, filter 0.2s ease;
-}
-
-.btn-signup:hover {
-    transform: translateY(-2px);
-    filter: brightness(1.1);
-}
-
-/* --- MOBILE TOGGLE --- */
-.mobile-toggle {
-    display: none;
-    background: none;
+.btn {
+    width: 100%;
+    padding: 14px;
     border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.2s, opacity 0.2s;
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+.btn-primary {
+    background-color: var(--fpl-green);
+    color: var(--fpl-purple);
+}
+
+.btn-secondary {
+    background-color: transparent;
+    border: 2px solid var(--fpl-pink);
+    color: var(--fpl-pink);
+    margin-top: 20px;
+}
+
+.btn-secondary:hover {
+    background-color: var(--fpl-pink);
     color: white;
-    font-size: 1.8rem;
+}
+
+.help-link {
+    margin-top: 1.5rem;
+}
+
+.help-link a {
+    color: var(--text-gray);
+    font-size: 0.85rem;
+    text-decoration: underline;
     cursor: pointer;
 }
 
-/* --- HERO SECTION --- */
-.hero-placeholder {
-    height: 500px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: radial-gradient(circle at 20% 30%, rgba(255, 0, 90, 0.15), transparent), 
-                linear-gradient(135deg, var(--primary-purple) 0%, var(--dark-bg) 100%);
-    color: white;
-    text-align: center;
-    padding: 20px;
+.help-link a:hover {
+    color: var(--fpl-green);
 }
 
-.hero-title {
-    font-size: clamp(2rem, 5vw, 3.5rem);
-    margin-bottom: 15px;
-    font-weight: 800;
+/* --- DASHBOARD STYLES --- */
+.neon-text {
+    color: var(--fpl-green);
+    font-size: 2.5rem;
+    margin: 10px 0;
+    text-shadow: 0 0 10px rgba(0, 255, 135, 0.3);
 }
 
-.hero-subtitle {
+.success-icon {
+    font-size: 3rem;
+    color: var(--fpl-green);
+    margin-bottom: 1rem;
+}
+
+.info-text {
     color: var(--text-gray);
-    font-size: clamp(1rem, 2vw, 1.25rem);
+    font-size: 0.85rem;
+    font-style: italic;
 }
 
-/* --- ANIMATIONS --- */
-.reveal {
-    animation: revealUp 1.2s var(--transition-slick) forwards;
+/* --- UTILITIES --- */
+.hidden {
+    display: none !important;
 }
 
-@keyframes revealUp {
-    from { opacity: 0; transform: translateY(40px); }
+.active {
+    display: block;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* --- RESPONSIVENESS --- */
-@media (max-width: 992px) {
-    nav, .header-actions {
-        display: none; /* Hidden on mobile by default */
-    }
-    
-    .mobile-toggle {
-        display: block;
-    }
-
-    /* Simple class to show menu via JS */
-    nav.open {
-        display: flex;
-        flex-direction: column;
-        position: absolute;
-        top: var(--header-height);
-        left: 0;
-        width: 100%;
-        background: var(--primary-purple);
-        padding: 20px;
-        border-top: 1px solid var(--glass);
-    }
-}
-
-@keyframes ticker-scroll {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-100%); }
-}
-
-/* --- LOGIN & TUTORIAL STYLES --- */
-.modal-overlay {
-    display: none;
+/* --- MODAL --- */
+.modal {
     position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(10px);
-    z-index: 2000;
-    align-items: center;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.85);
+    backdrop-filter: blur(5px);
+    display: flex;
     justify-content: center;
+    align-items: center;
+    z-index: 1000;
 }
 
-.modal-card {
-    background: var(--primary-purple);
-    padding: 40px;
-    border-radius: 20px;
+.modal-content {
+    background-color: var(--card-bg);
     width: 90%;
     max-width: 400px;
-    text-align: center;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-}
-
-.login-input {
-    width: 100%;
-    padding: 15px;
-    margin: 25px 0 15px;
-    border-radius: 8px;
-    border: 1px solid rgba(255,255,255,0.2);
-    background: rgba(255,255,255,0.05);
-    color: white;
-    font-size: 1rem;
-}
-
-.btn-text-only {
-    background: none;
-    border: none;
-    color: var(--text-gray);
-    margin-top: 15px;
-    cursor: pointer;
-    font-size: 0.85rem;
-}
-
-.tutorial-box {
-    display: none;
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    background: var(--dark-bg);
-    color: white;
-    padding: 20px;
+    padding: 2rem;
     border-radius: 12px;
-    width: 280px;
-    z-index: 1500;
-    border-left: 4px solid var(--fpl-green);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    position: relative;
+    border: 1px solid var(--fpl-purple);
+}
+
+.close-modal {
+    position: absolute;
+    top: 10px; right: 15px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-gray);
+}
+
+.tutorial-steps {
+    margin: 20px 0;
+    text-align: left;
+}
+
+.step {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 15px;
+}
+
+.step-num {
+    background-color: var(--fpl-purple);
+    color: white;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.8rem;
+    margin-right: 10px;
+    flex-shrink: 0;
+}
+
+.step p {
+    font-size: 0.9rem;
+    color: #ddd;
+    line-height: 1.4;
+}
+
+.url-example {
+    display: block;
+    background: #000;
+    padding: 8px;
+    border-radius: 4px;
+    color: var(--fpl-pink);
+    margin-top: 5px;
+    font-size: 0.8rem;
+    word-break: break-all;
 }
