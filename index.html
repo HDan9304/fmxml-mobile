@@ -3,81 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wedding Budget Tracker</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <title>Our Wedding Budget Tracker</title>
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@300;400&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <h1 class="main-title">Weddy</h1>
-
-    <div class="couple-card">
-        <div class="card-content">
-            <div class="photo-wrapper" onclick="document.getElementById('upload-input').click()">
-                <img id="photo-preview" src="https://placehold.co/100x100?text=+" alt="Tap to Add Photo">
+    <div class="container">
+        <header>
+            <h1>Wedding Budget Tracker</h1>
+            <div class="budget-setup">
+                <label for="total-budget-input">Total Budget: $</label>
+                <input type="number" id="total-budget-input" placeholder="Enter total budget">
+                <button id="set-budget-btn">Set Budget</button>
             </div>
-            
-            <input type="file" id="upload-input" style="display: none;" accept="image/*" onchange="loadPhoto(event)">
+        </header>
 
-            <h2 class="names" id="couple-name" contenteditable="true">Alex & Jordan</h2>
-        </div>
+        <section class="summary">
+            <div class="card">
+                <h3>Total Budget</h3>
+                <p id="display-total">$0</p>
+            </div>
+            <div class="card">
+                <h3>Spent</h3>
+                <p id="display-spent">$0</p>
+            </div>
+            <div class="card">
+                <h3>Remaining</h3>
+                <p id="display-remaining" class="remaining-positive">$0</p>
+            </div>
+        </section>
+
+        <section class="add-expense">
+            <h2>Add New Expense</h2>
+            <div class="input-group">
+                <input type="text" id="item-name" placeholder="Expense name (e.g., Flowers)">
+                <input type="number" id="item-amount" placeholder="Amount ($)">
+                <button id="add-expense-btn">Add Expense</button>
+            </div>
+        </section>
+
+        <section class="expense-list-section">
+            <h2>Expenses</h2>
+            <ul id="expense-list">
+                <!-- Expenses will appear here -->
+            </ul>
+        </section>
     </div>
 
-    <script>
-        // 1. Run immediately when page loads to restore saved data
-        window.addEventListener('load', () => {
-            const savedPhoto = localStorage.getItem('couplePhoto');
-            if (savedPhoto) document.getElementById('photo-preview').src = savedPhoto;
-
-            const savedName = localStorage.getItem('coupleName');
-            if (savedName) document.getElementById('couple-name').innerText = savedName;
-        });
-
-        // Save name changes automatically
-        document.getElementById('couple-name').addEventListener('input', (e) => {
-            localStorage.setItem('coupleName', e.target.innerText);
-        });
-
-
-        // 2. New function: Compresses image to ~50KB to fix storage crashes
-        function loadPhoto(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const img = new Image();
-                    img.onload = function() {
-                        // Create a temporary canvas to draw and compress the image
-                        const canvas = document.createElement('canvas');
-                        const ctx = canvas.getContext('2d');
-
-                        // Resize logic: Force image to fit within 300x300px
-                        const maxSize = 300;
-                        const scale = Math.min(maxSize / img.width, maxSize / img.height, 1);
-                        canvas.width = img.width * scale;
-                        canvas.height = img.height * scale;
-
-                        // Draw image to canvas
-                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-
-                        // Export as compressed JPEG (0.7 quality)
-                        const compressedData = canvas.toDataURL('image/jpeg', 0.7);
-
-                        // Update screen and save safely
-                        document.getElementById('photo-preview').src = compressedData;
-                        try {
-                            localStorage.setItem('couplePhoto', compressedData);
-                        } catch (error) {
-                            alert("Photo issue: Storage full. Please try a different photo.");
-                        }
-                    };
-                    img.src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-    </script>
-
+    <script src="script.js"></script>
 </body>
 </html>
