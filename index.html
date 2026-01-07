@@ -12,6 +12,11 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="news-ticker">
+        <div class="ticker-content">
+            🚨 GW21 Deadline: Saturday 11:00 AM &nbsp;&nbsp; | &nbsp;&nbsp; 🚑 Haaland Injury Update: Returning to training &nbsp;&nbsp; | &nbsp;&nbsp; 📈 Price Rise: Palmer +0.1m, Salah +0.1m &nbsp;&nbsp; | &nbsp;&nbsp; 📉 Price Fall: Son -0.1m
+        </div>
+    </div>
 
     <header>
         <div class="logo-container">
@@ -28,8 +33,8 @@
         </nav>
 
         <div class="header-actions">
-            <a href="#" class="btn-login">Sign In</a>
-            <a href="#" class="btn-signup">Get Started</a>
+            <a href="#" id="login-trigger" class="btn-login">Sign In</a>
+            <a href="#" id="tutorial-trigger" class="btn-signup">Get Started</a>
         </div>
 
         <button class="mobile-toggle" id="mobile-toggle" aria-label="Open Menu">
@@ -39,12 +44,35 @@
 
     <main>
         <section class="hero-placeholder">
-            <div>
+            <div class="reveal">
                 <h1 class="hero-title">Master Your Mini-League</h1>
                 <p class="hero-subtitle">The professional toolkit for FPL Managers.</p>
             </div>
         </section>
     </main>
+
+    <!-- Login Modal -->
+    <div id="login-modal" class="modal-overlay">
+        <div class="modal-card">
+            <h2 style="color: white; margin-bottom: 10px;">Sync Your Team</h2>
+            <p style="color: var(--text-gray); font-size: 0.9rem;">Enter your official FPL ID to get started.</p>
+            <input type="number" id="fpl-id-input" placeholder="e.g., 1234567" class="login-input">
+            <button class="btn-signup" style="width: 100%; border: none; cursor: pointer;">Connect Sidekick</button>
+            <button id="close-login" class="btn-text-only">Maybe later</button>
+        </div>
+    </div>
+
+    <!-- Tutorial Card -->
+    <div id="tutorial-card" class="tutorial-box">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+            <strong style="color: var(--fpl-green);">Quick Start Guide</strong>
+            <button id="close-tutorial" style="background:none; border:none; color:white; cursor:pointer;">✕</button>
+        </div>
+        <p style="font-size: 0.85rem; color: #ddd; margin-bottom: 15px;">
+            Find your <strong>FPL ID</strong> in the URL of your 'Points' or 'Pick Team' page on the official FPL site.
+        </p>
+        <button class="btn-signup" id="tutorial-next" style="padding: 5px 15px; font-size: 0.8rem;">Next Step</button>
+    </div>
 
     <!-- External JS -->
     <script src="script.js"></script>
